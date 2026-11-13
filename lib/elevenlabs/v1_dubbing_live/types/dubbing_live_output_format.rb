@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+module Elevenlabs
+  module V1DubbingLive
+    module Types
+      module DubbingLiveOutputFormat
+        extend ::Elevenlabs::Internal::Types::Enum
+
+        PCM_8000 = :pcm_8000
+        PCM_16000 = :pcm_16000
+        PCM_22050 = :pcm_22050
+        PCM_24000 = :pcm_24000
+        PCM_44100 = :pcm_44100
+        PCM_48000 = :pcm_48000
+        ULAW_8000 = :ulaw_8000
+
+        def self.load(str)
+          coerce(::JSON.parse(str, symbolize_names: true))
+        end
+
+        def self.dump(value)
+          coerced = coerce(value)
+          ::JSON.generate(coerced.nil? || !coerced.respond_to?(:to_h) ? coerced : coerced.to_h)
+        end
+      end
+    end
+  end
+end
