@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+module Elevenlabs
+  module Types
+    class OrderItemInfo < ::Elevenlabs::Internal::Types::Model
+      field :item_id, -> { String }, optional: false, nullable: false
+      field :item, -> { ::Elevenlabs::Types::OrderItemRequestOutput }, optional: false, nullable: false
+      field :quote, -> { ::Elevenlabs::Types::QuoteInfo }, optional: true, nullable: true
+
+      def validate!
+        ::Elevenlabs::Validator.validate_string!(item_id, 'item_id', pattern: /^proditem_[a-z0-9]{26}$/)
+      end
+
+      def self.load(str)
+        coerce(::JSON.parse(str, symbolize_names: true))
+      end
+
+      def self.dump(value)
+        coerced = coerce(value)
+        ::JSON.generate(coerced.nil? || !coerced.respond_to?(:to_h) ? coerced : coerced.to_h)
+      end
+    end
+  end
+end

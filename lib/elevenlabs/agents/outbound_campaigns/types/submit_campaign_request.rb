@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+module Elevenlabs
+  module Agents
+    module OutboundCampaigns
+      module Types
+        class SubmitCampaignRequest < ::Elevenlabs::Internal::Types::Model
+          field :call_name, -> { String }, optional: false, nullable: false
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :recipients, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::SubmitCampaignRecipient] }, optional: false, nullable: false
+          field :scheduled_time_unix, -> { Integer }, optional: true, nullable: true
+          field :timezone, -> { String }, optional: true, nullable: true
+          field :branch_id, -> { String }, optional: true, nullable: true
+          field :environment, -> { String }, optional: true, nullable: true
+          field :target_concurrency_limit, -> { Integer }, optional: true, nullable: true
+          field :idempotency_key, -> { String }, optional: true, nullable: true
+          field :policy, -> { ::Elevenlabs::Types::PolicyConfigInput }, optional: true, nullable: false
+          field :variant, -> { ::Elevenlabs::Types::CampaignVariant }, optional: true, nullable: false
+          field :channel_config, -> { ::Elevenlabs::Agents::OutboundCampaigns::Types::SubmitCampaignRequestChannelConfig }, optional: false, nullable: false
+
+          def validate!
+            ::Elevenlabs::Validator.validate_string!(call_name, 'call_name', min_length: 1, max_length: 256)
+            ::Elevenlabs::Validator.validate_string!(agent_id, 'agent_id', min_length: 1, max_length: 256)
+            ::Elevenlabs::Validator.validate_array!(recipients, 'recipients', min_items: 1, max_items: 10_000)
+            ::Elevenlabs::Validator.validate_integer!(scheduled_time_unix, 'scheduled_time_unix', min: 0)
+            ::Elevenlabs::Validator.validate_string!(branch_id, 'branch_id', max_length: 256)
+            ::Elevenlabs::Validator.validate_string!(environment, 'environment', max_length: 256)
+            ::Elevenlabs::Validator.validate_integer!(target_concurrency_limit, 'target_concurrency_limit', min: 1)
+            ::Elevenlabs::Validator.validate_string!(idempotency_key, 'idempotency_key', min_length: 1, max_length: 256)
+          end
+
+          def self.load(str)
+            coerce(::JSON.parse(str, symbolize_names: true))
+          end
+
+          def self.dump(value)
+            coerced = coerce(value)
+            ::JSON.generate(coerced.nil? || !coerced.respond_to?(:to_h) ? coerced : coerced.to_h)
+          end
+        end
+      end
+    end
+  end
+end

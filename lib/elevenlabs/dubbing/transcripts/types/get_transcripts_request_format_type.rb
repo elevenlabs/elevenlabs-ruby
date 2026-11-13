@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+module Elevenlabs
+  module Dubbing
+    module Transcripts
+      module Types
+        module GetTranscriptsRequestFormatType
+          extend ::Elevenlabs::Internal::Types::Enum
+
+          SRT = :srt
+          WEBVTT = :webvtt
+          JSON = :json
+
+          def self.load(str)
+            coerce(::JSON.parse(str, symbolize_names: true))
+          end
+
+          def self.dump(value)
+            coerced = coerce(value)
+            ::JSON.generate(coerced.nil? || !coerced.respond_to?(:to_h) ? coerced : coerced.to_h)
+          end
+        end
+      end
+    end
+  end
+end
