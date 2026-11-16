@@ -1,2 +1,8 @@
 # Specify files that shouldn't be modified by Fern
 README.md
+
+# Hand-written agent workflows-as-code builder (a layer on top of the generated client) and its
+# shared cross-SDK conformance fixtures.
+lib/elevenlabs/agent_workflows.rb
+lib/elevenlabs/agent_workflows/
+test/elevenlabs/agent_workflows/
