@@ -5,3 +5,15 @@ README.md
 # the compound `t=...,v0=...` header).
 lib/elevenlabs/webhooks/verifier.rb
 test/elevenlabs/webhooks/verifier_test.rb
+
+# Hand-written Speech Engine server model (the generator only produces the
+# upstream WS client; the inbound server side is hand-written).
+lib/elevenlabs/speech_engine/jwt_verifier.rb
+lib/elevenlabs/speech_engine/conversation_message.rb
+lib/elevenlabs/speech_engine/session.rb
+lib/elevenlabs/speech_engine/server.rb
+lib/elevenlabs/speech_engine/resource.rb
+test/elevenlabs/speech_engine/jwt_verifier_test.rb
+test/elevenlabs/speech_engine/session_test.rb
+test/elevenlabs/speech_engine/server_test.rb
+test/elevenlabs/speech_engine/resource_test.rb
