@@ -26,7 +26,7 @@ module Elevenlabs
     #     failure: ->(failed) { failed.transfer('human', Destination.phone('+15551234567')) },
     #   )
     #
-    #   client.conversational_ai.agents.update(agent_id, workflow: wf.build)
+    #   client.agents.update(agent_id: agent_id, workflow: wf.build)
     class Workflow < WorkflowChain
       # +prevent_subagent_loops+ stops the conversation from re-entering a subagent it already visited.
       def initialize(prevent_subagent_loops: nil)

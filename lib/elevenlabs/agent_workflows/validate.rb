@@ -51,6 +51,21 @@ module Elevenlabs
           end
           error.call('tool_edge_needs_result', "Edge #{name} leaves a tool node, so it must use on_success() or on_failure()", edge.source) if source_type == 'tool' && condition_type != 'result'
           error.call('result_edge_needs_tool', "Edge #{name} uses on_success()/on_failure(), which only applies to tool nodes", edge.source) if !source_type.nil? && source_type != 'tool' && condition_type == 'result'
+
+          # A backward condition is a second transition the other way, target → source, that the API
+          # stores on this same edge. It must obey the same routing rules as any edge leaving the target.
+          next if edge.backward_condition.nil?
+
+          back_name = "\"#{edge.target}\" → \"#{edge.source}\""
+          back_source_type = (graph.nodes[edge.target] || {})['type']
+          back_condition_type = (edge.backward_condition || {})['type']
+          error.call('edge_into_start', "Edge #{back_name} points into the start node; go to the first node after it instead", edge.target) if edge.source == graph.start_id
+          if back_source_type == 'end' && !ends_with_edges.key?(edge.target)
+            ends_with_edges[edge.target] = true
+            error.call('end_has_outgoing_edges', "End node \"#{edge.target}\" can't have outgoing edges", edge.target)
+          end
+          error.call('tool_edge_needs_result', "Edge #{back_name} leaves a tool node, so it must use on_success() or on_failure()", edge.target) if back_source_type == 'tool' && back_condition_type != 'result'
+          error.call('result_edge_needs_tool', "Edge #{back_name} uses on_success()/on_failure(), which only applies to tool nodes", edge.target) if !back_source_type.nil? && back_source_type != 'tool' && back_condition_type == 'result'
         end
 
         graph.nodes.each do |id, model|
