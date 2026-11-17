@@ -37,6 +37,10 @@ module Elevenlabs
       # closed immediately rather than each getting an unbounded worker thread.
       MAX_CONNECTIONS = 1024
 
+      # After a close handshake is initiated, the TCP socket is force-closed this many seconds later
+      # if the peer never acknowledges, so the reader loop and worker cannot stay allocated forever.
+      CLOSE_HANDSHAKE_TIMEOUT = 10
+
       # @return [Integer, nil] The port the server actually bound to, set once
       #   {#serve} starts listening. Useful when +port: 0+ lets the OS assign one.
       attr_reader :bound_port
@@ -52,8 +56,11 @@ module Elevenlabs
       #   WebSocket handshake before it is dropped. Defaults to {HANDSHAKE_TIMEOUT}.
       # @param max_connections [Integer] Maximum concurrent accepted connections.
       #   Defaults to {MAX_CONNECTIONS}.
+      # @param close_handshake_timeout [Numeric] Seconds to wait for a close-handshake
+      #   acknowledgement before force-closing the socket. Defaults to {CLOSE_HANDSHAKE_TIMEOUT}.
       def initialize(port: 3001, path: nil, api_key: nil, debug: false, disable_auth: false, handlers: {},
-                     handshake_timeout: HANDSHAKE_TIMEOUT, max_connections: MAX_CONNECTIONS)
+                     handshake_timeout: HANDSHAKE_TIMEOUT, max_connections: MAX_CONNECTIONS,
+                     close_handshake_timeout: CLOSE_HANDSHAKE_TIMEOUT)
         @port = port
         @path = path
         @api_key = api_key
@@ -62,6 +69,7 @@ module Elevenlabs
         @handlers = handlers
         @handshake_timeout = handshake_timeout
         @max_connections = max_connections
+        @close_handshake_timeout = close_handshake_timeout
         @running = false
         @tcp_server = nil
         @mutex = Mutex.new
@@ -164,12 +172,13 @@ module Elevenlabs
         driver = ::WebSocket::Driver.server(io)
         session = nil
         opened = false
-        # websocket-driver is not safe for concurrent writes, so every outbound
-        # driver call (handshake, pong, agent_response, close) is serialized here.
-        # Protocol-level WebSocket control frames auto-answered inside driver.parse
-        # are not covered, but the Speech Engine protocol signals ping/close as
-        # JSON text frames, not WebSocket control frames.
+        closing_at = nil
+        # websocket-driver is not safe for concurrent access, so driver.parse and every outbound
+        # driver call (handshake, pong, agent_response, close) run under this one lock. parse itself
+        # can write control-frame (ping/close) replies, so it must hold the lock too; its callbacks
+        # only queue events, which are dispatched after the lock is released to avoid re-entering it.
         driver_mutex = Mutex.new
+        pending = []
         # One worker thread per connection runs transcript handlers serially, so a
         # slow send_response stream never blocks the reader from answering ping or
         # close frames (see Session's transcript_executor).
@@ -186,36 +195,57 @@ module Elevenlabs
           end
         end
 
-        driver.on(:connect) do
-          if accept_handshake?(driver, api_key)
-            driver_mutex.synchronize { driver.start }
-          else
+        driver.on(:connect) { pending << [:connect] }
+        driver.on(:open) { pending << [:open] }
+        driver.on(:message) { |event| pending << [:message, event.data] }
+        driver.on(:close) { pending << [:close] }
+
+        dispatch = ->(type, data = nil) do
+          case type
+          when :connect
+            if accept_handshake?(driver, api_key)
+              driver_mutex.synchronize { driver.start }
+            else
+              close_io(io)
+            end
+          when :open
+            opened = true
+            session = create_session(
+              driver,
+              send: ->(text) { driver_mutex.synchronize { driver.text(text) } },
+              close: -> do
+                driver_mutex.synchronize { driver.close }
+                # Bound the close handshake: if the peer never acknowledges, the reader loop would
+                # otherwise run until the socket drops. Arm a deadline the loop enforces.
+                closing_at ||= Time.now + @close_handshake_timeout
+              end,
+              transcript_executor: ->(job) { jobs << job },
+            )
+          when :message
+            session&.handle_raw_message(data)
+          when :close
+            session&.handle_disconnect
             close_io(io)
           end
         end
-        driver.on(:open) do
-          opened = true
-          session = create_session(
-            driver,
-            send: ->(text) { driver_mutex.synchronize { driver.text(text) } },
-            close: -> { driver_mutex.synchronize { driver.close } },
-            transcript_executor: ->(job) { jobs << job },
-          )
-        end
-        driver.on(:message) { |event| session&.handle_raw_message(event.data) }
-        driver.on(:close) do
-          session&.handle_disconnect
-          close_io(io)
-        end
 
-        read_loop(io, driver, -> { opened })
+        read_loop(io, -> { opened }, -> { closing_at }) do |data|
+          events = driver_mutex.synchronize do
+            driver.parse(data)
+            pending.slice!(0..)
+          end
+          events.each { |type, payload| dispatch.call(type, payload) }
+        end
       rescue StandardError => e
         log("connection error — #{e.message}")
       ensure
+        # Mark the session disconnected before stopping the worker: when the loop ends on EOF/reset
+        # or stop (no WebSocket :close event), this flips the closed flag first so queued transcript
+        # turns are skipped and no further response frames are sent for a gone conversation.
+        session&.handle_disconnect
         jobs << :stop
         worker.join(1)
         worker.kill if worker.alive?
-        session&.handle_disconnect
         close_io(io)
         @mutex.synchronize { @connections.delete(io) }
       end
@@ -246,13 +276,23 @@ module Elevenlabs
       # Read frames until the connection drops, the server stops, or (before the
       # handshake completes) the handshake deadline passes. IO.select bounds the
       # blocking read so both the deadline and {#stop} are honoured promptly.
-      def read_loop(io, driver, opened)
+      def read_loop(io, opened, closing_deadline)
         handshake_deadline = Time.now + @handshake_timeout
         loop do
           break unless @running
 
           if opened.call
-            timeout = 1.0
+            deadline = closing_deadline.call
+            if deadline
+              remaining = deadline - Time.now
+              if remaining <= 0
+                log('close handshake not acknowledged in time — closing connection')
+                break
+              end
+              timeout = [remaining, 1.0].min
+            else
+              timeout = 1.0
+            end
           else
             timeout = handshake_deadline - Time.now
             if timeout <= 0
@@ -264,7 +304,7 @@ module Elevenlabs
           next if io.wait_readable(timeout).nil?
 
           data = io.readpartial(READ_CHUNK)
-          driver.parse(data)
+          yield data
         rescue IOError, Errno::ECONNRESET, Errno::EBADF
           break
         end

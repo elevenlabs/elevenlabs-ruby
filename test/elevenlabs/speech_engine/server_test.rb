@@ -157,6 +157,33 @@ module Elevenlabs
         server_thread&.join(2)
       end
 
+      def test_close_handshake_timeout_releases_the_connection
+        server = Server.new(
+          port: 0,
+          api_key: API_KEY,
+          close_handshake_timeout: 0.3,
+          handlers: { on_transcript: ->(_transcript, session) { session.close } },
+        )
+        server_thread = Thread.new { server.serve }
+        wait_until { server.bound_port }
+        io, _messages, client, reader = open_client(server)
+
+        # The handler closes the session (the server sends a WebSocket close frame). Kill the client
+        # reader so it never acknowledges, leaving the close handshake incomplete.
+        reader.kill
+        client.text('{"type":"user_transcript","event_id":1,"user_transcript":[]}')
+
+        # With no acknowledgement the server must force-close and release the connection slot within
+        # the close-handshake timeout rather than looping forever.
+        connections = server.instance_variable_get(:@connections)
+        wait_until(timeout: 5) { connections.empty? }
+      ensure
+        io&.close
+        reader&.kill
+        server&.stop
+        server_thread&.join(2)
+      end
+
       def test_stop_closes_active_connections
         server = Server.new(port: 0, api_key: API_KEY)
         server_thread = Thread.new { server.serve }
