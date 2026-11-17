@@ -25,10 +25,17 @@ module Elevenlabs
       # @param send [#call] Writes a text frame to the connection.
       # @param close [#call, nil] Closes the connection. No-op if omitted.
       # @param debug [Boolean] When true, logs protocol activity to $stderr.
-      def initialize(send:, close: nil, debug: false)
+      # @param transcript_executor [#call, nil] Runs each +user_transcript+ turn.
+      #   Given a job (a callable), it must invoke it. Defaults to running the job
+      #   inline on the calling thread. The bundled {Server} injects an executor
+      #   that runs handlers on a per-connection worker thread, so a slow
+      #   +send_response+ stream does not block the reader from answering +ping+
+      #   and +close+ frames.
+      def initialize(send:, close: nil, debug: false, transcript_executor: nil)
         @send = send
         @close_connection = close || -> {}
         @debug = debug
+        @transcript_executor = transcript_executor
         @handlers = Hash.new { |h, k| h[k] = [] }
         @conversation_id = nil
         @current_event_id = nil
@@ -82,7 +89,7 @@ module Elevenlabs
           return
         end
 
-        event_id = @current_event_id
+        event_id = current_event_id_for_turn
         if response.is_a?(String)
           send_agent_response(response, false, event_id)
           send_agent_response('', true, event_id)
@@ -186,7 +193,8 @@ module Elevenlabs
           log("session initialized, conversation_id=#{@conversation_id}")
           emit('init', @conversation_id)
         when 'user_transcript'
-          @current_event_id = msg['event_id'].is_a?(Integer) ? msg['event_id'] : nil
+          event_id = msg['event_id'].is_a?(Integer) ? msg['event_id'] : nil
+          @current_event_id = event_id
           raw = msg['user_transcript']
           transcript = []
           if raw.is_a?(::Array)
@@ -196,22 +204,45 @@ module Elevenlabs
               transcript << ConversationMessage.new(m['role'], m['content'])
             end
           end
-          @in_transcript_handler = true
-          begin
-            emit('user_transcript', transcript)
-          ensure
-            @in_transcript_handler = false
-          end
+          run_transcript(event_id, transcript)
         when 'ping'
           send_json({ 'type' => 'pong' })
         when 'close'
-          @closed = true
+          # Emit first (the session is still open, so an on_close handler can
+          # call close itself) then close, so the transport-close callback runs
+          # instead of only flipping the flag. close is idempotent.
           emit('close')
+          close
         when 'error'
           message = msg['message'].is_a?(String) ? msg['message'] : ''
           emit('error', RuntimeError.new(message))
           # Unknown types are ignored for forward compatibility.
         end
+      end
+
+      # Run one user_transcript turn's handlers. The turn's event_id is pinned on
+      # the executing thread for the duration, so send_response tags its frames
+      # with this turn even after a later transcript has advanced
+      # @current_event_id on the reader thread.
+      def run_transcript(event_id, transcript)
+        job = -> {
+          previous = Thread.current[:elevenlabs_se_event_id]
+          Thread.current[:elevenlabs_se_event_id] = event_id
+          @in_transcript_handler = true
+          begin
+            emit('user_transcript', transcript)
+          ensure
+            @in_transcript_handler = false
+            Thread.current[:elevenlabs_se_event_id] = previous
+          end
+        }
+        @transcript_executor ? @transcript_executor.call(job) : job.call
+      end
+
+      # The event_id of the turn running on the current thread, falling back to the
+      # most recent transcript when called outside a pinned turn.
+      def current_event_id_for_turn
+        Thread.current[:elevenlabs_se_event_id] || @current_event_id
       end
 
       def send_agent_response(content, is_final, event_id)

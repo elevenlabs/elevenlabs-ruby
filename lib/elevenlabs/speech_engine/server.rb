@@ -27,6 +27,16 @@ module Elevenlabs
     class Server
       READ_CHUNK = 4096
 
+      # A connection that has been accepted but has not finished the WebSocket
+      # handshake is dropped after this many seconds, so an unauthenticated client
+      # that opens a socket and sends nothing cannot pin a thread and file
+      # descriptor indefinitely.
+      HANDSHAKE_TIMEOUT = 10
+
+      # Upper bound on concurrent accepted connections. Beyond it, new sockets are
+      # closed immediately rather than each getting an unbounded worker thread.
+      MAX_CONNECTIONS = 1024
+
       # @return [Integer, nil] The port the server actually bound to, set once
       #   {#serve} starts listening. Useful when +port: 0+ lets the OS assign one.
       attr_reader :bound_port
@@ -38,15 +48,26 @@ module Elevenlabs
       # @param disable_auth [Boolean] Skip JWT verification. Only behind an IP allowlist.
       # @param handlers [Hash] Event handlers wired onto each session, keyed by
       #   +:on_init+, +:on_transcript+, +:on_close+, +:on_disconnect+, +:on_error+.
-      def initialize(port: 3001, path: nil, api_key: nil, debug: false, disable_auth: false, handlers: {})
+      # @param handshake_timeout [Numeric] Seconds a connection has to complete the
+      #   WebSocket handshake before it is dropped. Defaults to {HANDSHAKE_TIMEOUT}.
+      # @param max_connections [Integer] Maximum concurrent accepted connections.
+      #   Defaults to {MAX_CONNECTIONS}.
+      def initialize(port: 3001, path: nil, api_key: nil, debug: false, disable_auth: false, handlers: {},
+                     handshake_timeout: HANDSHAKE_TIMEOUT, max_connections: MAX_CONNECTIONS)
         @port = port
         @path = path
         @api_key = api_key
         @debug = debug
         @disable_auth = disable_auth
         @handlers = handlers
+        @handshake_timeout = handshake_timeout
+        @max_connections = max_connections
         @running = false
         @tcp_server = nil
+        @mutex = Mutex.new
+        # Open connection sockets (accepted, not yet finished). Guarded by @mutex
+        # so {#stop} can drain them and new connections are refused once stopping.
+        @connections = {}
       end
 
       # Start the server. Blocks until {#stop} is called.
@@ -68,7 +89,7 @@ module Elevenlabs
 
         @tcp_server = TCPServer.new(@port)
         @bound_port = @tcp_server.addr[1]
-        @running = true
+        @mutex.synchronize { @running = true }
         log("speech engine server listening on port #{@bound_port}")
 
         loop do
@@ -77,37 +98,49 @@ module Elevenlabs
           rescue IOError, Errno::EBADF
             break
           end
-          break unless @running
+
+          admitted = @mutex.synchronize do
+            if @running && @connections.size < @max_connections
+              @connections[io] = true
+              true
+            else
+              false
+            end
+          end
+          unless admitted
+            log('refused connection — server stopping or at capacity') unless @running
+            close_io(io)
+            next
+          end
 
           Thread.new(io) { |conn| handle_connection(conn, api_key) }
         end
       ensure
-        @running = false
-        begin
-          @tcp_server&.close
-        rescue IOError
-          # already closed
-        end
-        @tcp_server = nil
+        @mutex.synchronize { @running = false }
+        close_listener
+        drain_connections
         @bound_port = nil
       end
 
-      # Signal the server to stop accepting connections and shut down.
+      # Signal the server to stop accepting connections and shut down. Closes the
+      # listening socket and every open connection, which unblocks their reader
+      # threads so they finish and fire +disconnected+.
       def stop
-        @running = false
-        begin
-          @tcp_server&.close
-        rescue IOError
-          # already closed
-        end
+        @mutex.synchronize { @running = false }
+        close_listener
+        drain_connections
       end
 
       # Wrap a websocket-driver connection in a session with this server's handlers
-      # wired up.
-      def create_session(driver)
+      # wired up. +send+, +close+ and +transcript_executor+ override the defaults so
+      # the bundled server can serialize writes and run handlers off the reader
+      # thread; left unset, the session talks to the driver directly and runs
+      # handlers inline.
+      def create_session(driver, send: nil, close: nil, transcript_executor: nil)
         session = Session.new(
-          send: ->(text) { driver.text(text) },
-          close: -> { driver.close },
+          send: send || ->(text) { driver.text(text) },
+          close: close || -> { driver.close },
+          transcript_executor: transcript_executor,
           debug: @debug,
         )
         wire_handlers(session)
@@ -126,27 +159,61 @@ module Elevenlabs
       def handle_connection(io, api_key)
         driver = ::WebSocket::Driver.server(io)
         session = nil
+        opened = false
+        # websocket-driver is not safe for concurrent writes, so every outbound
+        # driver call (handshake, pong, agent_response, close) is serialized here.
+        # Protocol-level WebSocket control frames auto-answered inside driver.parse
+        # are not covered, but the Speech Engine protocol signals ping/close as
+        # JSON text frames, not WebSocket control frames.
+        driver_mutex = Mutex.new
+        # One worker thread per connection runs transcript handlers serially, so a
+        # slow send_response stream never blocks the reader from answering ping or
+        # close frames (see Session's transcript_executor).
+        jobs = Thread::Queue.new
+        worker = Thread.new do
+          while (job = jobs.pop)
+            break if job == :stop
+
+            begin
+              job.call
+            rescue StandardError => e
+              log("transcript worker error — #{e.message}")
+            end
+          end
+        end
 
         driver.on(:connect) do
           if accept_handshake?(driver, api_key)
-            driver.start
+            driver_mutex.synchronize { driver.start }
           else
             close_io(io)
           end
         end
-        driver.on(:open) { session = create_session(driver) }
+        driver.on(:open) do
+          opened = true
+          session = create_session(
+            driver,
+            send: ->(text) { driver_mutex.synchronize { driver.text(text) } },
+            close: -> { driver_mutex.synchronize { driver.close } },
+            transcript_executor: ->(job) { jobs << job },
+          )
+        end
         driver.on(:message) { |event| session&.handle_raw_message(event.data) }
         driver.on(:close) do
           session&.handle_disconnect
           close_io(io)
         end
 
-        read_loop(io, driver)
+        read_loop(io, driver, -> { opened })
       rescue StandardError => e
         log("connection error — #{e.message}")
       ensure
+        jobs << :stop
+        worker.join(1)
+        worker.kill if worker.alive?
         session&.handle_disconnect
         close_io(io)
+        @mutex.synchronize { @connections.delete(io) }
       end
 
       def accept_handshake?(driver, api_key)
@@ -172,11 +239,29 @@ module Elevenlabs
         true
       end
 
-      def read_loop(io, driver)
+      # Read frames until the connection drops, the server stops, or (before the
+      # handshake completes) the handshake deadline passes. IO.select bounds the
+      # blocking read so both the deadline and {#stop} are honoured promptly.
+      def read_loop(io, driver, opened)
+        handshake_deadline = Time.now + @handshake_timeout
         loop do
+          break unless @running
+
+          if opened.call
+            timeout = 1.0
+          else
+            timeout = handshake_deadline - Time.now
+            if timeout <= 0
+              log('dropped connection — handshake not completed in time')
+              break
+            end
+          end
+
+          next if io.wait_readable(timeout).nil?
+
           data = io.readpartial(READ_CHUNK)
           driver.parse(data)
-        rescue IOError, Errno::ECONNRESET
+        rescue IOError, Errno::ECONNRESET, Errno::EBADF
           break
         end
       end
@@ -192,6 +277,23 @@ module Elevenlabs
           handler = @handlers[key]
           session.on(event, handler) if handler
         end
+      end
+
+      def close_listener
+        @tcp_server&.close
+      rescue IOError
+        # already closed
+      ensure
+        @tcp_server = nil
+      end
+
+      def drain_connections
+        conns = @mutex.synchronize do
+          keys = @connections.keys
+          @connections.clear
+          keys
+        end
+        conns.each { |io| close_io(io) }
       end
 
       def close_io(io)
