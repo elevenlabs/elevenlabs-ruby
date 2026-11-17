@@ -230,11 +230,17 @@ module Elevenlabs
         end
 
         read_loop(io, -> { opened }, -> { closing_at }) do |data|
-          events = driver_mutex.synchronize do
-            driver.parse(data)
-            pending.slice!(0..)
+          driver_mutex.synchronize { driver.parse(data) }
+          # Dispatch outside the lock, re-draining after each batch: dispatching :connect calls
+          # driver.start, which synchronously queues :open. Without the re-drain that :open would
+          # wait for the next socket read, so an idle but upgraded client would be dropped when the
+          # handshake deadline expired.
+          loop do
+            events = driver_mutex.synchronize { pending.slice!(0..) }
+            break if events.empty?
+
+            events.each { |type, payload| dispatch.call(type, payload) }
           end
-          events.each { |type, payload| dispatch.call(type, payload) }
         end
       rescue StandardError => e
         log("connection error — #{e.message}")

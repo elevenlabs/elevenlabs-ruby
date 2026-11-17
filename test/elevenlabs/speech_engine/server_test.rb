@@ -157,6 +157,26 @@ module Elevenlabs
         server_thread&.join(2)
       end
 
+      def test_idle_client_is_not_dropped_after_completing_the_handshake
+        server = Server.new(port: 0, api_key: API_KEY, handshake_timeout: 0.3)
+        server_thread = Thread.new { server.serve }
+        wait_until { server.bound_port }
+        io, messages, client, reader = open_client(server)
+
+        # Stay idle past the handshake deadline. Because :open is dispatched as soon as the handshake
+        # completes (not on the next read), a handshaken client must survive, and the connection stays
+        # usable — a ping still gets a pong.
+        sleep 0.6
+        client.text('{"type":"ping"}')
+
+        assert_equal({ 'type' => 'pong' }, next_message(messages))
+      ensure
+        io&.close
+        reader&.kill
+        server&.stop
+        server_thread&.join(2)
+      end
+
       def test_close_handshake_timeout_releases_the_connection
         server = Server.new(
           port: 0,
