@@ -1,6 +1,11 @@
 # Specify files that shouldn't be modified by Fern
 README.md
 
+# Hand-written webhook signature verifier (Fern's generated verifier can't parse
+# the compound `t=...,v0=...` header).
+lib/elevenlabs/webhooks/verifier.rb
+test/elevenlabs/webhooks/verifier_test.rb
+
 # Hand-written Speech Engine server model (the generator only produces the
 # upstream WS client; the inbound server side is hand-written).
 lib/elevenlabs/speech_engine/jwt_verifier.rb
