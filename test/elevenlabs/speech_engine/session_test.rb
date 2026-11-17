@@ -2,6 +2,7 @@
 
 require 'minitest/autorun'
 require 'json'
+require 'timeout'
 require 'elevenlabs/speech_engine/session'
 
 module Elevenlabs
@@ -170,6 +171,69 @@ module Elevenlabs
 
         assert_equal 1, count
         refute_predicate s, :open?
+      end
+
+      def test_queued_transcript_is_skipped_when_session_already_closed
+        jobs = []
+        session = Session.new(
+          send: ->(_text) {},
+          close: -> {},
+          transcript_executor: ->(job) { jobs << job }, # defer instead of running
+        )
+        invoked = false
+        session.on('user_transcript') { |_t, _s| invoked = true }
+
+        session.handle_raw_message('{"type":"user_transcript","event_id":1,"user_transcript":[]}')
+        session.close
+        jobs.each(&:call) # the queued job runs after the session closed
+
+        refute invoked, 'a queued transcript must be skipped once the session is closed'
+      end
+
+      def test_concurrent_turns_keep_their_own_marker_and_event_id
+        sent = Thread::Queue.new
+        first_ready = Thread::Queue.new
+        second_done = Thread::Queue.new
+        release = Thread::Queue.new
+        session = Session.new(
+          send: ->(text) { sent << text },
+          close: -> {},
+          transcript_executor: ->(job) { Thread.new { job.call } }, # each turn on its own thread
+        )
+        session.on('user_transcript') do |transcript, s|
+          if transcript.first&.content == 'first'
+            first_ready << true
+            release.pop
+            s.send_response('reply-one') # must carry event_id 1 and not be suppressed
+          else
+            second_done << true
+          end
+        end
+
+        session.handle_raw_message(
+          '{"type":"user_transcript","event_id":1,"user_transcript":[{"role":"user","content":"first"}]}',
+        )
+        Timeout.timeout(5) { first_ready.pop }
+        session.handle_raw_message(
+          '{"type":"user_transcript","event_id":2,"user_transcript":[{"role":"user","content":"second"}]}',
+        )
+        # The second turn completes first — in the buggy shared-flag version this cleared the marker
+        # and would suppress the first turn's response.
+        Timeout.timeout(5) { second_done.pop }
+        release << true
+
+        frame = nil
+        Timeout.timeout(5) do
+          loop do
+            parsed = ::JSON.parse(sent.pop)
+            if parsed['content'] == 'reply-one'
+              frame = parsed
+              break
+            end
+          end
+        end
+
+        assert_equal 1, frame['event_id']
       end
     end
   end

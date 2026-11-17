@@ -142,6 +142,21 @@ module Elevenlabs
       end
       # rubocop:enable Minitest/MultipleAssertions
 
+      def test_serve_returns_without_error_when_stopped
+        server = Server.new(port: 0, api_key: API_KEY)
+        server_thread = Thread.new { server.serve }
+        wait_until { server.bound_port }
+
+        server.stop
+
+        # Thread#join re-raises any unhandled exception from serve (e.g. the NoMethodError from
+        # reading a nil'd @tcp_server), so this fails if stop crashes the accept loop.
+        assert server_thread.join(5), 'serve should return cleanly after stop'
+      ensure
+        server&.stop
+        server_thread&.join(2)
+      end
+
       def test_stop_closes_active_connections
         server = Server.new(port: 0, api_key: API_KEY)
         server_thread = Thread.new { server.serve }

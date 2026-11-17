@@ -38,8 +38,6 @@ module Elevenlabs
         @transcript_executor = transcript_executor
         @handlers = Hash.new { |h, k| h[k] = [] }
         @conversation_id = nil
-        @current_event_id = nil
-        @in_transcript_handler = false
         @closed = false
       end
 
@@ -80,7 +78,8 @@ module Elevenlabs
       def send_response(response)
         raise 'Cannot send response: session is closed' if @closed
 
-        unless @in_transcript_handler
+        context = Thread.current[context_key]
+        unless context
           warn(
             "[SpeechEngine] send_response called outside an on('user_transcript') handler; " \
             'responses can only be sent in reply to a user transcript. To have the agent speak ' \
@@ -89,7 +88,7 @@ module Elevenlabs
           return
         end
 
-        event_id = current_event_id_for_turn
+        event_id = context[:event_id]
         if response.is_a?(String)
           send_agent_response(response, false, event_id)
           send_agent_response('', true, event_id)
@@ -194,7 +193,6 @@ module Elevenlabs
           emit('init', @conversation_id)
         when 'user_transcript'
           event_id = msg['event_id'].is_a?(Integer) ? msg['event_id'] : nil
-          @current_event_id = event_id
           raw = msg['user_transcript']
           transcript = []
           if raw.is_a?(::Array)
@@ -220,29 +218,33 @@ module Elevenlabs
         end
       end
 
-      # Run one user_transcript turn's handlers. The turn's event_id is pinned on
-      # the executing thread for the duration, so send_response tags its frames
-      # with this turn even after a later transcript has advanced
-      # @current_event_id on the reader thread.
+      # Run one user_transcript turn's handlers. The turn's context — the
+      # active-handler marker and its event_id together — is scoped to the executing
+      # thread/fiber (and to this session, via a per-session key), so concurrent or
+      # overlapping turns never see each other's marker or send with the wrong
+      # event_id. The context is restored on exit.
       def run_transcript(event_id, transcript)
-        job = -> {
-          previous = Thread.current[:elevenlabs_se_event_id]
-          Thread.current[:elevenlabs_se_event_id] = event_id
-          @in_transcript_handler = true
+        key = context_key
+        job = -> do
+          # Skip a turn queued behind a slow response if the session closed before it
+          # started: otherwise it would invoke handlers after on_close, start an
+          # unnecessary LLM request, and then raise in send_response.
+          next if @closed
+
+          previous = Thread.current[key]
+          Thread.current[key] = { event_id: event_id }
           begin
             emit('user_transcript', transcript)
           ensure
-            @in_transcript_handler = false
-            Thread.current[:elevenlabs_se_event_id] = previous
+            Thread.current[key] = previous
           end
-        }
+        end
         @transcript_executor ? @transcript_executor.call(job) : job.call
       end
 
-      # The event_id of the turn running on the current thread, falling back to the
-      # most recent transcript when called outside a pinned turn.
-      def current_event_id_for_turn
-        Thread.current[:elevenlabs_se_event_id] || @current_event_id
+      # Per-session, per-thread/fiber key under which a running turn's context lives.
+      def context_key
+        @context_key ||= :"elevenlabs_se_ctx_#{object_id}"
       end
 
       def send_agent_response(content, is_final, event_id)

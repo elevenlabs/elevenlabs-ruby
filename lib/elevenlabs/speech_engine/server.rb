@@ -87,14 +87,18 @@ module Elevenlabs
           )
         end
 
-        @tcp_server = TCPServer.new(@port)
-        @bound_port = @tcp_server.addr[1]
+        listener = TCPServer.new(@port)
+        @tcp_server = listener
+        @bound_port = listener.addr[1]
         @mutex.synchronize { @running = true }
         log("speech engine server listening on port #{@bound_port}")
 
+        # Use a local reference: stop() closes the listener and nils @tcp_server, and reading the
+        # nil'd ivar here would raise NoMethodError (which the rescue below does not cover). The
+        # local still points at the now-closed socket, so accept follows the normal IO-error path.
         loop do
           begin
-            io = @tcp_server.accept
+            io = listener.accept
           rescue IOError, Errno::EBADF
             break
           end
