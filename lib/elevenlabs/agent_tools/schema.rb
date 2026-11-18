@@ -40,9 +40,6 @@ module Elevenlabs
         any_of: [].freeze,
         all_of: [].freeze,
         extra: {}.freeze,
-        # Whether an object or array writes its +type+. A loaded one without a +type+ is written back
-        # without one.
-        typed: true,
       }.freeze
 
       # @api private — use the static constructors.
@@ -88,7 +85,8 @@ module Elevenlabs
 
         # @api private — loads a wire-format schema where the API expects an object (a body, a response, the
         # query params or a client tool's params). It's an object when it has no +type+, since an empty
-        # schema has none; a declared +type+ is kept, so validation can report a schema that isn't an object.
+        # schema has none, and is then written with "type": "object". A declared +type+ is kept, so
+        # validation can report a schema that isn't an object.
         def from_wire_object(model)
           from_wire(model, kind: model.key?('type') ? kind_of(model) : 'object')
         end
@@ -114,7 +112,6 @@ module Elevenlabs
             omitted: model['is_omitted'] == true,
             optional: optional,
             extra: ToolWire.deep_copy(extra),
-            typed: model.key?('type'),
           )
           case kind
           when 'object' then load_object(model, base, set)
@@ -321,7 +318,7 @@ module Elevenlabs
 
       def add_kind_fields(wire)
         s = @state
-        wire['type'] = 'object' if s[:typed]
+        wire['type'] = 'object'
         wire['properties'] = s[:properties].to_h { |(name, child)| [name, child.to_wire] } unless s[:properties].empty?
         required = required_names
         wire['required'] = required unless required.empty?
@@ -352,7 +349,7 @@ module Elevenlabs
       protected
 
       def add_kind_fields(wire)
-        wire['type'] = 'array' if @state[:typed]
+        wire['type'] = 'array'
         wire['items'] = @state[:items].to_wire unless @state[:items].nil?
       end
     end

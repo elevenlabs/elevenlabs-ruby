@@ -43,12 +43,12 @@ module Elevenlabs
         refute tool.to_json.key?('parameters')
       end
 
-      def test_a_loaded_empty_parameters_schema_round_trips
-        assert_equal({}, client({}).to_json['parameters'])
+      def test_a_loaded_empty_parameters_schema_is_written_as_an_object
+        assert_equal({ 'type' => 'object' }, client({}).to_json['parameters'])
       end
 
       def test_removing_a_missing_client_param_changes_nothing
-        assert_equal({}, client({}).as_client.remove_param('a').to_json['parameters'])
+        assert_equal({ 'type' => 'object' }, client({}).as_client.remove_param('a').to_json['parameters'])
       end
 
       # Rule 2: an empty URL counts as missing.
@@ -89,8 +89,8 @@ module Elevenlabs
         assert_equal([%w[body_not_object query]], codes_and_paths_of { tool.build })
       end
 
-      def test_a_loaded_empty_body_is_an_empty_object
-        assert_equal({}, webhook('method' => 'POST', 'request_body_schema' => {}).to_json['api_schema']['request_body_schema'])
+      def test_a_loaded_empty_body_is_written_as_an_object
+        assert_equal({ 'type' => 'object' }, webhook('method' => 'POST', 'request_body_schema' => {}).to_json['api_schema']['request_body_schema'])
       end
 
       # Rule 4: a null constant on a nullable literal survives loading and building.
@@ -110,6 +110,32 @@ module Elevenlabs
                       'properties' => { 'x' => { 'type' => 'string', 'description' => 'X', 'constant_value' => nil } })
 
         assert_equal({ 'description' => 'X', 'type' => 'string' }, tool.to_json['parameters']['properties']['x'])
+      end
+
+      def test_a_loaded_typeless_params_schema_is_written_as_an_object_after_edits
+        tool = client('properties' => { 'a' => { 'type' => 'string', 'description' => 'A' } }).as_client
+        tool.param('b', Schema.string.describe('B'))
+
+        assert_equal 'object', tool.to_json['parameters']['type']
+      end
+
+      def test_a_loaded_typeless_response_is_written_as_an_object
+        tool = webhook('response_body_schema' => { 'properties' => { 's' => { 'type' => 'string', 'description' => 'S' } } })
+
+        assert_equal 'object', tool.to_json['api_schema']['response_body_schema']['type']
+      end
+
+      def test_a_loaded_typeless_query_gets_no_type
+        tool = webhook('query_params_schema' => { 'properties' => { 'q' => { 'type' => 'string', 'description' => 'Q' } } })
+        tool.as_webhook.query_param('r', Schema.string.describe('R'))
+
+        refute tool.to_json['api_schema']['query_params_schema'].key?('type')
+      end
+
+      def test_a_loaded_query_type_is_kept
+        query = { 'type' => 'object', 'properties' => { 'q' => { 'type' => 'string', 'description' => 'Q' } } }
+
+        assert_equal 'object', webhook('query_params_schema' => query).to_json['api_schema']['query_params_schema']['type']
       end
 
       # Rule 5: a loaded query_params_schema keeps every loaded field.
