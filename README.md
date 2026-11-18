@@ -168,6 +168,30 @@ run = client.flows.templates.runs.create_and_wait(template_id: "TEMPLATE_ID", in
 This is meant for scripts and quickstarts. In production, pass `webhook` to `create` and handle the
 webhook event instead of holding a process open.
 
+## Composing music with metadata
+
+`POST /v1/music/detailed` returns the song's metadata and its audio file in one `multipart/mixed`
+response. Require `elevenlabs/music/compose_detailed` and `client.music.compose_detailed` splits it for
+you (without it, the method returns the raw multipart body):
+
+```ruby
+require "elevenlabs"
+require "elevenlabs/music/compose_detailed"
+
+song = client.music.compose_detailed(
+  prompt: "Epic orchestral music with dramatic strings and powerful brass",
+  music_length_ms: 60_000,
+)
+
+puts song.json["song_metadata"]["title"]
+File.binwrite(song.filename, song.audio)
+```
+
+- `json` is the metadata part as the API sends it: `composition_plan`, `song_metadata` and
+  `words_timestamps`.
+- `audio` is the audio file's bytes and `filename` the name the API suggests for it.
+- `song_id` is set when the request passes `store_for_inpainting: true`.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the production environment.

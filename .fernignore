@@ -17,6 +17,12 @@ test/elevenlabs/webhooks/verifier_test.rb
 lib/elevenlabs/flows/create_and_wait.rb
 test/elevenlabs/flows/create_and_wait_test.rb
 
+# Hand-written parsed music `compose_detailed`. `POST /v1/music/detailed` returns a `multipart/mixed`
+# body (JSON metadata + audio) that the generator doesn't parse. It prepends a module to the generated
+# music client that runs the generated method unchanged and splits the parts.
+lib/elevenlabs/music/compose_detailed.rb
+test/elevenlabs/music/compose_detailed_test.rb
+
 # Hand-written Speech Engine server model (the generator only produces the
 # upstream WS client; the inbound server side is hand-written).
 lib/elevenlabs/speech_engine/jwt_verifier.rb
