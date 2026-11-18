@@ -107,6 +107,12 @@ module Elevenlabs
           graph.issue('unknown_edge', "There is no edge from \"#{source_id}\" to \"#{target_id}\" to insert into", source_id)
           return nil
         end
+        # Splitting a bidirectional edge can't preserve the original target's reverse route, so reject
+        # it rather than silently drop or misattach that route. Remove the backward condition first.
+        unless graph.edges[index].backward_condition.nil?
+          graph.issue('cannot_insert_bidirectional', "Edge \"#{source_id}\" → \"#{target_id}\" has a backward condition; inserting into a bidirectional edge would drop its reverse route. Remove the backward condition first", source_id)
+          return nil
+        end
         original = graph.edges.delete_at(index)
         before = graph.edges.length
         last = insert.call(
@@ -196,8 +202,10 @@ module Elevenlabs
             edges[id_of[reverse]]['backward_condition'] = edge.forward_condition
             next
           end
-          (outgoing[edge.source] ||= []) << edge
-          # The API lists an edge with a backward condition among its target's outgoing edges as well.
+          # An edge belongs in a node's outgoing order only for a transition that leaves it: the source
+          # when it has a forward condition, the target when it has a backward condition. A loaded edge
+          # may carry only one.
+          (outgoing[edge.source] ||= []) << edge unless edge.forward_condition.nil?
           (outgoing[edge.target] ||= []) << edge unless edge.backward_condition.nil?
           wire = edge.extra.merge('source' => edge.source, 'target' => edge.target)
           wire['forward_condition'] = edge.forward_condition unless edge.forward_condition.nil?

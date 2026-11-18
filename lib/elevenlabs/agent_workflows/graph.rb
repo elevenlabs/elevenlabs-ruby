@@ -108,7 +108,9 @@ module Elevenlabs
           rest['tool_ids'] = tool_ids.to_a unless tool_ids.nil?
         end
 
-        fields = FIELDS[node['type']] || {}
+        # Node kinds without a dedicated field map (e.g. generated say/update_state) still accept
+        # position, which is common to every node kind.
+        fields = FIELDS[node['type']] || { 'position' => 'position' }
         rest.each do |key, value|
           field = fields[key]
           if field.nil?
