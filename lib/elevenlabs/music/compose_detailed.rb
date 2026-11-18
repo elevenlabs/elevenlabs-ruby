@@ -129,14 +129,17 @@ module Elevenlabs
 
                   found + 1
                 end
-          # The body uses one line ending throughout; read it from the first delimiter line.
-          line_break = body.byteslice(pos + delimiter.bytesize, 2) == "\r\n" ? "\r\n" : "\n"
+          # The body uses one line ending throughout; read it from the end of the first delimiter line, past
+          # any transport padding (spaces or tabs, which MIME allows after a delimiter).
+          line_end = skip_padding(body, pos + delimiter.bytesize)
+          line_break = body.byteslice(line_end, 2) == "\r\n" ? "\r\n" : "\n"
 
           parts = []
           loop do
             after = pos + delimiter.bytesize
             break if body.byteslice(after, 2) == '--' # Closing delimiter.
 
+            after = skip_padding(body, after)
             start = body.byteslice(after, line_break.bytesize) == line_break ? after + line_break.bytesize : after
             nxt = body.index(line_break + delimiter, start)
             # Every part ends at a delimiter, and the body at `--boundary--`; the API always sends it. A body
@@ -185,16 +188,21 @@ module Elevenlabs
           delimiter
         end
 
+        # Spaces and tabs after a delimiter are MIME transport padding; returns the offset past them.
+        def skip_padding(body, offset)
+          # The body is binary (ASCII-8BIT), so character offsets are byte offsets.
+          body.index(/[^ \t]/n, offset) || body.bytesize
+        end
+
         def split_part(part, line_break)
-          # Prepend a line break so a part with no headers (the blank line straight after the delimiter)
-          # is found at offset 0 too.
-          with_break = line_break + part
-          separator = with_break.index(line_break * 2)
+          # A part with no headers starts with the blank line that ends them.
+          return { headers: {}, body: part.byteslice(line_break.bytesize, part.bytesize), separated: true } if part.start_with?(line_break)
+
+          separator = part.index(line_break * 2)
           return { headers: headers(part, line_break), body: ''.b, separated: false } if separator.nil?
 
-          header_block = with_break.byteslice(line_break.bytesize, [separator - line_break.bytesize, 0].max)
-          body = with_break.byteslice(separator + (2 * line_break.bytesize), with_break.bytesize)
-          { headers: headers(header_block, line_break), body: body, separated: true }
+          body = part.byteslice(separator + (2 * line_break.bytesize), part.bytesize)
+          { headers: headers(part.byteslice(0, separator), line_break), body: body, separated: true }
         end
 
         def headers(block, line_break)
