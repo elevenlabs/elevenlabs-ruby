@@ -12,6 +12,11 @@ test/elevenlabs/agent_workflows/
 lib/elevenlabs/webhooks/verifier.rb
 test/elevenlabs/webhooks/verifier_test.rb
 
+# Hand-written Flows `create_and_wait` (polls a generation or template run until it finishes). It adds
+# the method to the generated flow clients by including a module, so no generated file is changed.
+lib/elevenlabs/flows/create_and_wait.rb
+test/elevenlabs/flows/create_and_wait_test.rb
+
 # Hand-written Speech Engine server model (the generator only produces the
 # upstream WS client; the inbound server side is hand-written).
 lib/elevenlabs/speech_engine/jwt_verifier.rb
