@@ -131,6 +131,43 @@ end
 Iterating the stream a second time raises rather than re-sending the request. Call `read` to get the
 whole body as one binary `String` instead, or `to_a` on the first pass to keep the chunks.
 
+## Flows: waiting for a generation
+
+Image, video and text-to-speech generations, and template runs, finish asynchronously: `create`
+returns at once and you poll `get` until the `status` is `completed` or `failed`. `create_and_wait`
+does both. It takes the same parameters as `create` and returns the finished generation or run.
+
+```ruby
+require "elevenlabs"
+require "elevenlabs/flows/create_and_wait"
+
+client = Elevenlabs::Client.new
+
+image = client.flows.image.create_and_wait(
+  model_id: "gpt-image-2",
+  prompt: "A lighthouse at dusk",
+  wait_timeout_in_seconds: 300
+)
+puts image.content_url if image.status.to_s == "completed"
+
+run = client.flows.templates.runs.create_and_wait(template_id: "TEMPLATE_ID", inputs: { "prompt" => "A lighthouse" })
+```
+
+`client.flows.video` and `client.flows.text_to_speech` have the same method.
+
+- Between status checks it waits as long as the server's `Retry-After` header asks, never less than
+  `min_poll_interval_in_seconds` (default 3, at least 0.5), plus up to 20% jitter.
+- `wait_timeout_in_seconds` bounds the whole wait. It defaults to `nil`, which waits indefinitely; `0`
+  gives up straight after the create. When it runs out, `Elevenlabs::Flows::FlowsWaitTimeoutError` is
+  raised with the `id` (and `template_id` for a run) and the `last_response`. The work keeps running:
+  call `get` to keep waiting.
+- A `failed` generation or run is returned, not raised. Check `status`.
+- `request_options` apply to every request, except `additional_body_parameters`, which only the create
+  sends.
+
+This is meant for scripts and quickstarts. In production, pass `webhook` to `create` and handle the
+webhook event instead of holding a process open.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the production environment.
