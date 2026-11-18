@@ -192,6 +192,58 @@ File.binwrite(song.filename, song.audio)
 - `audio` is the audio file's bytes and `filename` the name the API suggests for it.
 - `song_id` is set when the request passes `store_for_inpainting: true`.
 
+## Agent tools as code
+
+Require `elevenlabs/agent_tools` to define agent tools as chained Ruby instead of hand-written JSON.
+`build` validates the tool and returns the `Elevenlabs::Types::ToolRequestModel` that
+`client.agents.tools.create` and `update` accept; `to_json_string` writes the API format the
+ElevenLabs CLI keeps in `tool_configs/*.json`.
+
+```ruby
+require "elevenlabs"
+require "elevenlabs/agent_tools"
+include Elevenlabs::AgentTools
+
+get_order = Tool.webhook("get_order", "Look up an order by the number the caller gives")
+  .get("https://api.example.com/orders/{order_id}")
+  .path_param("order_id", Schema.string.describe("The order number, e.g. A-1042"))
+  .query_param("include", Schema.string.constant("items"))
+  .header("Authorization", Header.secret("sec_orders_api"))
+  .assign("order_status", "order.status")
+  .options(response_timeout_secs: 10, pre_tool_speech: "force")
+
+refund = Tool.webhook("issue_refund", "Refund an order the caller asked to return")
+  .post("https://api.example.com/refunds")
+  .body(
+    Schema.object
+      .property("order_id", Schema.string.from_variable("order_id"))
+      .property("reason", Schema.string.describe("Why the caller wants a refund").choices(%w[damaged late other]))
+      .property("note", Schema.string.describe("Anything else the caller said").optional)
+  )
+
+transfer = SystemTool.transfer_to_number
+  .transfer("Caller asks for billing", Destination.phone("+15551234567"))
+  .transfer("Caller asks for a manager", Destination.sip_variable("manager_sip"), transfer_type: "sip_refer")
+
+tool = client.agents.tools.create(**get_order.build.to_h)
+File.write("tool_configs/issue_refund.json", refund.to_json_string)
+```
+
+- `Tool.client(name, description)` builds a client tool, with `param(name, schema)` for its parameters.
+  `SystemTool.end_call`, `skip_turn`, `language_detection`, `play_keypad_touch_tone`,
+  `voicemail_detection`, `knowledge_base`, `transfer_to_number` and `transfer_to_agent` build system
+  tools. `Destination` is the workflow builder's, so both builders take the same destinations.
+- Every literal needs exactly one value source: `describe` (the LLM provides it), `from_variable`,
+  `constant`, `system_provided` or `omit`. Properties are required unless marked `optional`. Schemas are
+  values, so one can be reused across tools.
+- Webhook and client tools are created with `tools.create` and attached to an agent by id in
+  `prompt.tool_ids`. A system tool's `build_config` is its entry in the agent's `prompt.built_in_tools`.
+- `build` raises `Elevenlabs::AgentTools::ToolValidationError` listing every problem at once; each issue
+  has a `code`, a `message` and a `path`. Pass `on_warning:` to see warnings.
+- `Tool.from_json` loads a tool config (a JSON string or a hash, or a request with a `tool_config` key)
+  and `Tool.from_response` the result of `tools.get`, so a tool can be edited and written back. Fields the
+  builder doesn't model, and tool types it has no constructor for, round-trip unchanged.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the production environment.
