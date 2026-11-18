@@ -132,6 +132,41 @@ module Elevenlabs
         assert_raises(Elevenlabs::Errors::ResponseError) { @client.music.compose_detailed(prompt: 'x') }
       end
 
+      def test_raises_when_the_body_ends_mid_audio
+        full = multipart("\r\n")
+        # Cut inside the audio, so the closing delimiter never arrives.
+        cut = full.byteslice(0, full.bytesize - "\r\n#{BOUNDARY}--\r\n".bytesize - 100)
+        stub_request(:post, URL).with(query: hash_including({})).to_return(reply(cut))
+
+        error = assert_raises(Elevenlabs::Errors::ApiError) { @client.music.compose_detailed(prompt: 'x') }
+        assert_match(/incomplete/, error.message)
+      end
+
+      def test_raises_on_a_partial_closing_boundary
+        full = multipart("\r\n")
+        cut = full.byteslice(0, full.bytesize - "3--\r\n".bytesize) # ends in "...\r\n--boundary12"
+        stub_request(:post, URL).with(query: hash_including({})).to_return(reply(cut))
+
+        error = assert_raises(Elevenlabs::Errors::ApiError) { @client.music.compose_detailed(prompt: 'x') }
+        assert_match(/incomplete/, error.message)
+      end
+
+      def test_skips_a_preamble_using_the_content_type_boundary
+        body = "This is a multipart message.\r\n".b + multipart("\r\n")
+        stub_request(:post, URL).with(query: hash_including({})).to_return(reply(body))
+
+        song = @client.music.compose_detailed(prompt: 'x')
+
+        assert_equal METADATA, song.json
+        assert_equal AUDIO, song.audio
+      end
+
+      def test_reads_the_boundary_parameter
+        assert_equal 'abc', ComposeDetailed::MultipartParser.boundary_from('multipart/mixed; boundary="abc"')
+        assert_equal '----boundaryf00', ComposeDetailed::MultipartParser.boundary_from('multipart/mixed; boundary=----boundaryf00')
+        assert_nil ComposeDetailed::MultipartParser.boundary_from('application/json')
+      end
+
       def test_parser_finds_the_audio_part_before_the_json_part
         body = "#{BOUNDARY}\r\nContent-Type: audio/mpeg\r\n\r\n".b + AUDIO +
                "\r\n#{BOUNDARY}\r\nContent-Type: application/json\r\n\r\n{\"a\":1}\r\n#{BOUNDARY}--\r\n".b

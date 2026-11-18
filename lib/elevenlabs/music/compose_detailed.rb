@@ -54,7 +54,8 @@ module Elevenlabs
       def compose_detailed(request_options: {}, **params)
         recorder = StreamRecorder.new(@client)
         stream = GENERATED.bind_call(self.class.new(client: recorder), request_options: request_options, **params)
-        parsed = MultipartParser.parse(stream.read)
+        body = stream.read
+        parsed = MultipartParser.parse(body, boundary: MultipartParser.boundary_from(recorder.last_response&.[]('content-type')))
         ComposeDetailedResponse.new(
           json: parsed[:json],
           audio: parsed[:audio],
@@ -103,29 +104,50 @@ module Elevenlabs
       module MultipartParser
         module_function
 
-        # @param body [String]
-        # @return [Hash] +{ json:, audio:, filename: }+
-        # @raise [::Elevenlabs::Errors::ApiError]
-        def parse(body)
-          body = body.b
-          first_break = body.index("\n")
-          delimiter = (first_break.nil? ? body : body.byteslice(0, first_break)).strip
-          raise ::Elevenlabs::Errors::ApiError, 'Could not find the multipart boundary in the music response' unless delimiter.start_with?('--') && delimiter.bytesize > 2
+        # The +boundary+ parameter of a +Content-Type+ header, unquoted, or nil.
+        def boundary_from(content_type)
+          match = content_type&.match(/boundary=(?:"([^"]+)"|([^;\s]+))/i)
+          match && (match[1] || match[2])
+        end
 
-          # The body uses one line ending throughout; read it from the delimiter line.
-          line_break = !first_break.nil? && first_break.positive? && body.getbyte(first_break - 1) == 13 ? "\r\n" : "\n"
+        # @param body [String]
+        # @param boundary [String, nil] The +boundary+ parameter of the response's +Content-Type+. Without
+        #   it the delimiter is read from the body's first line.
+        # @return [Hash] +{ json:, audio:, filename: }+
+        # @raise [::Elevenlabs::Errors::ApiError] The body isn't a complete multipart body with a JSON part
+        #   and an audio part, including when it ends before the closing +--boundary--+ (truncated).
+        def parse(body, boundary: nil)
+          body = body.b
+          delimiter = delimiter_for(body, boundary)
+
+          # The first delimiter starts the body or a line: anything before it is a preamble, which is ignored.
+          pos = if body.start_with?(delimiter)
+                  0
+                else
+                  found = body.index("\n#{delimiter}")
+                  raise ::Elevenlabs::Errors::ApiError, 'Could not find the multipart boundary in the music response' if found.nil?
+
+                  found + 1
+                end
+          # The body uses one line ending throughout; read it from the first delimiter line.
+          line_break = body.byteslice(pos + delimiter.bytesize, 2) == "\r\n" ? "\r\n" : "\n"
 
           parts = []
-          pos = body.index(delimiter)
-          until pos.nil?
+          loop do
             after = pos + delimiter.bytesize
             break if body.byteslice(after, 2) == '--' # Closing delimiter.
 
             start = body.byteslice(after, line_break.bytesize) == line_break ? after + line_break.bytesize : after
             nxt = body.index(line_break + delimiter, start)
-            finish = nxt.nil? ? body.bytesize : nxt
-            parts << split_part(body.byteslice(start, finish - start), line_break)
-            pos = nxt.nil? ? nil : nxt + line_break.bytesize
+            # Every part ends at a delimiter, and the body at `--boundary--`; the API always sends it. A body
+            # that stops first was cut off, so its last part (the audio, usually) is incomplete.
+            if nxt.nil?
+              raise ::Elevenlabs::Errors::ApiError,
+                    'The music response ended before its closing multipart boundary; it is incomplete'
+            end
+
+            parts << split_part(body.byteslice(start, nxt - start), line_break)
+            pos = nxt + line_break.bytesize
           end
 
           json_part = nil
@@ -151,6 +173,16 @@ module Elevenlabs
           raise ::Elevenlabs::Errors::ApiError, 'Could not find the audio part in the music response' if audio_part.nil? || !audio_part[:separated]
 
           { json: metadata, audio: audio_part[:body], filename: filename(audio_part[:headers]['content-disposition']) }
+        end
+
+        def delimiter_for(body, boundary)
+          return "--#{boundary}".b unless boundary.nil? || boundary.empty?
+
+          first_break = body.index("\n")
+          delimiter = (first_break.nil? ? body : body.byteslice(0, first_break)).strip
+          raise ::Elevenlabs::Errors::ApiError, 'Could not find the multipart boundary in the music response' unless delimiter.start_with?('--') && delimiter.bytesize > 2
+
+          delimiter
         end
 
         def split_part(part, line_break)
