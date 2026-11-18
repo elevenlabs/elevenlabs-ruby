@@ -167,6 +167,26 @@ module Elevenlabs
         assert_nil ComposeDetailed::MultipartParser.boundary_from('application/json')
       end
 
+      def test_skips_transport_padding_after_each_delimiter
+        padded = multipart("\r\n").gsub("#{BOUNDARY}\r\n".b, "#{BOUNDARY} \t\r\n".b)
+        stub_request(:post, URL).with(query: hash_including({})).to_return(reply(padded))
+
+        song = @client.music.compose_detailed(prompt: 'x')
+
+        assert_equal METADATA, song.json
+        assert_equal AUDIO, song.audio
+      end
+
+      def test_parser_reads_a_part_with_no_headers
+        body = "#{BOUNDARY}\r\nContent-Type: application/json\r\n\r\n{\"a\":1}\r\n#{BOUNDARY}\r\n\r\n".b + AUDIO +
+               "\r\n#{BOUNDARY}--\r\n".b
+
+        parsed = ComposeDetailed::MultipartParser.parse(body)
+
+        assert_equal({ 'a' => 1 }, parsed[:json])
+        assert_equal AUDIO, parsed[:audio]
+      end
+
       def test_parser_finds_the_audio_part_before_the_json_part
         body = "#{BOUNDARY}\r\nContent-Type: audio/mpeg\r\n\r\n".b + AUDIO +
                "\r\n#{BOUNDARY}\r\nContent-Type: application/json\r\n\r\n{\"a\":1}\r\n#{BOUNDARY}--\r\n".b
