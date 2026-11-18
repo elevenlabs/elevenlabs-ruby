@@ -21,12 +21,14 @@ module Elevenlabs
       end
 
       # Drops null fields at every level, except inside free-form values such as constants and
-      # dynamic variable placeholders, which are copied as they are.
+      # dynamic variable placeholders, which are copied as they are. A null +constant_value+ is kept:
+      # on a literal whose type list includes "null" it's a real constant, and Schema.from_wire drops it
+      # everywhere else.
       def strip_nulls(value)
         case value
         when ::Hash
           value.each_with_object({}) do |(key, item), acc|
-            next if item.nil?
+            next if item.nil? && key != 'constant_value'
 
             acc[key] = FREE_FORM_KEYS.include?(key) ? AgentWorkflows::Wire.deep_copy(item) : strip_nulls(item)
           end

@@ -27,6 +27,9 @@ module Elevenlabs
         @api = api
         @path_params = {}
         @query = nil
+        # Whether a loaded query_params_schema declared its own +type+. Otherwise the +type+ an object
+        # schema writes is the builder's, and the API's query_params_schema has none.
+        @query_typed = false
         @body = nil
         @response = nil
         @headers = {}
@@ -76,9 +79,11 @@ module Elevenlabs
         self
       end
 
-      # Sets the query param +name+. Required unless the schema is optional. Literal schemas only.
+      # Sets the query param +name+. Required unless the schema is optional. Literal schemas only. A loaded
+      # query_params_schema that isn't an object is left as it is, and build() reports it.
       def query_param(name, schema)
-        @query = (@query || Schema.object).property(name, schema)
+        @query = Schema.object if @query.nil?
+        @query = @query.property(name, schema) if @query.is_a?(ObjectSchema)
         self
       end
 
@@ -126,7 +131,7 @@ module Elevenlabs
 
       # Removes the query param +name+.
       def remove_query_param(name)
-        @query = @query&.without(name)
+        @query = @query.without(name) if @query.is_a?(ObjectSchema)
         self
       end
 
@@ -136,10 +141,19 @@ module Elevenlabs
         self
       end
 
-      # Removes every assignment to +variable+.
+      # Removes every assignment to +variable+. Removing the last one leaves +assignments+ out.
       def remove_assignment(variable)
         assignments = @config['assignments']
-        @config['assignments'] = assignments.reject { |a| a['dynamic_variable'] == variable } unless assignments.nil?
+        return self if assignments.nil?
+
+        kept = assignments.reject { |a| a['dynamic_variable'] == variable }
+        return self if kept.length == assignments.length
+
+        if kept.empty?
+          @config.delete('assignments')
+        else
+          @config['assignments'] = kept
+        end
         self
       end
 
@@ -169,7 +183,8 @@ module Elevenlabs
 
       def validate_tool
         issues = []
-        url = @api['url']
+        # The API reads "" as unset, so an empty URL is a missing one.
+        url = @api['url'] == '' ? nil : @api['url']
         issues << ToolIssue.error('missing_url', nil, 'Set the method and URL with get, post, put, patch or delete') if url.nil?
         check_path_params(url, issues)
         check_query(issues)
@@ -184,9 +199,11 @@ module Elevenlabs
         api = ToolWire.deep_copy(@api)
         api['path_params_schema'] = @path_params.transform_values(&:to_wire) unless @path_params.empty?
         query = @query&.to_wire
-        if !query.nil? && query.key?('properties')
-          api['query_params_schema'] = { 'properties' => query['properties'] }
-          api['query_params_schema']['required'] = query['required'] if query.key?('required')
+        unless query.nil?
+          # Every loaded field is kept; only the builder's own +type+ is dropped. A query with nothing left
+          # is left out.
+          query.delete('type') unless @query_typed
+          api['query_params_schema'] = query unless query.empty?
         end
         api['request_body_schema'] = @body.to_wire unless @body.nil?
         api['response_body_schema'] = @response.to_wire unless @response.nil?
@@ -199,11 +216,14 @@ module Elevenlabs
       def load_api_schema(api_schema)
         (api_schema['path_params_schema'] || {}).each { |name, model| @path_params[name] = Schema.from_wire(model) }
         query = api_schema['query_params_schema']
-        @query = Schema.from_wire(query, kind: 'object') unless query.nil?
+        unless query.nil?
+          @query = Schema.from_wire_object(query)
+          @query_typed = query.key?('type')
+        end
         body = api_schema['request_body_schema']
-        @body = Schema.from_wire(body, kind: 'object') unless body.nil?
+        @body = Schema.from_wire_object(body) unless body.nil?
         response = api_schema['response_body_schema']
-        @response = Schema.from_wire(response, kind: 'object') unless response.nil?
+        @response = Schema.from_wire_object(response) unless response.nil?
         (api_schema['request_headers'] || {}).each { |name, value| @headers[name] = value }
       end
 
@@ -243,6 +263,11 @@ module Elevenlabs
       def check_query(issues)
         return if @query.nil?
 
+        unless @query.is_a?(ObjectSchema)
+          issues << ToolIssue.error('body_not_object', 'query', 'The query params schema must be an object')
+          Validate.check_schema(@query, 'query', false, issues)
+          return
+        end
         @query.property_names.each do |name|
           schema = @query.property_schema(name)
           path = "query.#{name}"
@@ -272,7 +297,7 @@ module Elevenlabs
         where = {}
         [
           ['path_params', @path_params.keys],
-          ['query', @query.nil? ? [] : @query.property_names],
+          ['query', @query.is_a?(ObjectSchema) ? @query.property_names : []],
           ['body', @body.is_a?(ObjectSchema) ? @body.property_names : []],
         ].each do |location, names|
           names.each do |name|

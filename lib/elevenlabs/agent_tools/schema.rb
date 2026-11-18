@@ -40,6 +40,9 @@ module Elevenlabs
         any_of: [].freeze,
         all_of: [].freeze,
         extra: {}.freeze,
+        # Whether an object or array writes its +type+. A loaded one without a +type+ is written back
+        # without one.
+        typed: true,
       }.freeze
 
       # @api private — use the static constructors.
@@ -83,10 +86,22 @@ module Elevenlabs
           from_wire(ToolWire.parse(data))
         end
 
+        # @api private — loads a wire-format schema where the API expects an object (a body, a response, the
+        # query params or a client tool's params). It's an object when it has no +type+, since an empty
+        # schema has none; a declared +type+ is kept, so validation can report a schema that isn't an object.
+        def from_wire_object(model)
+          from_wire(model, kind: model.key?('type') ? kind_of(model) : 'object')
+        end
+
         # @api private — loads a wire-format schema. +optional+ is whether its parent leaves it out of
-        # +required+. +kind+ is given where the API only allows one kind (e.g. a tool's params object), since
-        # an empty schema has no +type+.
+        # +required+.
         def from_wire(model, optional: false, kind: kind_of(model))
+          # A null constant is a value only on a literal whose type list includes "null"; anywhere else it
+          # means unset, like every other null the API sends.
+          if model.key?('constant_value') && model['constant_value'].nil? &&
+             !(LITERAL_KINDS.include?(kind) && nullable_type?(model['type']))
+            model = model.except('constant_value')
+          end
           # The API fills unset fields with defaults ("", false, []). They aren't value sources, but are kept
           # as extra fields so a pulled config writes back unchanged.
           extra = model.reject { |key, value| MODELED_KEYS.include?(key) && !unset?(key, value, kind) }
@@ -99,6 +114,7 @@ module Elevenlabs
             omitted: model['is_omitted'] == true,
             optional: optional,
             extra: ToolWire.deep_copy(extra),
+            typed: model.key?('type'),
           )
           case kind
           when 'object' then load_object(model, base, set)
@@ -121,6 +137,11 @@ module Elevenlabs
         # @api private
         def initial(kind)
           INITIAL_STATE.merge(kind: kind)
+        end
+
+        # @api private — whether a literal's +type+ is a list that includes "null", e.g. ["integer", "null"].
+        def nullable_type?(type)
+          type.is_a?(::Array) && type.include?('null')
         end
 
         # @api private — the kind of a wire schema. A literal's type can be a list such as
@@ -300,7 +321,7 @@ module Elevenlabs
 
       def add_kind_fields(wire)
         s = @state
-        wire['type'] = 'object'
+        wire['type'] = 'object' if s[:typed]
         wire['properties'] = s[:properties].to_h { |(name, child)| [name, child.to_wire] } unless s[:properties].empty?
         required = required_names
         wire['required'] = required unless required.empty?
@@ -331,7 +352,7 @@ module Elevenlabs
       protected
 
       def add_kind_fields(wire)
-        wire['type'] = 'array'
+        wire['type'] = 'array' if @state[:typed]
         wire['items'] = @state[:items].to_wire unless @state[:items].nil?
       end
     end

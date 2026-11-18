@@ -21,19 +21,24 @@ module Elevenlabs
         'client'
       end
 
-      # Sets the param +name+. Required unless the schema is optional. Any schema kind.
+      # Sets the param +name+. Required unless the schema is optional. Any schema kind. Loaded parameters
+      # that aren't an object are left as they are, and build() reports them.
       def param(name, schema)
-        @parameters = (@parameters || Schema.object).property(name, schema)
+        @parameters = Schema.object if @parameters.nil?
+        @parameters = @parameters.property(name, schema) if @parameters.is_a?(ObjectSchema)
         self
       end
 
-      # Removes the param +name+.
+      # Removes the param +name+. Removing the last one leaves +parameters+ out.
       def remove_param(name)
-        @parameters = @parameters&.without(name)
+        return self unless @parameters.is_a?(ObjectSchema) && @parameters.property_names.include?(name)
+
+        @parameters = @parameters.without(name)
+        @parameters = nil if @parameters.property_names.empty?
         self
       end
 
-      # The params as an ObjectSchema, or nil if there are none.
+      # The params as an ObjectSchema (or the schema as loaded, if it isn't an object), or nil if there are none.
       def parameters_schema
         @parameters
       end
@@ -47,7 +52,10 @@ module Elevenlabs
       def validate_tool
         issues = []
         # Checks the params object's own require_any_of/require_all_of and every param under it.
-        Validate.check_schema(@parameters, 'params', false, issues) unless @parameters.nil?
+        unless @parameters.nil?
+          issues << ToolIssue.error('body_not_object', 'params', 'The params schema must be an object') unless @parameters.is_a?(ObjectSchema)
+          Validate.check_schema(@parameters, 'params', false, issues)
+        end
         timeout = @config['response_timeout_secs']
         if timeout.is_a?(::Numeric) && timeout != -1 && (timeout < 1 || timeout > 120)
           issues << ToolIssue.error('invalid_option', 'response_timeout_secs',

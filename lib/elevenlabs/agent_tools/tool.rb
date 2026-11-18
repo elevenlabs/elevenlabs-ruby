@@ -62,7 +62,7 @@ module Elevenlabs
           when 'client'
             parameters = config['parameters']
             ClientTool.new(config.except('parameters'),
-                           parameters.nil? ? nil : Schema.from_wire(parameters, kind: 'object'))
+                           parameters.nil? ? nil : Schema.from_wire_object(parameters))
           else
             params = (config['params'] || {}).dup
             system_tool_type = params.delete('system_tool_type')
