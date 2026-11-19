@@ -61,11 +61,19 @@ module Elevenlabs
         end
       end
 
+      # The property names each loaded or added any_of and all_of group requires.
+      def constraint_names(state)
+        ((state[:any_of] || []) + (state[:all_of] || [])).map do |group|
+          names = group.is_a?(::Hash) ? group['required'] : nil
+          names.is_a?(::Array) ? names : []
+        end
+      end
+
       def check_children(state, path, issues)
         case state[:kind]
         when 'object'
           names = state[:properties].map(&:first)
-          (state[:any_of] + state[:all_of]).each do |group|
+          constraint_names(state).each do |group|
             group.reject { |name| names.include?(name) }.each do |name|
               issues << error('unknown_required_property', path,
                               "\"#{path}\" requires \"#{name}\" in require_any_of/require_all_of, but has no such property")

@@ -164,6 +164,120 @@ module Elevenlabs
 
         refute tool.to_json['api_schema'].key?('query_params_schema')
       end
+
+      # Rule 6: loaded allowed_values and required_constraints keep the fields the builder doesn't model.
+
+      def params_of(parameters)
+        client(parameters).to_json['parameters']
+      end
+
+      def test_a_loaded_allowed_values_object_keeps_unmodeled_fields
+        parameters = { 'type' => 'object', 'required' => ['x'],
+                       'properties' => { 'x' => { 'type' => 'string', 'description' => 'X',
+                                                  'allowed_values' => { 'dynamic_variable' => 'ids',
+                                                                        'future_field' => 1 } } } }
+
+        assert_equal parameters, params_of(parameters)
+      end
+
+      def test_allowed_from_on_a_loaded_schema_overlays_the_variable_name
+        loaded = Schema.from_json('type' => 'string', 'description' => 'X',
+                                  'allowed_values' => { 'dynamic_variable' => 'ids', 'future_field' => 1 })
+
+        assert_equal({ 'dynamic_variable' => 'other', 'future_field' => 1 },
+                     loaded.allowed_from('other').to_json['allowed_values'])
+      end
+
+      def test_a_loaded_required_constraints_object_keeps_unmodeled_fields
+        parameters = { 'type' => 'object',
+                       'properties' => { 'a' => { 'type' => 'string', 'description' => 'A' },
+                                         'b' => { 'type' => 'string', 'description' => 'B' } },
+                       'required_constraints' => { 'all_of' => [{ 'required' => ['b'] }],
+                                                   'any_of' => [{ 'group_field' => true, 'required' => ['a'] }],
+                                                   'future_field' => 1 } }
+
+        assert_equal parameters, params_of(parameters)
+      end
+
+      def test_a_loaded_empty_required_constraints_round_trips
+        parameters = { 'type' => 'object', 'properties' => { 'a' => { 'type' => 'string', 'description' => 'A' } },
+                       'required_constraints' => { 'all_of' => [], 'any_of' => [] } }
+
+        assert_equal parameters, params_of(parameters)
+      end
+
+      def test_require_any_of_on_a_loaded_schema_appends_to_the_loaded_groups
+        loaded = Schema.from_json('type' => 'object',
+                                  'properties' => { 'a' => { 'type' => 'string', 'description' => 'A' },
+                                                    'b' => { 'type' => 'string', 'description' => 'B' } },
+                                  'required_constraints' => { 'any_of' => [{ 'group_field' => true, 'required' => ['a'] }],
+                                                              'future_field' => 1 })
+
+        assert_equal({ 'any_of' => [{ 'group_field' => true, 'required' => ['a'] }, { 'required' => ['b'] }],
+                       'future_field' => 1 },
+                     loaded.require_any_of(['b']).to_json['required_constraints'])
+      end
+
+      def test_allowed_values_and_required_constraints_on_other_kinds_are_kept
+        parameters = { 'type' => 'object', 'required' => ['x'],
+                       'properties' => { 'x' => { 'type' => 'string', 'description' => 'X',
+                                                  'required_constraints' => { 'any_of' => [] } } },
+                       'allowed_values' => { 'dynamic_variable' => 'ids' } }
+
+        assert_equal parameters, params_of(parameters)
+      end
+
+      def test_a_loaded_constraint_naming_a_missing_property_is_reported
+        tool = client('type' => 'object', 'properties' => { 'a' => { 'type' => 'string', 'description' => 'A' } },
+                      'required_constraints' => { 'any_of' => [{ 'required' => ['z'] }] })
+
+        assert_equal([%w[unknown_required_property params]], codes_and_paths_of { tool.build })
+      end
+
+      # Rule 7: to_json_string writes numbers the way JavaScript's Number.prototype.toString does.
+
+      def written_constant(value)
+        tool = Tool.client('show', 'Show').param('x', Schema.number.constant(value))
+        tool.to_json_string[/"constant_value": ([^,\n]+)/, 1]
+      end
+
+      def test_small_floats_are_written_in_javascript_exponent_form
+        assert_equal '1e-7', written_constant(1e-7)
+        assert_equal '1.5e-7', written_constant(1.5e-7)
+        assert_equal '-2.5e-8', written_constant(-2.5e-8)
+      end
+
+      def test_large_floats_are_written_in_javascript_exponent_form
+        assert_equal '1e+21', written_constant(1e21)
+        assert_equal '1.7976931348623157e+308', written_constant(Float::MAX)
+      end
+
+      def test_large_floats_in_the_plain_range_are_written_as_decimals
+        assert_equal '123456789012345680000', written_constant(123_456_789_012_345_680_000.0)
+        assert_equal '10000000000000000', written_constant(1e16)
+      end
+
+      def test_small_floats_in_the_plain_range_are_written_as_decimals
+        assert_equal '0.000001', written_constant(0.000001)
+        assert_equal '0.1', written_constant(0.1)
+        assert_equal '1.5', written_constant(1.5)
+      end
+
+      def test_whole_floats_are_written_as_integers
+        assert_equal '3', written_constant(3.0)
+        assert_equal '0', written_constant(-0.0)
+      end
+
+      def test_integers_javascript_cannot_hold_are_written_as_javascript_rounds_them
+        assert_equal '18446744073709552000', written_constant(2**64)
+        assert_equal '9007199254740991', written_constant((2**53) - 1)
+      end
+
+      def test_to_json_string_round_trips_a_tool_with_float_constants
+        tool = Tool.client('show', 'Show').param('x', Schema.number.constant(1e-7))
+
+        assert_equal tool.to_json, Tool.from_json(tool.to_json_string).to_json
+      end
     end
   end
 end

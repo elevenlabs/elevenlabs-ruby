@@ -158,9 +158,10 @@ module Elevenlabs
         ToolWire.canonical(validated_wire(nil))
       end
 
-      # to_json as a string with 2-space indentation and a trailing newline: the canonical file format.
+      # to_json as a string with 2-space indentation and a trailing newline: the canonical file format, byte
+      # for byte what the JavaScript SDK writes (numbers included).
       def to_json_string
-        "#{::JSON.pretty_generate(to_json)}\n"
+        "#{ToolWire.json_string(to_json)}\n"
       end
 
       protected

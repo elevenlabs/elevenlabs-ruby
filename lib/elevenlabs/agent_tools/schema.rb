@@ -34,11 +34,17 @@ module Elevenlabs
         optional: false,
         choices: nil,
         allowed_from: nil,
+        # A loaded literal's allowed_values object, so its other fields survive edits.
+        allowed_values: nil,
         items: nil,
         properties: [].freeze,
         loaded_required: nil,
-        any_of: [].freeze,
-        all_of: [].freeze,
+        # A loaded object's required_constraints fields other than any_of and all_of, or nil if it had none.
+        constraints_extra: nil,
+        # The any_of and all_of groups, each a wire object with "required" (and any loaded fields), or nil
+        # when absent.
+        any_of: nil,
+        all_of: nil,
         extra: {}.freeze,
       }.freeze
 
@@ -102,7 +108,7 @@ module Elevenlabs
           end
           # The API fills unset fields with defaults ("", false, []). They aren't value sources, but are kept
           # as extra fields so a pulled config writes back unchanged.
-          extra = model.reject { |key, value| MODELED_KEYS.include?(key) && !unset?(key, value, kind) }
+          extra = model.reject { |key, value| modeled?(key, value, kind) }
           set = ->(key) { unset?(key, model[key], kind) ? nil : model[key] }
           base = initial(kind).merge(
             description: set.call('description'),
@@ -119,13 +125,14 @@ module Elevenlabs
             items = set.call('items')
             ArraySchema.new(base.merge(items: items.nil? ? nil : from_wire(items, optional: true)))
           else
-            allowed = set.call('allowed_values')
+            allowed = model['allowed_values'].is_a?(::Hash) ? model['allowed_values'] : nil
             LiteralSchema.new(
               base.merge(
                 literal_type: ToolWire.deep_copy(model['type']),
                 system_provided: model['is_system_provided'] == true,
                 choices: set.call('enum')&.dup,
-                allowed_from: allowed.is_a?(::Hash) ? allowed['dynamic_variable'] : nil,
+                allowed_from: allowed&.[]('dynamic_variable'),
+                allowed_values: allowed.nil? ? nil : ToolWire.deep_copy(allowed).freeze,
               ),
             )
           end
@@ -156,7 +163,7 @@ module Elevenlabs
 
         def load_object(model, base, set)
           required = set.call('required').is_a?(::Array) ? model['required'].dup : nil
-          constraints = model['required_constraints'].is_a?(::Hash) ? model['required_constraints'] : {}
+          constraints = model['required_constraints'].is_a?(::Hash) ? model['required_constraints'] : nil
           properties = (set.call('properties') || {}).map do |name, child|
             [name, from_wire(child, optional: !(required || []).include?(name))].freeze
           end
@@ -164,10 +171,30 @@ module Elevenlabs
             base.merge(
               properties: properties.freeze,
               loaded_required: required,
-              any_of: (constraints['any_of'] || []).map { |c| c['required'].dup },
-              all_of: (constraints['all_of'] || []).map { |c| c['required'].dup },
+              constraints_extra: constraints&.except('any_of', 'all_of')&.then { |rest| ToolWire.deep_copy(rest).freeze },
+              any_of: constraint_groups(constraints, 'any_of'),
+              all_of: constraint_groups(constraints, 'all_of'),
             ),
           )
+        end
+
+        # A loaded constraint group list, each group kept whole, or nil if there is none.
+        def constraint_groups(constraints, key)
+          groups = constraints&.[](key)
+          groups.is_a?(::Array) ? ToolWire.deep_copy(groups).freeze : nil
+        end
+
+        # Whether the builder models the loaded field +key+, so it isn't kept as an extra field. Unset API
+        # defaults are kept as they are, and so are allowed_values and required_constraints unless they're
+        # objects on the kind that writes them back (a literal and an object).
+        def modeled?(key, value, kind)
+          return false unless MODELED_KEYS.include?(key) && !unset?(key, value, kind)
+
+          case key
+          when 'allowed_values' then value.is_a?(::Hash) && LITERAL_KINDS.include?(kind)
+          when 'required_constraints' then value.is_a?(::Hash) && kind == 'object'
+          else true
+          end
         end
 
         # Whether +value+ is what the API returns for an unset field. A literal's unset constant is "", so
@@ -251,7 +278,12 @@ module Elevenlabs
         wire['type'] = s[:literal_type].nil? ? s[:kind] : ToolWire.deep_copy(s[:literal_type])
         wire['is_system_provided'] = true if s[:system_provided]
         wire['enum'] = s[:choices].dup unless s[:choices].nil?
-        wire['allowed_values'] = { 'dynamic_variable' => s[:allowed_from] } unless s[:allowed_from].nil?
+        return if s[:allowed_values].nil? && s[:allowed_from].nil?
+
+        # A loaded object keeps its other fields; the variable name is overlaid.
+        allowed = ToolWire.deep_copy(s[:allowed_values] || {})
+        allowed['dynamic_variable'] = s[:allowed_from] unless s[:allowed_from].nil?
+        wire['allowed_values'] = allowed
       end
     end
 
@@ -296,12 +328,12 @@ module Elevenlabs
 
       # Requires at least one of these sets of properties: appends +names+ to required_constraints.any_of.
       def require_any_of(names)
-        with(any_of: (@state[:any_of] + [names.dup]).freeze)
+        with(any_of: ((@state[:any_of] || []) + [{ 'required' => names.dup }]).freeze)
       end
 
       # Requires all of these sets of properties: appends +names+ to required_constraints.all_of.
       def require_all_of(names)
-        with(all_of: (@state[:all_of] + [names.dup]).freeze)
+        with(all_of: ((@state[:all_of] || []) + [{ 'required' => names.dup }]).freeze)
       end
 
       # Property names, in order.
@@ -322,10 +354,18 @@ module Elevenlabs
         wire['properties'] = s[:properties].to_h { |(name, child)| [name, child.to_wire] } unless s[:properties].empty?
         required = required_names
         wire['required'] = required unless required.empty?
-        constraints = {}
-        constraints['any_of'] = s[:any_of].map { |names| { 'required' => names.dup } } unless s[:any_of].empty?
-        constraints['all_of'] = s[:all_of].map { |names| { 'required' => names.dup } } unless s[:all_of].empty?
-        wire['required_constraints'] = constraints unless constraints.empty?
+        add_constraints(wire)
+      end
+
+      # A loaded required_constraints keeps its own fields, and a loaded (even empty) group list.
+      def add_constraints(wire)
+        s = @state
+        return if s[:constraints_extra].nil? && s[:any_of].nil? && s[:all_of].nil?
+
+        constraints = ToolWire.deep_copy(s[:constraints_extra] || {})
+        constraints['any_of'] = ToolWire.deep_copy(s[:any_of]) unless s[:any_of].nil?
+        constraints['all_of'] = ToolWire.deep_copy(s[:all_of]) unless s[:all_of].nil?
+        wire['required_constraints'] = constraints
       end
 
       private
