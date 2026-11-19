@@ -98,7 +98,8 @@ module Elevenlabs
         when ::Float
           js_number(value)
         when ::Integer
-          value.abs > MAX_SAFE_INTEGER ? js_number(value.to_f) : value.to_s
+          # Exact, even beyond 2^53: rounding as JavaScript would change large IDs.
+          value.to_s
         else
           ::JSON.generate(value)
         end

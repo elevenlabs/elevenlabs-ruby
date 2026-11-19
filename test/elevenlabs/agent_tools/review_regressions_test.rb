@@ -268,8 +268,10 @@ module Elevenlabs
         assert_equal '0', written_constant(-0.0)
       end
 
-      def test_integers_javascript_cannot_hold_are_written_as_javascript_rounds_them
-        assert_equal '18446744073709552000', written_constant(2**64)
+      # Rounding them as JavaScript would change large IDs, so they are written exactly (as in .NET and Rust).
+      def test_integers_beyond_javascript_precision_are_written_exactly
+        assert_equal '18446744073709551616', written_constant(2**64)
+        assert_equal '9007199254740993', written_constant((2**53) + 1)
         assert_equal '9007199254740991', written_constant((2**53) - 1)
       end
 
