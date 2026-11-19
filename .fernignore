@@ -7,6 +7,12 @@ lib/elevenlabs/agent_workflows.rb
 lib/elevenlabs/agent_workflows/
 test/elevenlabs/agent_workflows/
 
+# Hand-written agent tools-as-code builder (webhook, client and system tools on top of the generated
+# client; reuses the workflow builder's Destination and wire helpers) and its shared conformance fixtures.
+lib/elevenlabs/agent_tools.rb
+lib/elevenlabs/agent_tools/
+test/elevenlabs/agent_tools/
+
 # Hand-written webhook signature verifier (Fern's generated verifier can't parse
 # the compound `t=...,v0=...` header).
 lib/elevenlabs/webhooks/verifier.rb
