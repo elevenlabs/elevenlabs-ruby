@@ -12,6 +12,7 @@ module Elevenlabs
       field :additional_tool_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :label, -> { String }, optional: false, nullable: false
       field :entry_behavior, -> { ::Elevenlabs::Types::EntryBehavior }, optional: true, nullable: false
+      field :allow_interruptions_on_entry, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

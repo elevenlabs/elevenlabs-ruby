@@ -9,6 +9,7 @@ module Elevenlabs
       field :supported_usages, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::DocumentUsageModeEnum] }, optional: false, nullable: false
       field :access_info, -> { ::Elevenlabs::Types::ResourceAccessInfo }, optional: false, nullable: false
       field :folder_parent_id, -> { String }, optional: true, nullable: true
+      field :chunking_override, -> { ::Elevenlabs::Types::ChunkingOverride }, optional: true, nullable: false
       field :folder_path, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::KnowledgeBaseFolderPathSegmentSummaryResponseModel] }, optional: true, nullable: false
       field :dependent_agents, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::GetKnowledgeBaseSummaryFolderResponseModelDependentAgentsItem] }, optional: false, nullable: false
       field :type, -> { ::Elevenlabs::Types::GetKnowledgeBaseSummaryFolderResponseModelType }, optional: false, nullable: false

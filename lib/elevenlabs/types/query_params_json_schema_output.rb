@@ -3,7 +3,7 @@
 module Elevenlabs
   module Types
     class QueryParamsJSONSchemaOutput < ::Elevenlabs::Internal::Types::Model
-      field :properties, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::LiteralJSONSchemaProperty] }, optional: false, nullable: false
+      field :properties, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::QueryParamsJSONSchemaOutputPropertiesValue] }, optional: false, nullable: false
       field :required, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
 
       def self.load(str)

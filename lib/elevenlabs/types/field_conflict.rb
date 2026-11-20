@@ -8,6 +8,8 @@ module Elevenlabs
       field :base_value, -> { Object }, optional: true, nullable: false
       field :source_value, -> { Object }, optional: true, nullable: false
       field :target_value, -> { Object }, optional: true, nullable: false
+      field :id, -> { String }, optional: true, nullable: false
+      field :accepts_custom_value, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

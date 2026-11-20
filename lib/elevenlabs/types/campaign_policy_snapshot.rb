@@ -6,6 +6,7 @@ module Elevenlabs
       field :timezone, -> { String }, optional: false, nullable: false
       field :retry_, -> { ::Elevenlabs::Types::RetryPolicy }, optional: false, nullable: false, api_name: 'retry'
       field :calling_periods, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::CallingPeriodPolicy] }, optional: false, nullable: false
+      field :date_overrides, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::DateOverridePolicy] }, optional: true, nullable: false
       field :data_collection, -> { ::Elevenlabs::Types::DataCollectionPolicy }, optional: false, nullable: false
       field :followup_context, -> { ::Elevenlabs::Types::FollowupContextPolicy }, optional: false, nullable: false
 

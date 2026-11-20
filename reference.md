@@ -1721,6 +1721,19 @@ Update Audio-Native Content From Url
 - `author`
 - `title`
 
+## ContentProvenance
+
+### `elevenlabs.content_provenance.watermark`
+
+`POST /v1/content-provenance/watermark`
+
+Check Watermark
+
+**Parameters:**
+
+- `file` (required)
+- `version`
+
 ## PronunciationDictionaries Rules
 
 ### `elevenlabs.pronunciation_dictionaries.rules.set`
@@ -1755,6 +1768,47 @@ Remove pronunciation dictionary rules
 
 - `pronunciation_dictionary_id` (required)
 - `rule_strings` (required)
+
+### `elevenlabs.pronunciation_dictionaries.rules.create`
+
+`POST /v1/reception/customer-facing-agents/{agent_id}/rules`
+
+Add Rule
+
+**Parameters:**
+
+- `agent_id` (required)
+- `xi_workspace_id` (required)
+- `title` (required)
+- `description` (required)
+- `priority`
+
+### `elevenlabs.pronunciation_dictionaries.rules.update`
+
+`PUT /v1/reception/customer-facing-agents/{agent_id}/rules/{rule_id}`
+
+Update Rule
+
+**Parameters:**
+
+- `agent_id` (required)
+- `rule_id` (required)
+- `xi_workspace_id` (required)
+- `title` (required)
+- `description` (required)
+- `priority`
+
+### `elevenlabs.pronunciation_dictionaries.rules.delete`
+
+`DELETE /v1/reception/customer-facing-agents/{agent_id}/rules/{rule_id}`
+
+Delete Rule
+
+**Parameters:**
+
+- `agent_id` (required)
+- `rule_id` (required)
+- `xi_workspace_id` (required)
 
 ## Workspaces APIKeys
 
@@ -1996,6 +2050,39 @@ Update Member Usage Limit
 - `user_id` (required)
 - `usage_limit` (required)
 
+### `elevenlabs.workspace.groups.members.list`
+
+`GET /v1/reception/team/members`
+
+Get Team Members
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.workspace.groups.members.update_role`
+
+`PATCH /v1/reception/team/members/{user_id}`
+
+Update Team Member Role
+
+**Parameters:**
+
+- `user_id` (required)
+- `xi_workspace_id` (required)
+- `role` (required)
+
+### `elevenlabs.workspace.groups.members.remove`
+
+`DELETE /v1/reception/team/members/{user_id}`
+
+Remove Team Member
+
+**Parameters:**
+
+- `user_id` (required)
+- `xi_workspace_id` (required)
+
 ## Workspace Invites
 
 ### `elevenlabs.workspace.invites.create`
@@ -2033,6 +2120,39 @@ Delete invite
 
 **Parameters:**
 
+- `email` (required)
+
+### `elevenlabs.workspace.invites.list`
+
+`GET /v1/reception/team/invites`
+
+Get Pending Team Invites
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.workspace.invites.create`
+
+`POST /v1/reception/team/invites`
+
+Invite Team Member
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `email` (required)
+- `role`
+
+### `elevenlabs.workspace.invites.cancel`
+
+`DELETE /v1/reception/team/invites`
+
+Cancel Team Invite
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
 - `email` (required)
 
 ## Workspace Resources
@@ -2113,6 +2233,7 @@ Update Workspace Webhook
 - `retry_enabled`
 - `request_headers`
 - `events`
+- `log_redacted_fields`
 
 ### `elevenlabs.webhooks.delete`
 
@@ -2123,6 +2244,28 @@ Delete Workspace Webhook
 **Parameters:**
 
 - `webhook_id` (required)
+
+### `elevenlabs.webhooks.test`
+
+`POST /v1/workspace/webhooks/{webhook_id}/test`
+
+Send Test Webhook Event
+
+**Parameters:**
+
+- `webhook_id` (required)
+- `webhook_type` (required)
+
+### `elevenlabs.webhooks.redeliver`
+
+`POST /v1/workspace/webhooks/{webhook_id}/deliveries/{delivery_id}/redeliver`
+
+Redeliver Webhook Delivery
+
+**Parameters:**
+
+- `webhook_id` (required)
+- `delivery_id` (required)
 
 ## Music
 
@@ -2318,6 +2461,7 @@ Create Single Use Token
 **Parameters:**
 
 - `token_type` (required)
+- `max_session_duration_seconds`
 
 ## ForcedAlignment
 
@@ -2421,6 +2565,19 @@ List conversations
 - `custom_guardrail_names`
 - `sort_direction`
 
+### `elevenlabs.agents.conversations.create`
+
+`POST /v1/convai/conversations`
+
+Create Conversation
+
+**Parameters:**
+
+- `agent` (required)
+- `environment`
+- `user_id`
+- `dynamic_variables`
+
 ### `elevenlabs.agents.conversations.resolve`
 
 `GET /v1/convai/conversations/resolve`
@@ -2475,6 +2632,52 @@ Get Sip Messages For A Conversation
 - `conversation_id` (required)
 - `page_size`
 - `cursor`
+
+### `elevenlabs.agents.conversations.send_message`
+
+`POST /v1/convai/conversations/{conversation_id}/messages`
+
+Send Conversation Message
+
+**Parameters:**
+
+- `conversation_id` (required)
+- `input` (required)
+- `background`
+
+### `elevenlabs.agents.conversations.send_message_stream`
+
+`POST /v1/convai/conversations/{conversation_id}/messages/stream`
+
+Send Conversation Message Stream
+
+**Parameters:**
+
+- `conversation_id` (required)
+- `input` (required)
+
+### `elevenlabs.agents.conversations.get_turn`
+
+`GET /v1/convai/conversations/{conversation_id}/turns/{turn_id}`
+
+Get Conversation Turn
+
+**Parameters:**
+
+- `conversation_id` (required)
+- `turn_id` (required)
+
+### `elevenlabs.agents.conversations.stream_turn_events`
+
+`GET /v1/convai/conversations/{conversation_id}/turns/{turn_id}/events`
+
+Stream Conversation Turn Events
+
+**Parameters:**
+
+- `conversation_id` (required)
+- `turn_id` (required)
+- `last_event_id`
 
 ## Agents Twilio
 
@@ -2709,6 +2912,20 @@ Get Knowledge Base Summaries By Ids
 **Parameters:**
 
 - `document_ids` (required)
+
+## Agents Subagents
+
+### `elevenlabs.agents.subagents.get_dependents`
+
+`GET /v1/convai/agents/{agent_id}/subagent-dependents`
+
+Get Agent Subagent Dependents
+
+**Parameters:**
+
+- `agent_id` (required)
+- `page_size`
+- `cursor`
 
 ## Agents Widget
 
@@ -3274,7 +3491,6 @@ List Agent Conversation Tickets
 - `sort_by`
 - `owner_user_id`
 - `assignee_user_id`
-- `issue_type`
 - `label`
 - `merged_into_ticket_id`
 - `search`
@@ -3309,7 +3525,6 @@ List Workspace Conversation Tickets
 - `sort_by`
 - `owner_user_id`
 - `assignee_user_id`
-- `issue_type`
 - `label`
 - `merged_into_ticket_id`
 - `search`
@@ -3498,6 +3713,53 @@ Get Sip Messages For A Phone Number
 - `page_size`
 - `cursor`
 
+### `elevenlabs.agents.phone_numbers.list`
+
+`GET /v1/reception/phone-numbers/assignments`
+
+List Phone Numbers
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.agents.phone_numbers.create`
+
+`POST /v1/reception/phone-numbers/assignments`
+
+Assign Phone Number
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `customer_facing_agent_id` (required)
+- `area_codes`
+- `number_type`
+- `idempotency_key`
+
+### `elevenlabs.agents.phone_numbers.update`
+
+`PATCH /v1/reception/phone-numbers/assignments/{phone_assignment_id}`
+
+Move Phone Number
+
+**Parameters:**
+
+- `phone_assignment_id` (required)
+- `xi_workspace_id` (required)
+- `customer_facing_agent_id` (required)
+
+### `elevenlabs.agents.phone_numbers.delete`
+
+`DELETE /v1/reception/phone-numbers/assignments/{phone_assignment_id}`
+
+Release Phone Number
+
+**Parameters:**
+
+- `phone_assignment_id` (required)
+- `xi_workspace_id` (required)
+
 ## Agents Llm
 
 ### `elevenlabs.agents.llm.list`
@@ -3611,6 +3873,27 @@ Delete Knowledge Base Document Or Folder
 
 - `documentation_id` (required)
 - `force`
+
+### `elevenlabs.agents.knowledge_base.documents.get_chunking_override`
+
+`GET /v1/convai/knowledge-base/{documentation_id}/chunking-override`
+
+Get Chunking Override
+
+**Parameters:**
+
+- `documentation_id` (required)
+
+### `elevenlabs.agents.knowledge_base.documents.update_chunking_override`
+
+`PATCH /v1/convai/knowledge-base/{documentation_id}/chunking-override`
+
+Update Chunking Override
+
+**Parameters:**
+
+- `documentation_id` (required)
+- `chunking_override` (required)
 
 ### `elevenlabs.agents.knowledge_base.documents.get_agents`
 
@@ -4505,6 +4788,9 @@ Merge A Branch Into A Target Branch
 - `target_branch_id` (required)
 - `archive_source_branch`
 - `force`
+- `conflict_resolutions`
+- `source_tip_id`
+- `target_tip_id`
 
 ### `elevenlabs.agents.branches.preview_rebase`
 
@@ -4530,6 +4816,9 @@ Rebase A Branch Onto Main
 - `agent_id` (required)
 - `branch_id` (required)
 - `source_branch_id`
+- `conflict_resolutions`
+- `branch_tip_id`
+- `source_tip_id`
 
 ## Agents Versions
 
@@ -5132,6 +5421,58 @@ Remove Procedure
 - `agent_id` (required)
 - `branch_id` (required)
 - `procedure_id` (required)
+
+### `elevenlabs.agents.procedures.list`
+
+`GET /v1/reception/customer-facing-agents/{agent_id}/procedures`
+
+List Procedures
+
+**Parameters:**
+
+- `agent_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.agents.procedures.create`
+
+`POST /v1/reception/customer-facing-agents/{agent_id}/procedures`
+
+Add Procedure
+
+**Parameters:**
+
+- `agent_id` (required)
+- `xi_workspace_id` (required)
+- `name` (required)
+- `trigger` (required)
+- `body`
+
+### `elevenlabs.agents.procedures.update`
+
+`PUT /v1/reception/customer-facing-agents/{agent_id}/procedures/{procedure_id}`
+
+Update Procedure
+
+**Parameters:**
+
+- `agent_id` (required)
+- `procedure_id` (required)
+- `xi_workspace_id` (required)
+- `name` (required)
+- `trigger` (required)
+- `body`
+
+### `elevenlabs.agents.procedures.delete`
+
+`DELETE /v1/reception/customer-facing-agents/{agent_id}/procedures/{procedure_id}`
+
+Delete Procedure
+
+**Parameters:**
+
+- `agent_id` (required)
+- `procedure_id` (required)
+- `xi_workspace_id` (required)
 
 ## Agents Conversations Analysis
 
@@ -5830,6 +6171,77 @@ Delete Asset
 
 - `asset_id` (required)
 
+### `elevenlabs.assets.list`
+
+`GET /v1/reception/assets`
+
+Get All Assets
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.assets.create`
+
+`POST /v1/reception/assets`
+
+Create Asset
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `groups`
+- `ungrouped_rank`
+- `name` (required)
+- `description`
+- `is_active`
+- `available_hours`
+- `photo_url`
+- `location_id`
+- `customer_facing_name`
+
+### `elevenlabs.assets.get`
+
+`GET /v1/reception/assets/{asset_id}`
+
+Get Asset
+
+**Parameters:**
+
+- `asset_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.assets.update`
+
+`PUT /v1/reception/assets/{asset_id}`
+
+Update Asset
+
+**Parameters:**
+
+- `asset_id` (required)
+- `xi_workspace_id` (required)
+- `groups`
+- `ungrouped_rank`
+- `name`
+- `description`
+- `is_active`
+- `available_hours`
+- `photo_url`
+- `location_id`
+- `customer_facing_name`
+
+### `elevenlabs.assets.delete`
+
+`DELETE /v1/reception/assets/{asset_id}`
+
+Delete Asset
+
+**Parameters:**
+
+- `asset_id` (required)
+- `xi_workspace_id` (required)
+
 ## Workspace Usage
 
 ### `elevenlabs.workspace.usage.get_usage_by_product_over_time`
@@ -5877,3 +6289,790 @@ List Api Requests
 - `sort`
 - `filters`
 - `search`
+
+## Reception Services
+
+### `elevenlabs.reception.services.list`
+
+`GET /v1/reception/services`
+
+Get All Services
+
+**Parameters:**
+
+- `staff_id`
+- `asset_id`
+- `is_active`
+- `kind`
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.services.create`
+
+`POST /v1/reception/services`
+
+Create Service
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `pricing_mode`
+- `intake_questions`
+- `groups`
+- `ungrouped_rank`
+- `name` (required)
+- `description`
+- `variants`
+- `kind`
+- `buffer_minutes`
+- `service_location`
+- `add_ons`
+- `max_participants`
+- `capacity`
+- `is_active`
+- `any_staff_member`
+- `staff_ids`
+- `asset_ids`
+- `advance_booking_minutes`
+- `location_ids`
+- `display_on_booking_page`
+- `travel_minutes`
+- `travel_before`
+- `travel_after`
+- `promotions`
+
+### `elevenlabs.reception.services.get`
+
+`GET /v1/reception/services/{service_id}`
+
+Get Service
+
+**Parameters:**
+
+- `service_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.services.update`
+
+`PUT /v1/reception/services/{service_id}`
+
+Update Service
+
+**Parameters:**
+
+- `service_id` (required)
+- `xi_workspace_id` (required)
+- `pricing_mode`
+- `intake_questions`
+- `groups`
+- `ungrouped_rank`
+- `name`
+- `description`
+- `variants`
+- `kind`
+- `buffer_minutes`
+- `service_location`
+- `add_ons`
+- `max_participants`
+- `capacity`
+- `is_active`
+- `any_staff_member`
+- `staff_ids`
+- `asset_ids`
+- `advance_booking_minutes`
+- `location_ids`
+- `display_on_booking_page`
+- `travel_minutes`
+- `travel_before`
+- `travel_after`
+- `promotions`
+- `duration_minutes`
+- `price`
+
+### `elevenlabs.reception.services.delete`
+
+`DELETE /v1/reception/services/{service_id}`
+
+Delete Service
+
+**Parameters:**
+
+- `service_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.services.confirm_update`
+
+`POST /v1/reception/services/{service_id}/confirm-update`
+
+Confirm Service Update
+
+**Parameters:**
+
+- `service_id` (required)
+- `reprice`
+- `xi_workspace_id` (required)
+- `pricing_mode`
+- `intake_questions`
+- `groups`
+- `ungrouped_rank`
+- `name`
+- `description`
+- `variants`
+- `kind`
+- `buffer_minutes`
+- `service_location`
+- `add_ons`
+- `max_participants`
+- `capacity`
+- `is_active`
+- `any_staff_member`
+- `staff_ids`
+- `asset_ids`
+- `advance_booking_minutes`
+- `location_ids`
+- `display_on_booking_page`
+- `travel_minutes`
+- `travel_before`
+- `travel_after`
+- `promotions`
+- `duration_minutes`
+- `price`
+
+## Reception Products
+
+### `elevenlabs.reception.products.list`
+
+`GET /v1/reception/products`
+
+Get All Products
+
+**Parameters:**
+
+- `group`
+- `is_active`
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.products.create`
+
+`POST /v1/reception/products`
+
+Create Product
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `pricing_mode`
+- `intake_questions`
+- `groups`
+- `ungrouped_rank`
+- `name` (required)
+- `description`
+- `price`
+- `is_active`
+- `orderable`
+- `allowed_fulfillment_types`
+- `location_ids`
+- `track_quantity`
+
+### `elevenlabs.reception.products.get`
+
+`GET /v1/reception/products/{product_id}`
+
+Get Product
+
+**Parameters:**
+
+- `product_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.products.update`
+
+`PUT /v1/reception/products/{product_id}`
+
+Update Product
+
+**Parameters:**
+
+- `product_id` (required)
+- `xi_workspace_id` (required)
+- `pricing_mode`
+- `intake_questions`
+- `groups`
+- `ungrouped_rank`
+- `name`
+- `description`
+- `price`
+- `is_active`
+- `orderable`
+- `allowed_fulfillment_types`
+- `location_ids`
+- `track_quantity`
+
+### `elevenlabs.reception.products.delete`
+
+`DELETE /v1/reception/products/{product_id}`
+
+Delete Product
+
+**Parameters:**
+
+- `product_id` (required)
+- `xi_workspace_id` (required)
+
+## Reception Products Stock
+
+### `elevenlabs.reception.products.stock.set`
+
+`PATCH /v1/reception/products/{product_id}/stock`
+
+Update Product Stock
+
+**Parameters:**
+
+- `product_id` (required)
+- `xi_workspace_id` (required)
+- `location_id` (required)
+- `on_hand` (required)
+- `expected_on_hand` (required)
+
+### `elevenlabs.reception.products.stock.adjust`
+
+`POST /v1/reception/products/{product_id}/stock/adjust`
+
+Adjust Product Stock
+
+**Parameters:**
+
+- `product_id` (required)
+- `xi_workspace_id` (required)
+- `location_id` (required)
+- `delta` (required)
+
+## Reception Staff
+
+### `elevenlabs.reception.staff.list`
+
+`GET /v1/reception/staff`
+
+Get All Staff
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.staff.create`
+
+`POST /v1/reception/staff`
+
+Create Staff Member
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `groups`
+- `ungrouped_rank`
+- `name` (required)
+- `description`
+- `is_active`
+- `email`
+- `phone`
+- `sms_notifications_opted_in`
+- `photo_url`
+- `location_id`
+- `working_hours`
+- `display_on_booking_page`
+- `customer_facing_name`
+
+### `elevenlabs.reception.staff.get`
+
+`GET /v1/reception/staff/{staff_id}`
+
+Get Staff Member
+
+**Parameters:**
+
+- `staff_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.staff.update`
+
+`PUT /v1/reception/staff/{staff_id}`
+
+Update Staff Member
+
+**Parameters:**
+
+- `staff_id` (required)
+- `xi_workspace_id` (required)
+- `groups`
+- `ungrouped_rank`
+- `name`
+- `description`
+- `is_active`
+- `email`
+- `phone`
+- `sms_notifications_opted_in`
+- `photo_url`
+- `location_id`
+- `working_hours`
+- `display_on_booking_page`
+- `customer_facing_name`
+
+### `elevenlabs.reception.staff.delete`
+
+`DELETE /v1/reception/staff/{staff_id}`
+
+Delete Staff Member
+
+**Parameters:**
+
+- `staff_id` (required)
+- `xi_workspace_id` (required)
+
+## Reception Receptionists
+
+### `elevenlabs.reception.receptionists.list`
+
+`GET /v1/reception/customer-facing-agents`
+
+List Receptionists
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.receptionists.update`
+
+`PATCH /v1/reception/customer-facing-agents/{agent_id}`
+
+Update Receptionist
+
+**Parameters:**
+
+- `agent_id` (required)
+- `xi_workspace_id` (required)
+- `config`
+- `name`
+- `widget`
+
+### `elevenlabs.reception.receptionists.activate`
+
+`POST /v1/reception/customer-facing-agents/{agent_id}/activate`
+
+Activate Receptionist
+
+**Parameters:**
+
+- `agent_id` (required)
+- `xi_workspace_id` (required)
+
+## Reception Receptionists TransferRules
+
+### `elevenlabs.reception.receptionists.transfer_rules.create`
+
+`POST /v1/reception/customer-facing-agents/{agent_id}/transfer-rules`
+
+Add Transfer Rule
+
+**Parameters:**
+
+- `agent_id` (required)
+- `xi_workspace_id` (required)
+- `label` (required)
+- `phone_number` (required)
+- `condition` (required)
+- `post_dial_digits`
+
+### `elevenlabs.reception.receptionists.transfer_rules.update`
+
+`PUT /v1/reception/customer-facing-agents/{agent_id}/transfer-rules/{rule_id}`
+
+Update Transfer Rule
+
+**Parameters:**
+
+- `agent_id` (required)
+- `rule_id` (required)
+- `xi_workspace_id` (required)
+- `label` (required)
+- `phone_number` (required)
+- `condition` (required)
+- `post_dial_digits`
+
+### `elevenlabs.reception.receptionists.transfer_rules.delete`
+
+`DELETE /v1/reception/customer-facing-agents/{agent_id}/transfer-rules/{rule_id}`
+
+Delete Transfer Rule
+
+**Parameters:**
+
+- `agent_id` (required)
+- `rule_id` (required)
+- `xi_workspace_id` (required)
+
+## Reception Holidays
+
+### `elevenlabs.reception.holidays.list`
+
+`GET /v1/reception/holidays`
+
+Get All Holidays
+
+**Parameters:**
+
+- `start_unix`
+- `end_unix`
+- `time_off_type`
+- `resource_id`
+- `location_id`
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.holidays.create`
+
+`POST /v1/reception/holidays`
+
+Create Holiday
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `name` (required)
+- `start_date` (required)
+- `end_date` (required)
+- `holiday_type`
+- `override_hours`
+- `time_off_type` (required)
+- `resource_id`
+- `location_id`
+- `reason`
+
+### `elevenlabs.reception.holidays.get`
+
+`GET /v1/reception/holidays/{holiday_id}`
+
+Get Holiday
+
+**Parameters:**
+
+- `holiday_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.holidays.update`
+
+`PUT /v1/reception/holidays/{holiday_id}`
+
+Update Holiday
+
+**Parameters:**
+
+- `holiday_id` (required)
+- `xi_workspace_id` (required)
+- `name`
+- `start_date`
+- `end_date`
+- `holiday_type`
+- `override_hours`
+- `time_off_type`
+- `resource_id`
+- `location_id`
+- `reason`
+
+### `elevenlabs.reception.holidays.delete`
+
+`DELETE /v1/reception/holidays/{holiday_id}`
+
+Delete Holiday
+
+**Parameters:**
+
+- `holiday_id` (required)
+- `xi_workspace_id` (required)
+
+## Reception Locations
+
+### `elevenlabs.reception.locations.list`
+
+`GET /v1/reception/locations`
+
+List Locations
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.locations.create`
+
+`POST /v1/reception/locations`
+
+Create Location
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `name` (required)
+- `address`
+- `notes`
+- `operating_hours`
+- `customer_facing_name`
+- `max_concurrent_appointments`
+- `is_active`
+
+### `elevenlabs.reception.locations.get`
+
+`GET /v1/reception/locations/{location_id}`
+
+Get Location
+
+**Parameters:**
+
+- `location_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.locations.update`
+
+`PUT /v1/reception/locations/{location_id}`
+
+Update Location
+
+**Parameters:**
+
+- `location_id` (required)
+- `xi_workspace_id` (required)
+- `name`
+- `address`
+- `notes`
+- `operating_hours`
+- `customer_facing_name`
+- `max_concurrent_appointments`
+- `is_active`
+
+### `elevenlabs.reception.locations.delete`
+
+`DELETE /v1/reception/locations/{location_id}`
+
+Delete Location
+
+**Parameters:**
+
+- `location_id` (required)
+- `xi_workspace_id` (required)
+
+## Reception BusinessProfile
+
+### `elevenlabs.reception.business_profile.get`
+
+`GET /v1/reception/agent-info`
+
+Get Business Profile
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.business_profile.update`
+
+`PUT /v1/reception/agent-info`
+
+Update Business Profile
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `business_name`
+- `business_country`
+- `business_description`
+- `timezone`
+- `currency`
+- `operating_hours`
+- `tool_call_sound`
+
+## Reception KnowledgeSources
+
+### `elevenlabs.reception.knowledge_sources.list`
+
+`GET /v1/reception/knowledge-sources`
+
+List Knowledge Sources
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.knowledge_sources.upload`
+
+`POST /v1/reception/knowledge-sources`
+
+Upload Knowledge Source
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `file` (required)
+
+### `elevenlabs.reception.knowledge_sources.get`
+
+`GET /v1/reception/knowledge-sources/{source_id}`
+
+Get Knowledge Source
+
+**Parameters:**
+
+- `source_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.knowledge_sources.delete`
+
+`DELETE /v1/reception/knowledge-sources/{source_id}`
+
+Delete Knowledge Source
+
+**Parameters:**
+
+- `source_id` (required)
+- `xi_workspace_id` (required)
+
+### `elevenlabs.reception.knowledge_sources.add_url`
+
+`POST /v1/reception/knowledge-sources/urls`
+
+Add Url Source
+
+**Parameters:**
+
+- `xi_workspace_id` (required)
+- `url` (required)
+- `crawl_entire_site`
+
+## Reception Workspaces
+
+### `elevenlabs.reception.workspaces.list`
+
+`GET /v1/reception/reseller/workspaces`
+
+List Reseller Workspaces
+
+**Parameters:**
+
+- `cursor`
+- `page_size`
+
+### `elevenlabs.reception.workspaces.create`
+
+`POST /v1/reception/reseller/workspaces`
+
+Create Reseller Workspace
+
+**Parameters:**
+
+- `business_name` (required)
+- `vertical`
+- `subscription`
+- `phone_number`
+- `members`
+- `complete_onboarding`
+- `idempotency_key`
+
+### `elevenlabs.reception.workspaces.complete_onboarding`
+
+`POST /v1/reception/reseller/workspaces/{workspace_id}/complete-onboarding`
+
+Complete Reseller Workspace Onboarding
+
+**Parameters:**
+
+- `workspace_id` (required)
+
+## Reception Subscriptions
+
+### `elevenlabs.reception.subscriptions.assign`
+
+`POST /v1/reception/reseller/workspaces/{workspace_id}/subscription`
+
+Assign Reseller Tier
+
+**Parameters:**
+
+- `workspace_id` (required)
+- `tier_id` (required)
+- `billing_period`
+- `idempotency_key`
+
+### `elevenlabs.reception.subscriptions.change`
+
+`PATCH /v1/reception/reseller/workspaces/{workspace_id}/subscription`
+
+Change Reseller Tier
+
+**Parameters:**
+
+- `workspace_id` (required)
+- `tier_id` (required)
+- `billing_period`
+- `idempotency_key`
+
+### `elevenlabs.reception.subscriptions.unassign`
+
+`DELETE /v1/reception/reseller/workspaces/{workspace_id}/subscription`
+
+Unassign Reseller Tier
+
+**Parameters:**
+
+- `workspace_id` (required)
+
+### `elevenlabs.reception.subscriptions.restore`
+
+`POST /v1/reception/reseller/workspaces/{workspace_id}/subscription/restore`
+
+Restore Reseller Subscription
+
+**Parameters:**
+
+- `workspace_id` (required)
+
+### `elevenlabs.reception.subscriptions.cancel_pending_downgrade`
+
+`POST /v1/reception/reseller/workspaces/{workspace_id}/subscription/cancel-downgrade`
+
+Cancel Reseller Pending Downgrade
+
+**Parameters:**
+
+- `workspace_id` (required)
+
+## Reception Tiers
+
+### `elevenlabs.reception.tiers.list`
+
+`GET /v1/reception/reseller/tier-ladder`
+
+List Reseller Tiers
+
+## Reception Billing
+
+### `elevenlabs.reception.billing.list_invoices`
+
+`GET /v1/reception/reseller/billing/invoices`
+
+List Reseller Invoices
+
+**Parameters:**
+
+- `cursor`
+- `page_size`
+
+### `elevenlabs.reception.billing.get_invoice`
+
+`GET /v1/reception/reseller/billing/invoices/{invoice_id}`
+
+Get Reseller Invoice
+
+**Parameters:**
+
+- `invoice_id` (required)
+
+### `elevenlabs.reception.billing.list_upcoming_payments`
+
+`GET /v1/reception/reseller/billing/upcoming`
+
+List Reseller Upcoming Payments

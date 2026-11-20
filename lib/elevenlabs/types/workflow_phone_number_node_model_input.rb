@@ -12,6 +12,7 @@ module Elevenlabs
       field :type, -> { ::Elevenlabs::Types::WorkflowPhoneNumberNodeModelInputType }, optional: true, nullable: false
       field :position, -> { ::Elevenlabs::Types::PositionInput }, optional: true, nullable: false
       field :edge_order, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
+      field :provider_configs, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::WorkflowPhoneNumberNodeModelInputProviderConfigsItem] }, optional: true, nullable: false
 
       def validate!
         ::Elevenlabs::Validator.validate_array!(custom_sip_headers, 'custom_sip_headers', max_items: 20)

@@ -7,7 +7,7 @@ module Elevenlabs
         module Types
           class BodyCreateDubbingLanguageTargetV1DubbingProjectProjectIDLanguagePost < ::Elevenlabs::Internal::Types::Model
             field :target_language, -> { String }, optional: false, nullable: false
-            field :voice_settings, -> { ::Elevenlabs::Types::DubbingLanguageResponseVoiceSettings }, optional: true, nullable: false
+            field :voice_settings, -> { ::Elevenlabs::Types::DubbingVoiceSettings }, optional: true, nullable: false
             field :translations, -> { ::Elevenlabs::Internal::Types::Hash[String, String] }, optional: true, nullable: true
 
             def self.load(str)

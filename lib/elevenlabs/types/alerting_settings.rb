@@ -5,10 +5,12 @@ module Elevenlabs
     class AlertingSettings < ::Elevenlabs::Internal::Types::Model
       field :monitor_configs, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::AlertingMonitorConfig] }, optional: true, nullable: false
       field :auto_resolve_after_inactive_minutes, -> { Integer }, optional: true, nullable: true
+      field :environments, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
       field :notifiers, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::AlertingSettingsNotifiersItem] }, optional: true, nullable: false
 
       def validate!
         ::Elevenlabs::Validator.validate_integer!(auto_resolve_after_inactive_minutes, 'auto_resolve_after_inactive_minutes', min: 1)
+        ::Elevenlabs::Validator.validate_array!(environments, 'environments', min_items: 1, max_items: 20)
         ::Elevenlabs::Validator.validate_array!(notifiers, 'notifiers', max_items: 10)
       end
 

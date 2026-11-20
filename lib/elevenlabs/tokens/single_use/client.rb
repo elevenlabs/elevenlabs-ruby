@@ -13,10 +13,13 @@ module Elevenlabs
         # Generate a time limited single-use token with embedded authentication for frontend clients.
         def create(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          query_params = {}
+          query_params['max_session_duration_seconds'] = params[:max_session_duration_seconds] if params.key?(:max_session_duration_seconds)
           request = ::Elevenlabs::Internal::JSON::Request.new(
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/single-use-token/#{URI.encode_uri_component(params[:token_type].to_s)}",
+            query: query_params,
             request_options: request_options,
           )
           response = @client.send(request)

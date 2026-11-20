@@ -12,7 +12,7 @@ module Elevenlabs
       field :description, -> { String }, optional: true, nullable: true
       field :preview_url, -> { String }, optional: true, nullable: true
       field :available_for_tiers, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
-      field :settings, -> { ::Elevenlabs::Types::BodyTextToSpeechFullVoiceSettings }, optional: true, nullable: false
+      field :settings, -> { ::Elevenlabs::Types::VoiceSettings }, optional: true, nullable: false
       field :sharing, -> { ::Elevenlabs::Types::VoiceSharingResponse }, optional: true, nullable: true
       field :high_quality_base_model_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :verified_languages, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::VerifiedVoiceLanguageResponseModel] }, optional: true, nullable: true

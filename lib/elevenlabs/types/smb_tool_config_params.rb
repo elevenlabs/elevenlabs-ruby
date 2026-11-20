@@ -81,6 +81,7 @@ module Elevenlabs
       member -> { ::Elevenlabs::Types::SearchClientsParams }, key: 'search_clients'
       member -> { ::Elevenlabs::Types::SendCustomEmailParams }, key: 'send_custom_email'
       member -> { ::Elevenlabs::Types::SetBookingSlugParams }, key: 'set_booking_slug'
+      member -> { ::Elevenlabs::Types::ConfirmChangeParams }, key: 'smb_confirm_change'
       member -> { ::Elevenlabs::Types::SubmitBusinessInfoParams }, key: 'submit_business_info'
       member -> { ::Elevenlabs::Types::TriggerUserVerificationParams }, key: 'trigger_user_verification'
       member -> { ::Elevenlabs::Types::UpdateAgentConfigParams }, key: 'update_agent_config'

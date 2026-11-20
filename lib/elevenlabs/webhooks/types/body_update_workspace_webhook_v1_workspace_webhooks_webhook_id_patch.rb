@@ -9,6 +9,7 @@ module Elevenlabs
         field :retry_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, String] }, optional: true, nullable: true
         field :events, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::WorkspaceWebhookEventType] }, optional: true, nullable: true
+        field :log_redacted_fields, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
 
         def self.load(str)
           coerce(::JSON.parse(str, symbolize_names: true))

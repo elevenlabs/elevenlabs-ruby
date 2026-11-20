@@ -3,7 +3,7 @@
 module Elevenlabs
   module Types
     class AgentResponse < ::Elevenlabs::Internal::Types::Model
-      field :type, -> { ::Elevenlabs::Types::AgentResponseType }, optional: false, nullable: false
+      field :type, -> { ::Elevenlabs::Types::Type }, optional: false, nullable: false
       field :event_id, -> { Integer }, optional: false, nullable: false
       field :content, -> { String }, optional: true, nullable: false
       field :is_final, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

@@ -5,7 +5,8 @@ module Elevenlabs
     module AgentResponseType
       extend ::Elevenlabs::Internal::Types::Enum
 
-      AGENT_RESPONSE = :agent_response
+      TEXT = :text
+      VOICE = :voice
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

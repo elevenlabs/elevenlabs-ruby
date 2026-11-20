@@ -8,7 +8,7 @@ module Elevenlabs
       field :target_language, -> { String }, optional: false, nullable: false
       field :status, -> { ::Elevenlabs::Types::DubbingLanguageResponseStatus }, optional: false, nullable: false
       field :model_id, -> { String }, optional: true, nullable: true
-      field :voice_settings, -> { ::Elevenlabs::Types::DubbingLanguageResponseVoiceSettings }, optional: true, nullable: true
+      field :voice_settings, -> { ::Elevenlabs::Types::DubbingVoiceSettings }, optional: true, nullable: true
       field :outputs, -> { ::Elevenlabs::Types::DubbingLanguageOutputs }, optional: true, nullable: true
       field :revision, -> { Integer }, optional: false, nullable: false
       field :output_revision, -> { Integer }, optional: true, nullable: true

@@ -8,6 +8,7 @@ module Elevenlabs
       field :credential_id, -> { String }, optional: false, nullable: false
       field :integration_connection_id, -> { String }, optional: false, nullable: false
       field :webhook_details, -> { ::Elevenlabs::Types::ConversationHistoryTranscriptToolCallWebhookDetails }, optional: false, nullable: false
+      field :function_details, -> { ::Elevenlabs::Types::ConversationHistoryTranscriptToolCallIntegrationFunctionDetails }, optional: false, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

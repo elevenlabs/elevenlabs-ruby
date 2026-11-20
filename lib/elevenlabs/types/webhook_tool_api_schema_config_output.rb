@@ -8,7 +8,7 @@ module Elevenlabs
       field :method_, -> { ::Elevenlabs::Types::WebhookToolAPISchemaConfigOutputMethod }, optional: true, nullable: false, api_name: 'method'
       field :path_params_schema, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::LiteralJSONSchemaProperty] }, optional: true, nullable: false
       field :query_params_schema, -> { ::Elevenlabs::Types::QueryParamsJSONSchemaOutput }, optional: true, nullable: true
-      field :request_body_schema, -> { ::Elevenlabs::Types::ObjectJSONSchemaPropertyOutput }, optional: true, nullable: true
+      field :request_body_schema, -> { ::Elevenlabs::Types::ObjectJSONSchemaPropertyOutput }, optional: true, nullable: false
       field :response_body_schema, -> { ::Elevenlabs::Types::ObjectJSONSchemaPropertyOutput }, optional: true, nullable: false
       field :response_filter, -> { ::Elevenlabs::Types::ResponseFilter }, optional: true, nullable: false
       field :content_type, -> { ::Elevenlabs::Types::WebhookToolAPISchemaConfigOutputContentType }, optional: true, nullable: false

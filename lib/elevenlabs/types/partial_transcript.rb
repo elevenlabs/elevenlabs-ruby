@@ -6,6 +6,7 @@ module Elevenlabs
       field :message_type, -> { ::Elevenlabs::Types::PartialTranscriptMessageType }, optional: true, nullable: false
       field :text, -> { String }, optional: false, nullable: false
       field :turn_probability, -> { Float }, optional: true, nullable: true
+      field :language_code, -> { String }, optional: true, nullable: true
       field :words, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::PartialTranscriptWordsItem] }, optional: true, nullable: true
 
       def self.load(str)

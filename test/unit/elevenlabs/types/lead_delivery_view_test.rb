@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'elevenlabs'
+require 'minitest/autorun'
+
+# Round-trip test generated for FSDK-1716. Proves the model's deserialize/serialize pair is
+# actually wire-shaped -- not just that it runs -- by asserting the exact wire hash it started
+# from comes back out unchanged.
+class LeadDeliveryViewTest < Minitest::Test
+  def test_round_trip
+    wire = { 'status' => 'pending', 'stage' => 'queued', 'sent_at_unix' => 1, 'delivered_at_unix' => 1, 'read_at_unix' => 1, 'replied_at_unix' => 1, 'failed_at_unix' => 1, 'error_message' => 'test-value' }
+
+    instance = ::Elevenlabs::Types::LeadDeliveryView.new(wire)
+
+    assert_equal(wire, instance.to_h)
+  end
+end

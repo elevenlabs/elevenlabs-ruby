@@ -5,6 +5,7 @@ module Elevenlabs
     class TransferToNumberToolConfigOutput < ::Elevenlabs::Internal::Types::Model
       field :system_tool_type, -> { ::Elevenlabs::Types::TransferToNumberToolConfigOutputSystemToolType }, optional: true, nullable: false
       field :transfers, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::PhoneNumberTransfer] }, optional: false, nullable: false
+      field :transfer_rules, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::TransferRuleOutput] }, optional: true, nullable: false
       field :enable_client_message, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 
       def self.load(str)

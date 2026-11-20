@@ -21,6 +21,7 @@ module Elevenlabs
       OCCUPATION = :occupation
       PHYSICAL_ATTRIBUTE = :physical_attribute
       LANGUAGE = :language
+      CRIMINAL_RECORD = :criminal_record
       USERNAME = :username
       PASSWORD = :password
       URL = :url

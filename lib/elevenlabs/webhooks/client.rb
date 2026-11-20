@@ -105,6 +105,53 @@ module Elevenlabs
           raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
         end
       end
+
+      # Sends a sample event of the given type to the webhook once and returns the endpoint's status code, response time, content type and response size. Test events are signed like real ones, are never retried, and share a limit of 10 per webhook per minute with redeliveries.
+      def test(request_options: {}, **params)
+        params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+        request_body = ::Elevenlabs::Webhooks::Types::BodySendTestWebhookEventV1WorkspaceWebhooksWebhookIDTestPost.new(params.except(:webhook_id))
+        request_body.validate! if request_body.respond_to?(:validate!)
+        request = ::Elevenlabs::Internal::JSON::Request.new(
+          base_url: request_options[:base_url],
+          method: 'POST',
+          path: "v1/workspace/webhooks/#{URI.encode_uri_component(params[:webhook_id].to_s)}/test",
+          body: request_body.to_h,
+          request_options: request_options,
+        )
+        response = @client.send(request)
+        code = response.code.to_i
+        if code.between?(200, 299)
+          result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::WebhookSendResultResponseModel.load(body) }
+          result.validate! if result.respond_to?(:validate!)
+          result
+        else
+          error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+          error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+          raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+        end
+      end
+
+      # Sends a stored delivery again, once, with the same delivery ID, a new signature and an ElevenLabs-Webhook-Redelivery header. A retry that is already scheduled is still sent. Redelivering needs permission to manage webhooks and a web session, and the delivery's payload must be stored. Redeliveries and test events share a limit of 10 per webhook per minute.
+      def redeliver(request_options: {}, **params)
+        params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+        request = ::Elevenlabs::Internal::JSON::Request.new(
+          base_url: request_options[:base_url],
+          method: 'POST',
+          path: "v1/workspace/webhooks/#{URI.encode_uri_component(params[:webhook_id].to_s)}/deliveries/#{URI.encode_uri_component(params[:delivery_id].to_s)}/redeliver",
+          request_options: request_options,
+        )
+        response = @client.send(request)
+        code = response.code.to_i
+        if code.between?(200, 299)
+          result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::WebhookSendResultResponseModel.load(body) }
+          result.validate! if result.respond_to?(:validate!)
+          result
+        else
+          error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+          error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+          raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+        end
+      end
     end
   end
 end

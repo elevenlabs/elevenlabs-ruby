@@ -28,10 +28,12 @@ module Elevenlabs
       TELEGRAM_INTEGRATION = :telegram_integration
       INTERCOM_INTEGRATION = :intercom_integration
       FRESHDESK_INTEGRATION = :freshdesk_integration
+      PLAIN_INTEGRATION = :plain_integration
       SALESFORCE_INTEGRATION = :salesforce_integration
       TEMPLATE_PREVIEW = :template_preview
       GENESYS_BOT_CONNECTOR = :genesys_bot_connector
       SUBAGENT_TOOL = :subagent_tool
+      AGENT_MESSAGES_API = :agent_messages_api
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

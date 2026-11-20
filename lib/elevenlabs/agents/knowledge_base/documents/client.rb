@@ -186,6 +186,53 @@ module Elevenlabs
             end
           end
 
+          # Get the stored and effective RAG chunking overrides for a document or folder.
+          def get_chunking_override(request_options: {}, **params)
+            params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+            request = ::Elevenlabs::Internal::JSON::Request.new(
+              base_url: request_options[:base_url],
+              method: 'GET',
+              path: "v1/convai/knowledge-base/#{URI.encode_uri_component(params[:documentation_id].to_s)}/chunking-override",
+              request_options: request_options,
+            )
+            response = @client.send(request)
+            code = response.code.to_i
+            if code.between?(200, 299)
+              result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::GetDocumentChunkingOverrideResponseModel.load(body) }
+              result.validate! if result.respond_to?(:validate!)
+              result
+            else
+              error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+              error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+              raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+            end
+          end
+
+          # Set or clear the RAG chunking override for a document or folder.
+          def update_chunking_override(request_options: {}, **params)
+            params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+            request_body = ::Elevenlabs::Agents::KnowledgeBase::Documents::Types::UpdateDocumentChunkingOverrideRequestModel.new(params.except(:documentation_id))
+            request_body.validate! if request_body.respond_to?(:validate!)
+            request = ::Elevenlabs::Internal::JSON::Request.new(
+              base_url: request_options[:base_url],
+              method: 'PATCH',
+              path: "v1/convai/knowledge-base/#{URI.encode_uri_component(params[:documentation_id].to_s)}/chunking-override",
+              body: request_body.to_h,
+              request_options: request_options,
+            )
+            response = @client.send(request)
+            code = response.code.to_i
+            if code.between?(200, 299)
+              result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::UpdateDocumentChunkingOverrideResponseModel.load(body) }
+              result.validate! if result.respond_to?(:validate!)
+              result
+            else
+              error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+              error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+              raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+            end
+          end
+
           # Get a list of agents depending on this knowledge base document
           def get_agents(request_options: {}, **params)
             params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)

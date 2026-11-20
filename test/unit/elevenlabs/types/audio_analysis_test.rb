@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'elevenlabs'
+require 'minitest/autorun'
+
+# Round-trip test generated for FSDK-1716. Proves the model's deserialize/serialize pair is
+# actually wire-shaped -- not just that it runs -- by asserting the exact wire hash it started
+# from comes back out unchanged.
+class AudioAnalysisTest < Minitest::Test
+  def test_round_trip
+    wire = { 'status' => 'processing', 'data' => { 'title' => 'test-value', 'description' => 'test-value', 'content_type' => 'test-value', 'overall_pacing' => 'test-value', 'segments' => [{ 'start_ms' => 1, 'end_ms' => 1, 'description' => 'test-value', 'segment_type' => 'test-value', 'has_speech' => true, 'has_music' => true, 'pacing' => 'test-value' }], 'key_moments' => [{ 'timestamp_ms' => 1, 'type' => 'test-value', 'description' => 'test-value' }] }, 'updated_at_ms' => 1 }
+
+    instance = ::Elevenlabs::Types::AudioAnalysis.new(wire)
+
+    assert_equal(wire, instance.to_h)
+  end
+end

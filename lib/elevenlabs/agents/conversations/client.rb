@@ -142,6 +142,31 @@ module Elevenlabs
           end
         end
 
+        # Create a text conversation with an agent. This does not run the agent, and the agent sends no first message. This endpoint is in alpha and may change.
+        def create(request_options: {}, **params)
+          params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          request_body = ::Elevenlabs::Agents::Conversations::Types::CreateAgentConversationRequest.new(params)
+          request_body.validate! if request_body.respond_to?(:validate!)
+          request = ::Elevenlabs::Internal::JSON::Request.new(
+            base_url: request_options[:base_url],
+            method: 'POST',
+            path: 'v1/convai/conversations',
+            body: request_body.to_h,
+            request_options: request_options,
+          )
+          response = @client.send(request)
+          code = response.code.to_i
+          if code.between?(200, 299)
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::CreateAgentConversationResponse.load(body) }
+            result.validate! if result.respond_to?(:validate!)
+            result
+          else
+            error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+            error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+            raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+          end
+        end
+
         # Resolve a conversation URL (a Slack message URL or a Zendesk ticket URL) to the deterministic conversation ID for the given agent, then confirm the conversation exists.
         def resolve(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
@@ -255,6 +280,103 @@ module Elevenlabs
           code = response.code.to_i
           if code.between?(200, 299)
             result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::GetSipLogMessagesResponse.load(body) }
+            result.validate! if result.respond_to?(:validate!)
+            result
+          else
+            error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+            error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+            raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+          end
+        end
+
+        # Send input to a conversation, and wait until the agent finishes or waits on client tool results. With `background` set to true, the endpoint returns 202 when the server admits the turn. Then stream the turn's events with `Last-Event-ID` set to the `stream_cursor`. This endpoint is in alpha and may change.
+        def send_message(request_options: {}, **params)
+          params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          request_body = ::Elevenlabs::Agents::Conversations::Types::SendConversationMessageRequest.new(params.except(:conversation_id))
+          request_body.validate! if request_body.respond_to?(:validate!)
+          request = ::Elevenlabs::Internal::JSON::Request.new(
+            base_url: request_options[:base_url],
+            method: 'POST',
+            path: "v1/convai/conversations/#{URI.encode_uri_component(params[:conversation_id].to_s)}/messages",
+            body: request_body.to_h,
+            request_options: request_options,
+          )
+          response = @client.send(request)
+          code = response.code.to_i
+          if code.between?(200, 299)
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::ConversationTurn.load(body) }
+            result.validate! if result.respond_to?(:validate!)
+            result
+          else
+            error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+            error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+            raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+          end
+        end
+
+        # Send input to a conversation, and stream the events of the request as server-sent events. The last event is `stream_ended`, which has the outcome of the turn. This endpoint is in alpha and may change.
+        def send_message_stream(request_options: {}, **params)
+          params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          request_body = ::Elevenlabs::Agents::Conversations::Types::SendConversationMessageStreamRequest.new(params.except(:conversation_id))
+          request_body.validate! if request_body.respond_to?(:validate!)
+          request = ::Elevenlabs::Internal::JSON::Request.new(
+            base_url: request_options[:base_url],
+            method: 'POST',
+            path: "v1/convai/conversations/#{URI.encode_uri_component(params[:conversation_id].to_s)}/messages/stream",
+            body: request_body.to_h,
+            request_options: request_options,
+          )
+          response = @client.send(request)
+          code = response.code.to_i
+          if code.between?(200, 299)
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::StreamEnvelope.load(body) }
+            result.validate! if result.respond_to?(:validate!)
+            result
+          else
+            error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+            error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+            raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+          end
+        end
+
+        # Get the status and output of a turn. The status comes from the stored transcript, so a turn that failed after the agent started can show as completed. Only the `stream_ended` event has the real outcome. This endpoint is in alpha and may change.
+        def get_turn(request_options: {}, **params)
+          params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          request = ::Elevenlabs::Internal::JSON::Request.new(
+            base_url: request_options[:base_url],
+            method: 'GET',
+            path: "v1/convai/conversations/#{URI.encode_uri_component(params[:conversation_id].to_s)}/turns/#{URI.encode_uri_component(params[:turn_id].to_s)}",
+            request_options: request_options,
+          )
+          response = @client.send(request)
+          code = response.code.to_i
+          if code.between?(200, 299)
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::ConversationTurn.load(body) }
+            result.validate! if result.respond_to?(:validate!)
+            result
+          else
+            error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+            error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+            raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+          end
+        end
+
+        # Stream the events of a turn as server-sent events. Send `Last-Event-ID` to resume after an event. The server keeps events for about an hour. This endpoint is in alpha and may change.
+        def stream_turn_events(request_options: {}, **params)
+          params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          headers = {}
+          headers['Last-Event-ID'] = ::Elevenlabs::Internal::Types::Utils.simple_param(params[:last_event_id]) if params.key?(:last_event_id)
+          request = ::Elevenlabs::Internal::JSON::Request.new(
+            base_url: request_options[:base_url],
+            method: 'GET',
+            path: "v1/convai/conversations/#{URI.encode_uri_component(params[:conversation_id].to_s)}/turns/#{URI.encode_uri_component(params[:turn_id].to_s)}/events",
+            headers: headers,
+            request_options: request_options,
+          )
+          response = @client.send(request)
+          code = response.code.to_i
+          if code.between?(200, 299)
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::StreamEnvelope.load(body) }
             result.validate! if result.respond_to?(:validate!)
             result
           else

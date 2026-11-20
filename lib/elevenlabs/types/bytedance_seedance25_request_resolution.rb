@@ -8,6 +8,7 @@ module Elevenlabs
       V480P = :'480p'
       V720P = :'720p'
       V1080P = :'1080p'
+      V4K = :'4k'
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

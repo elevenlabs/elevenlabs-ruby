@@ -7,6 +7,7 @@ module Elevenlabs
       field :name, -> { String }, optional: false, nullable: false
       field :webhook_url, -> { String }, optional: false, nullable: false
       field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, String] }, optional: true, nullable: true
+      field :log_redacted_fields, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

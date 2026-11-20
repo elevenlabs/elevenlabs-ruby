@@ -7,7 +7,7 @@ module Elevenlabs
         field :text, -> { String }, optional: false, nullable: false
         field :model_id, -> { String }, optional: true, nullable: false
         field :language_code, -> { String }, optional: true, nullable: true
-        field :voice_settings, -> { ::Elevenlabs::Types::BodyTextToSpeechFullVoiceSettings }, optional: true, nullable: false
+        field :voice_settings, -> { ::Elevenlabs::Types::VoiceSettings }, optional: true, nullable: false
         field :pronunciation_dictionary_locators, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::BodyTextToSpeechFullPronunciationDictionaryLocatorsItem] }, optional: true, nullable: false
         field :seed, -> { Integer }, optional: true, nullable: true
         field :previous_text, -> { String }, optional: true, nullable: true

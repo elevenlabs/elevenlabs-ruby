@@ -12,6 +12,7 @@ module Elevenlabs
         member -> { ::Elevenlabs::Types::WorkflowPhoneNumberNodeModelOutput }, key: 'phone_number'
         member -> { ::Elevenlabs::Types::WorkflowStandaloneAgentNodeModelOutput }, key: 'standalone_agent'
         member -> { ::Elevenlabs::Types::WorkflowStartNodeModelOutput }, key: 'start'
+        member -> { ::Elevenlabs::Types::WorkflowStartProcedureNodeModelOutput }, key: 'start_procedure'
         member -> { ::Elevenlabs::Types::WorkflowToolNodeModelOutput }, key: 'tool'
         member -> { ::Elevenlabs::Types::WorkflowSayNodeModelOutput }, key: 'say'
         member -> { ::Elevenlabs::Types::WorkflowUpdateStateNodeModelOutput }, key: 'update_state'

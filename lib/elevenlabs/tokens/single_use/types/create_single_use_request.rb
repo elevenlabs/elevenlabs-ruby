@@ -6,6 +6,8 @@ module Elevenlabs
       module Types
         class CreateSingleUseRequest < ::Elevenlabs::Internal::Types::Model
           field :token_type, -> { ::Elevenlabs::Types::SingleUseTokenType }, optional: false, nullable: false
+
+          field :max_session_duration_seconds, -> { Integer }, optional: true, nullable: true
         end
       end
     end

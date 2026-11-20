@@ -7,6 +7,9 @@ module Elevenlabs
         class BodyMergeABranchIntoATargetBranchV1ConvaiAgentsAgentIDBranchesSourceBranchIDMergePost < ::Elevenlabs::Internal::Types::Model
           field :archive_source_branch, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
           field :force, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
+          field :conflict_resolutions, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::ConflictResolution] }, optional: true, nullable: true
+          field :source_tip_id, -> { String }, optional: true, nullable: true
+          field :target_tip_id, -> { String }, optional: true, nullable: true
 
           def self.load(str)
             coerce(::JSON.parse(str, symbolize_names: true))

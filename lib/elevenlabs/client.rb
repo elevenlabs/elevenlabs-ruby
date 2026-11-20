@@ -4,7 +4,7 @@ module Elevenlabs
   class Client
     DEFAULT_BASE_URL = Environment::DEFAULT
 
-    def initialize(api_key: ENV.fetch('ELEVENLABS_API_KEY', nil), base_url: nil, max_retries: 2, timeout: 60, allow_insecure_http: false)
+    def initialize(api_key: ENV.fetch('ELEVENLABS_API_KEY', nil), base_url: nil, max_retries: 2, timeout: 240, allow_insecure_http: false)
       headers = { 'X-Fern-Language' => 'Ruby' }
       headers['xi-api-key'] = api_key unless api_key.nil?
       @raw_client = Internal::Http::RawClient.new(
@@ -77,6 +77,10 @@ module Elevenlabs
       @audio_native ||= AudioNative::Client.new(client: @raw_client)
     end
 
+    def content_provenance
+      @content_provenance ||= ContentProvenance::Client.new(client: @raw_client)
+    end
+
     def pronunciation_dictionaries
       @pronunciation_dictionaries ||= PronunciationDictionaries::Client.new(client: @raw_client)
     end
@@ -139,6 +143,10 @@ module Elevenlabs
 
     def assets
       @assets ||= Assets::Client.new(client: @raw_client)
+    end
+
+    def reception
+      @reception ||= Reception::Client.new(client: @raw_client)
     end
 
     def text_to_dialogue_multi_context

@@ -3,8 +3,8 @@
 module Elevenlabs
   module Types
     class AdhocAgentConfigOverrideForTestRequestModel < ::Elevenlabs::Internal::Types::Model
-      field :conversation_config, -> { ::Elevenlabs::Types::ConversationalConfig }, optional: false, nullable: false
-      field :platform_settings, -> { ::Elevenlabs::Types::AgentPlatformSettingsRequestModel }, optional: false, nullable: false
+      field :conversation_config, -> { ::Elevenlabs::Types::ConversationalConfig }, optional: true, nullable: false
+      field :platform_settings, -> { ::Elevenlabs::Types::AgentPlatformSettingsRequestModel }, optional: true, nullable: false
       field :workflow, -> { ::Elevenlabs::Types::AgentWorkflowRequestModel }, optional: true, nullable: false
 
       def self.load(str)

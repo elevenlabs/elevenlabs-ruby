@@ -21,7 +21,7 @@ module Elevenlabs
           response = @client.send(request)
           code = response.code.to_i
           if code.between?(200, 299)
-            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::BodyTextToSpeechFullVoiceSettings.load(body) }
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::VoiceSettings.load(body) }
             result.validate! if result.respond_to?(:validate!)
             result
           else
@@ -42,7 +42,7 @@ module Elevenlabs
           response = @client.send(request)
           code = response.code.to_i
           if code.between?(200, 299)
-            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::BodyTextToSpeechFullVoiceSettings.load(body) }
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::VoiceSettings.load(body) }
             result.validate! if result.respond_to?(:validate!)
             result
           else
@@ -55,7 +55,7 @@ module Elevenlabs
         # Edit your settings for a specific voice. "similarity_boost" corresponds to "Clarity + Similarity Enhancement" in the web app and "stability" corresponds to "Stability" slider in the web app.
         def update(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
-          request_body = ::Elevenlabs::Types::BodyTextToSpeechFullVoiceSettings.new(params.except(:voice_id))
+          request_body = ::Elevenlabs::Types::VoiceSettings.new(params.except(:voice_id))
           request_body.validate! if request_body.respond_to?(:validate!)
           request = ::Elevenlabs::Internal::JSON::Request.new(
             base_url: request_options[:base_url],
