@@ -6,11 +6,13 @@ module Elevenlabs
       field :timezone, -> { String }, optional: true, nullable: true
       field :retry_, -> { ::Elevenlabs::Types::RetryPolicy }, optional: true, nullable: false, api_name: 'retry'
       field :calling_periods, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::CallingPeriod] }, optional: true, nullable: true
+      field :date_overrides, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::DateOverride] }, optional: true, nullable: true
       field :data_collection, -> { ::Elevenlabs::Types::DataCollectionConfig }, optional: true, nullable: false
       field :followup_context, -> { ::Elevenlabs::Types::FollowupContextPolicy }, optional: true, nullable: false
 
       def validate!
         ::Elevenlabs::Validator.validate_array!(calling_periods, 'calling_periods', min_items: 1)
+        ::Elevenlabs::Validator.validate_array!(date_overrides, 'date_overrides', max_items: 100)
       end
 
       def self.load(str)

@@ -287,6 +287,10 @@ module Elevenlabs
         @summaries ||= Summaries::Client.new(client: @client)
       end
 
+      def subagents
+        @subagents ||= Subagents::Client.new(client: @client)
+      end
+
       def widget
         @widget ||= Widget::Client.new(client: @client)
       end

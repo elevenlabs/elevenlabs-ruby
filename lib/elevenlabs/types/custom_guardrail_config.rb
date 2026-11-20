@@ -8,6 +8,7 @@ module Elevenlabs
       field :prompt, -> { String }, optional: false, nullable: false
       field :execution_mode, -> { ::Elevenlabs::Types::GuardrailExecutionMode }, optional: true, nullable: false
       field :model, -> { ::Elevenlabs::Types::CustomGuardrailConfigModel }, optional: true, nullable: false
+      field :service_tier, -> { ::Elevenlabs::Types::LlmServiceTier }, optional: true, nullable: false
       field :history_message_count, -> { Integer }, optional: true, nullable: false
       field :trigger_action, -> { ::Elevenlabs::Types::CustomGuardrailConfigTriggerAction }, optional: true, nullable: false
       field :evaluate_full_response_only, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

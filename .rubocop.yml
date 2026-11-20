@@ -97,3 +97,16 @@ Style/TrailingCommaInArrayLiteral:
 # other way; `literal` can only ever produce the form the pattern match needs.
 Style/Lambda:
   EnforcedStyle: literal
+
+# Wire tests intentionally verify the method, path, parameters, auth, body, and response for one
+# captured request. Splitting those assertions into separate tests would repeat the HTTP request
+# and weaken the guarantee that all properties belong to the same request.
+Minitest/MultipleAssertions:
+  Enabled: false
+
+# Wire-test URL patterns contain escaped paths inside interpolation. Auto-correcting their
+# `%r{...}` literals to `/.../` also escapes slashes inside the interpolated string literal and
+# changes the Regexp at runtime. Other generated files keep RuboCop's default slash-literal style.
+Style/RegexpLiteral:
+  Exclude:
+    - 'test/wire/**/*'

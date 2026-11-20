@@ -5,6 +5,7 @@ module Elevenlabs
     class AlertingSettingsResponse < ::Elevenlabs::Internal::Types::Model
       field :monitor_configs, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::AlertingMonitorConfig] }, optional: true, nullable: false
       field :auto_resolve_after_inactive_minutes, -> { Integer }, optional: true, nullable: true
+      field :environments, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
       field :notifiers, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::AlertingSettingsResponseNotifiersItem] }, optional: true, nullable: false
 
       def self.load(str)

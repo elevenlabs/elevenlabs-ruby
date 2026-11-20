@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'elevenlabs'
+require 'minitest/autorun'
+
+# Round-trip test generated for FSDK-1716. Proves the model's deserialize/serialize pair is
+# actually wire-shaped -- not just that it runs -- by asserting the exact wire hash it started
+# from comes back out unchanged.
+class UserModelTest < Minitest::Test
+  def test_round_trip
+    wire = { 'name' => 'test-value', 'uid' => 'test-value', 'type_id' => 0, 'type' => 'test-value', 'email_addr' => 'test-value', 'full_name' => 'test-value', 'domain' => 'test-value' }
+
+    instance = ::Elevenlabs::Types::UserModel.new(wire)
+
+    assert_equal(wire, instance.to_h)
+  end
+end

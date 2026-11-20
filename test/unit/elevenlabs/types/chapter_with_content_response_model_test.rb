@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'elevenlabs'
+require 'minitest/autorun'
+
+# Round-trip test generated for FSDK-1716. Proves the model's deserialize/serialize pair is
+# actually wire-shaped -- not just that it runs -- by asserting the exact wire hash it started
+# from comes back out unchanged.
+class ChapterWithContentResponseModelTest < Minitest::Test
+  def test_round_trip
+    wire = { 'chapter_id' => 'test-value', 'name' => 'test-value', 'last_conversion_date_unix' => 1, 'conversion_progress' => 1, 'can_be_downloaded' => true, 'state' => 'default', 'has_video' => true, 'has_visual_content' => true, 'voice_ids' => ['test-value'], 'statistics' => { 'characters_unconverted' => 1, 'characters_converted' => 1, 'paragraphs_converted' => 1, 'paragraphs_unconverted' => 1, 'credits_needed_to_convert' => 1, 'voice_statistics' => [{ 'project_voice_ref_id' => 'test-value', 'characters_unconverted' => 1, 'characters_converted' => 1, 'credits_needed_to_convert' => 1, 'voice_id' => 'test-value' }] }, 'last_conversion_error' => 'test-value', 'content' => { 'blocks' => [{ 'block_id' => 'test-value', 'nodes' => [{ 'type' => 'tts_node', 'project_voice_ref_id' => 'test-value', 'text' => 'test-value', 'voice_id' => 'test-value' }] }] } }
+
+    instance = ::Elevenlabs::Types::ChapterWithContentResponseModel.new(wire)
+
+    assert_equal(wire, instance.to_h)
+  end
+end

@@ -109,7 +109,7 @@ module Elevenlabs
           end
         end
 
-        # Returns the result of merging the source branch into the target branch without performing the merge. Useful for showing an accurate diff before confirming.
+        # Returns the result of merging the source branch into the target branch without performing the merge. When `conflicts` is not empty, the merge itself is rejected unless `conflict_resolutions` settles every conflict or `force` is set; until then the returned configuration shows one side of each conflict only as a placeholder.
         def preview_merge(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
@@ -136,7 +136,7 @@ module Elevenlabs
           end
         end
 
-        # Merge a branch into a target branch
+        # Merge a branch into a target branch. If both branches changed the same field, the merge returns 409 unless `conflict_resolutions` settles every conflict the merge preview reports, or `force` is set.
         def merge(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
@@ -162,7 +162,7 @@ module Elevenlabs
           end
         end
 
-        # Returns the result of pulling changes from a source branch (defaults to main) into the given branch without performing it, preserving the given branch's own changes. Useful for showing an accurate diff before confirming.
+        # Returns the result of pulling changes from a source branch (defaults to main) into the given branch without performing it. When `conflicts` is not empty, the rebase itself is rejected unless `conflict_resolutions` settles every conflict; until then the returned configuration keeps the given branch's side of each conflict.
         def preview_rebase(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
@@ -188,17 +188,19 @@ module Elevenlabs
           end
         end
 
-        # Pull changes from a source branch (defaults to main) into this branch as a new version, preserving this branch's own changes on conflicts.
+        # Pull changes from a source branch (defaults to main) into this branch as a new version. If both branches changed the same field, the rebase returns 409 unless `conflict_resolutions` settles every conflict the rebase preview reports.
         def rebase(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
           query_params['source_branch_id'] = params[:source_branch_id] if params.key?(:source_branch_id)
+          request_body = ::Elevenlabs::Agents::Branches::Types::BodyRebaseABranchOntoMainV1ConvaiAgentsAgentIDBranchesBranchIDRebasePost.new(params.except(:agent_id, :branch_id, :source_branch_id))
+          request_body.validate! if request_body.respond_to?(:validate!)
           request = ::Elevenlabs::Internal::JSON::Request.new(
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:branch_id].to_s)}/rebase",
             query: query_params,
-            body: params.except(:agent_id, :branch_id, :source_branch_id),
+            body: request_body.to_h,
             request_options: request_options,
           )
           response = @client.send(request)

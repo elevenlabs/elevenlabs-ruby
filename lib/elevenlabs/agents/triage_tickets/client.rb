@@ -10,7 +10,7 @@ module Elevenlabs
           @client = client
         end
 
-        # List an agent's conversation triage tickets, ordered by most recently created first unless sorted by priority. These are tickets about the agent's own performance on a conversation (for triage with Architect), not tickets an agent opens for end users.
+        # List an agent's issues, ordered by most recently created first unless sorted by priority. These are issues about the agent's own performance on a conversation (to work on with Architect), not tickets an agent opens for end users.
         def list(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
@@ -22,7 +22,6 @@ module Elevenlabs
           query_params['sort_by'] = params[:sort_by] if params.key?(:sort_by)
           query_params['owner_user_id'] = params[:owner_user_id] if params.key?(:owner_user_id)
           query_params['assignee_user_id'] = params[:assignee_user_id] if params.key?(:assignee_user_id)
-          query_params['issue_type'] = params[:issue_type] if params.key?(:issue_type)
           query_params['label'] = params[:label] if params.key?(:label)
           query_params['merged_into_ticket_id'] = params[:merged_into_ticket_id] if params.key?(:merged_into_ticket_id)
           query_params['search'] = params[:search] if params.key?(:search)
@@ -47,7 +46,7 @@ module Elevenlabs
           end
         end
 
-        # Manually raise a follow-up ticket against an agent, not tied to any conversation (for example a task like 'add the KB about X'). Without a title, one is derived from the comment. Requires viewer access to the agent.
+        # Manually raise a follow-up issue against an agent, not tied to any conversation (for example a task like 'add the KB about X'). Without a title, one is derived from the comment. Requires viewer access to the agent.
         def create_manual(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::TriageTickets::Types::CreateManualTicketRequestModel.new(params.except(:agent_id))
@@ -72,7 +71,7 @@ module Elevenlabs
           end
         end
 
-        # List conversation triage tickets across every agent in the workspace, ordered by most recently created first. Use this to build a workspace-wide view (for example, tickets assigned to the caller). Supports the same filters, sorting and search as the per-agent endpoint. Tickets for agents the caller cannot access are omitted.
+        # List agent issues across every agent in the workspace, ordered by most recently created first. Use this to build a workspace-wide view (for example, issues assigned to the caller). Supports the same filters, sorting and search as the per-agent endpoint. Issues for agents the caller cannot access are omitted.
         def list_for_workspace(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
@@ -84,7 +83,6 @@ module Elevenlabs
           query_params['sort_by'] = params[:sort_by] if params.key?(:sort_by)
           query_params['owner_user_id'] = params[:owner_user_id] if params.key?(:owner_user_id)
           query_params['assignee_user_id'] = params[:assignee_user_id] if params.key?(:assignee_user_id)
-          query_params['issue_type'] = params[:issue_type] if params.key?(:issue_type)
           query_params['label'] = params[:label] if params.key?(:label)
           query_params['merged_into_ticket_id'] = params[:merged_into_ticket_id] if params.key?(:merged_into_ticket_id)
           query_params['search'] = params[:search] if params.key?(:search)
@@ -109,7 +107,7 @@ module Elevenlabs
           end
         end
 
-        # Raise a ticket about an agent's performance on a conversation, for triage with Architect. Provide an overall comment and/or turn-level comments describing what went wrong.
+        # Raise an issue about an agent's performance on a conversation, to work on with Architect. Provide an overall comment and/or turn-level comments describing what went wrong.
         def create(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::TriageTickets::Types::CreateAgentConversationTicketRequestModel.new(params)
@@ -156,7 +154,7 @@ module Elevenlabs
           end
         end
 
-        # Get an agent conversation ticket by ID.
+        # Get an agent issue by ID.
         def get(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request = ::Elevenlabs::Internal::JSON::Request.new(
@@ -178,7 +176,7 @@ module Elevenlabs
           end
         end
 
-        # Update a ticket's title, comment, status, priority, and/or assignee. Requires viewer access to the ticket's agent.
+        # Update an agent issue's title, comment, status, priority, and/or assignee. Requires viewer access to the issue's agent.
         def update(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::TriageTickets::Types::PatchAgentConversationTicketRequestModel.new(params.except(:agentqa_ticket_id))
@@ -203,7 +201,7 @@ module Elevenlabs
           end
         end
 
-        # Delete an agent conversation ticket. Restricted to the ticket creator or a workspace admin.
+        # Delete an agent issue. Restricted to the issue creator or a workspace admin.
         def delete(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request = ::Elevenlabs::Internal::JSON::Request.new(
@@ -221,7 +219,7 @@ module Elevenlabs
           raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
         end
 
-        # Append a comment discussing how to resolve the ticket. Requires viewer access to the ticket's agent.
+        # Append a comment discussing how to resolve the agent issue. Requires viewer access to the issue's agent.
         def add_comment(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::TriageTickets::Types::AddTicketCommentRequestModel.new(params.except(:agentqa_ticket_id))
@@ -246,7 +244,7 @@ module Elevenlabs
           end
         end
 
-        # Merge other open tickets of the same agent into this pending, in-progress, or resolved one. Their conversations move onto this ticket, its priority is raised to the highest among them, and they are kept with status 'merged'. Requires viewer access to the ticket's agent.
+        # Merge other open issues of the same agent into this pending, in-progress, or resolved one. Their conversations move onto this issue, its priority is raised to the highest among them, and they are kept with status 'merged'. Requires viewer access to the issue's agent.
         def merge(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::TriageTickets::Types::MergeAgentConversationTicketsRequestModel.new(params.except(:agentqa_ticket_id))
@@ -271,7 +269,7 @@ module Elevenlabs
           end
         end
 
-        # Append a turn-level comment to a ticket. Requires viewer access to the ticket's agent.
+        # Append a turn-level comment to an agent issue. Requires viewer access to the issue's agent.
         def add_turn_comment(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::TriageTickets::Types::AddTurnCommentRequestModel.new(params.except(:agentqa_ticket_id))

@@ -110,10 +110,10 @@ module Elevenlabs
           @token_provider = token_provider
           @retry_config = DEFAULT_RETRY_CONFIG.merge(retry_config.to_h.transform_keys(&:to_sym))
           @default_headers = {
-            'User-Agent': 'elevenlabs/1.0.0',
+            'User-Agent': 'elevenlabs/1.0.1',
             'X-Fern-Language': 'Ruby',
             'X-Fern-SDK-Name': 'elevenlabs',
-            'X-Fern-SDK-Version': '1.0.0',
+            'X-Fern-SDK-Version': '1.0.1',
           }.merge(headers)
           @websocket = websocket
         end

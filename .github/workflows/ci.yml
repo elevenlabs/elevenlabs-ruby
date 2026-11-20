@@ -41,7 +41,29 @@ jobs:
         run: bundle install
 
       - name: Run Tests
-        run: bundle exec rake test
+        run: |
+          if [ ! -d test ]; then
+            echo "::error::Expected generated tests under test/, found none."
+            exit 1
+          fi
+          set +e
+          test_output=$(bundle exec rake test 2>&1)
+          test_status=$?
+          set -e
+          printf '%s\n' "$test_output"
+          if [ "$test_status" -ne 0 ]; then
+            exit "$test_status"
+          fi
+          runs=$(printf '%s\n' "$test_output" | grep -oE '[0-9]+ runs,' | tail -1 | grep -oE '[0-9]+' || true)
+          if [ -z "$runs" ]; then
+            echo "::error::Could not parse Minitest's run count from rake test output."
+            exit 1
+          fi
+          if [ "$runs" -eq 0 ]; then
+            echo "::error::test/ exists but Minitest collected 0 runs."
+            exit 1
+          fi
+          echo "Minitest ran $runs test(s)."
 
   publish:
     name: Publish to RubyGems.org

@@ -35,6 +35,7 @@ module Elevenlabs
       CONVAI_READ = :convai_read
       CONVAI_WRITE = :convai_write
       AGENTS_ARCHITECT = :agents_architect
+      AGENTS_ENVIRONMENT_VARIABLES_WRITE = :agents_environment_variables_write
       MUSIC_GENERATION = :music_generation
       IMAGE_VIDEO_GENERATION = :image_video_generation
       FLOWS = :flows
@@ -57,6 +58,7 @@ module Elevenlabs
       CONVERSATION_PRIVACY_MANAGE = :conversation_privacy_manage
       COPY_RESOURCES_CROSS_WORKSPACE = :copy_resources_cross_workspace
       SYNTHID_DETECTOR = :synthid_detector
+      WATERMARK = :watermark
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

@@ -10,6 +10,7 @@ module Elevenlabs
       field :disable_first_message_interruptions, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :max_conversation_duration_message, -> { String }, optional: true, nullable: false
       field :text_behavior_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::BehaviorOverride] }, optional: true, nullable: true
+      field :subagent_config, -> { ::Elevenlabs::Types::SubagentConfigInput }, optional: true, nullable: false
       field :prompt, -> { ::Elevenlabs::Types::PromptAgentAPIModelInput }, optional: true, nullable: false
 
       def self.load(str)

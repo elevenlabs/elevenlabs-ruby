@@ -9,7 +9,7 @@ module Elevenlabs
       field :agent_id, -> { String }, optional: false, nullable: false
       field :needs_clustering, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: false, nullable: false
       field :title, -> { String }, optional: false, nullable: true
-      field :issue_type, -> { ::Elevenlabs::Types::AgentConversationTicketIssueType }, optional: false, nullable: false
+      field :issue_type, -> { Object }, optional: true, nullable: true
       field :labels, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
       field :conversation_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
       field :first_seen_unix_secs, -> { Integer }, optional: false, nullable: true

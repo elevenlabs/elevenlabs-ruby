@@ -8,7 +8,6 @@ module Elevenlabs
       discriminant :type
       member -> { ::Elevenlabs::Types::APIIntegrationWebhookToolConfigInput }, key: 'api_integration_webhook'
       member -> { ::Elevenlabs::Types::ClientToolConfigInput }, key: 'client'
-      member -> { ::Elevenlabs::Types::McpToolConfigInput }, key: 'mcp'
       member -> { ::Elevenlabs::Types::SmbToolConfig }, key: 'smb'
       member -> { ::Elevenlabs::Types::SystemToolConfigInput }, key: 'system'
       member -> { ::Elevenlabs::Types::WebhookToolConfigInput }, key: 'webhook'

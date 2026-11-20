@@ -12,6 +12,7 @@ module Elevenlabs
       field :referenced_kb_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :referenced_procedure_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :referenced_dynamic_variables, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
+      field :written_dynamic_variables, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :folder_parent_id, -> { String }, optional: true, nullable: true
 
       def self.load(str)

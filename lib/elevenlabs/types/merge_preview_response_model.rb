@@ -21,6 +21,9 @@ module Elevenlabs
       field :overridden_fields, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :conflicts, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::FieldConflict] }, optional: true, nullable: false
       field :source_identical_to_target, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
+      field :source_tip_version_id, -> { String }, optional: true, nullable: true
+      field :target_tip_version_id, -> { String }, optional: true, nullable: true
+      field :merge_error, -> { String }, optional: true, nullable: true
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

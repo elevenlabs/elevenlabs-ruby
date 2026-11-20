@@ -23,8 +23,6 @@ module Elevenlabs
 
           field :assignee_user_id, -> { String }, optional: true, nullable: true
 
-          field :issue_type, -> { ::Elevenlabs::Types::AgentConversationTicketIssueType }, optional: true, nullable: true
-
           field :label, -> { String }, optional: true, nullable: true
 
           field :merged_into_ticket_id, -> { String }, optional: true, nullable: true

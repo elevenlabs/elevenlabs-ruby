@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'elevenlabs'
+require 'minitest/autorun'
+
+# Round-trip test generated for FSDK-1716. Proves the model's deserialize/serialize pair is
+# actually wire-shaped -- not just that it runs -- by asserting the exact wire hash it started
+# from comes back out unchanged.
+class APIIntegrationOAuth2AuthCodeResponseTest < Minitest::Test
+  def test_round_trip
+    wire = { 'name' => 'test-value', 'auth_type' => 'api_integration_oauth2_auth_code', 'provider' => 'test-value', 'token_url' => 'test-value', 'scopes' => ['test-value'], 'scope_separator' => ' ', 'expires_at' => 'test-value', 'integration_id' => 'test-value', 'credential_id' => 'test-value', 'id' => 'test-value', 'used_by' => { 'tools' => [{ 'id' => 'test-value', 'name' => 'test-value', 'type' => 'available', 'created_at_unix_secs' => 1, 'access_level' => 'admin' }], 'mcp_servers' => [{ 'id' => 'test-value', 'name' => 'test-value', 'type' => 'available', 'created_at_unix_secs' => 1, 'access_level' => 'admin' }], 'integration_connections' => [{ 'id' => 'test-value', 'name' => 'test-value' }] }, 'status' => 'active', 'status_detail' => 'test-value', 'status_updated_at' => 'test-value' }
+
+    instance = ::Elevenlabs::Types::APIIntegrationOAuth2AuthCodeResponse.new(wire)
+
+    assert_equal(wire, instance.to_h)
+  end
+end

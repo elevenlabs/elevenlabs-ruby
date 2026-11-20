@@ -17,9 +17,11 @@ module Elevenlabs
       CONVERSATIONAL_AI = :conversational_ai
       CONVERSATIONAL_AI_READ = :conversational_ai_read
       ARCHITECT = :architect
+      AGENTS_ENVIRONMENT_VARIABLES_WRITE = :agents_environment_variables_write
       VOICE_ISOLATOR = :voice_isolator
       AI_SPEECH_CLASSIFIER = :ai_speech_classifier
       SYNTHID_DETECTOR = :synthid_detector
+      WATERMARK = :watermark
       ADD_VOICE_FROM_VOICE_LIBRARY = :add_voice_from_voice_library
       CREATE_INSTANT_VOICE_CLONE = :create_instant_voice_clone
       CREATE_PROFESSIONAL_VOICE_CLONE = :create_professional_voice_clone

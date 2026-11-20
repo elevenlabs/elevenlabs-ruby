@@ -8,6 +8,8 @@ module Elevenlabs
       ELEVENLABS = :elevenlabs
       SCRIBE_REALTIME = :scribe_realtime
       SCRIBE_V2_TURBO = :scribe_v2_turbo
+      SCRIBE_V3_LIVE = :scribe_v3_live
+      SCRIBE_V3_LIVE_MEDICAL = :scribe_v3_live_medical
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))
