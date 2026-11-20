@@ -475,6 +475,24 @@ module Elevenlabs
         assert_equal ['tool_mcp'], server.agents['agent_1'].dig('conversation_config', 'agent', 'prompt', 'tool_ids')
       end
 
+      def test_keeps_a_loaded_mcp_tool_in_tool_ids_when_the_tools_are_replaced
+        ping = Tool.client('ping', 'Ping the client')
+        agent = Agent.from_json(
+          { 'name' => 'A',
+            'conversation_config' => { 'agent' => { 'prompt' => { 'prompt' => 'p', 'tool_ids' => %w[tool_mcp tool_ping] } } } },
+          tools_by_id: { 'tool_mcp' => Tool.from_json(MCP), 'tool_ping' => ping },
+        )
+
+        assert_equal ['tool_mcp'], agent.tool_ids
+        assert_equal [ping], agent.tools
+
+        agent.update(tools: [get_order])
+
+        assert_equal ['tool_mcp'], agent.tool_ids
+        assert_equal %w[tool_mcp tool_order],
+                     agent.to_json(tool_ids: { 'get_order' => 'tool_order' }).dig('conversation_config', 'agent', 'prompt', 'tool_ids')
+      end
+
       def test_keeps_a_loaded_mcp_tool_in_a_workflow_node_by_its_id
         mcp = Tool.from_json(MCP)
         agent = Agent.from_json(

@@ -86,7 +86,7 @@ module Elevenlabs
       class << self
         # Loads an agent config in API format (snake_case): a CLI agent_configs/*.json file, or the to_json of
         # an agent, as a JSON string or a parsed hash. Tool ids found in +tools_by_id+ (a hash of id => Tool)
-        # become Tool objects the agent manages; the rest stay as tool_ids. Fields this SDK doesn't model are
+        # of webhook and client tools become Tool objects the agent manages; the rest stay as tool_ids. Fields this SDK doesn't model are
         # kept, so an unedited agent round-trips exactly.
         def from_json(config, tools_by_id: nil)
           parsed = config.is_a?(::String) ? ::JSON.parse(config) : AgentWorkflows::Wire.to_wire(config)
@@ -212,7 +212,8 @@ module Elevenlabs
           @tool_list_given = true
           ids.each do |id|
             tool = tools_by_id[id]
-            tool.nil? ? @tool_ids << id : @tools << tool
+            # Kinds push doesn't manage (MCP...) stay attached by id, as agents.pull leaves them.
+            tool.nil? || !managed?(tool) ? @tool_ids << id : @tools << tool
           end
         end
         load_system_tools(base)
