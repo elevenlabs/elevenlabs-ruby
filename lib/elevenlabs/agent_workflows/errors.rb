@@ -18,6 +18,8 @@ module Elevenlabs
       missing_insert_result
       unreachable_node
       unknown_node_type
+      duplicate_tool_name
+      unresolved_tool
     ].freeze
 
     # A problem found in a workflow. Errors stop build(); warnings are passed to its on_warning callback.

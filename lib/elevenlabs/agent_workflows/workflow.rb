@@ -51,13 +51,32 @@ module Elevenlabs
 
         # Loads a workflow stored as API-format JSON (snake_case), for example from to_json_string or a
         # CLI agent_configs/*.json file. Accepts a JSON string or a parsed hash, holding either the
-        # workflow itself or a whole agent config with a +workflow+ key.
-        def from_json(data)
+        # workflow itself or a whole agent config with a +workflow+ key. Tool ids found in +tools_by_id+
+        # (a hash of id => Tool) are swapped for those Tool objects, so the loaded workflow refers to them
+        # as a built one would; other ids stay as they are.
+        def from_json(data, tools_by_id: nil)
           parsed = data.is_a?(::String) ? ::JSON.parse(data) : data
           raw = parsed.is_a?(::Hash) && parsed.key?('workflow') ? parsed['workflow'] : parsed
           wf = new
           wf.graph.load(raw || {})
+          bind_tools(wf.graph, tools_by_id) unless tools_by_id.nil?
           wf
+        end
+
+        private
+
+        # Swaps tool ids for the Tool objects they stand for. Ids missing from +by_id+ stay as they are.
+        def bind_tools(graph, by_id)
+          graph.nodes.each_key do |node_id|
+            graph.nodes[node_id] = ToolRefs.map_node_tool_ids(graph.nodes[node_id]) do |id|
+              tool = by_id[id]
+              next id if tool.nil?
+
+              key = ToolRefs.placeholder(tool.name)
+              graph.tool_refs[key] = tool
+              key
+            end
+          end
         end
       end
 
@@ -67,6 +86,12 @@ module Elevenlabs
       # The id of the start node: "start_node" by default, or whatever a loaded workflow uses.
       def start_id
         @graph.start_id
+      end
+
+      # The Tool objects the workflow's nodes reference, in the order they were first used.
+      def tools
+        used = @graph.nodes.values.flat_map { |model| ToolRefs.node_tool_ids(model) }
+        @graph.tool_refs.filter_map { |key, tool| tool if used.include?(key) }
       end
 
       # Ids of every node, in the order they were added.
@@ -153,21 +178,24 @@ module Elevenlabs
       end
 
       # Validates the workflow and returns it as the model agents.create and agents.update accept.
-      # +on_warning+ is a callable invoked once per non-fatal problem. Raises WorkflowValidationError
-      # listing every problem, if the workflow is invalid.
-      def build(on_warning: nil)
-        ::Elevenlabs::Types::AgentWorkflowRequestModel.load(::JSON.generate(to_wire_hash(on_warning)))
+      # +on_warning+ is a callable invoked once per non-fatal problem. +tool_ids+ maps the name of each
+      # Tool object the workflow references to its id; agents.push passes it after creating the tools.
+      # Every Tool object needs one. Raises WorkflowValidationError listing every problem, if the
+      # workflow is invalid.
+      def build(on_warning: nil, tool_ids: nil)
+        ::Elevenlabs::Types::AgentWorkflowRequestModel.load(::JSON.generate(to_wire_hash(on_warning, tool_ids)))
       end
 
       # The workflow in API format (snake_case keys, sorted at every level), for storing as config.
-      # Validates like build().
-      def to_json(*_args)
-        Wire.canonical(to_wire_hash(nil))
+      # Validates like build(), and takes the same +tool_ids+.
+      def to_json(*_args, tool_ids: nil)
+        Wire.canonical(to_wire_hash(nil, tool_ids))
       end
 
       # to_json as a string with 2-space indentation and a trailing newline: the canonical file format.
-      def to_json_string
-        "#{::JSON.pretty_generate(to_json)}\n"
+      # Takes the same +tool_ids+.
+      def to_json_string(tool_ids: nil)
+        "#{::JSON.pretty_generate(to_json(tool_ids: tool_ids))}\n"
       end
 
       def origin
@@ -176,9 +204,10 @@ module Elevenlabs
 
       private
 
-      def to_wire_hash(on_warning)
+      def to_wire_hash(on_warning, tool_ids = nil)
         graph = @graph
-        issues = Validate.validate(graph)
+        ids_by_name = (tool_ids || {}).to_h { |name, id| [name.to_s, id] }
+        issues = Validate.validate(graph) + unresolved_tools(ids_by_name)
         errors = issues.select { |issue| issue.severity == 'error' }
         raise WorkflowValidationError, errors unless errors.empty?
 
@@ -216,7 +245,11 @@ module Elevenlabs
         nodes = {}
         graph.nodes.each do |node_id, model|
           order = edge_order(graph.loaded_order[node_id] || [], outgoing[node_id] || [])
-          nodes[node_id] = model.merge(
+          resolved = ToolRefs.map_node_tool_ids(model) do |id|
+            tool = graph.tool_refs[id]
+            tool.nil? ? id : ids_by_name[tool.name]
+          end
+          nodes[node_id] = resolved.merge(
             'position' => positions[node_id],
             'edge_order' => order.map { |edge| id_of[edge] },
           )
@@ -224,6 +257,24 @@ module Elevenlabs
         workflow = { 'nodes' => nodes, 'edges' => edges }
         workflow['prevent_subagent_loops'] = graph.prevent_subagent_loops unless graph.prevent_subagent_loops.nil?
         Wire.deep_copy(workflow)
+      end
+
+      # A Tool object without an id in +ids_by_name+, for each node that uses one.
+      def unresolved_tools(ids_by_name)
+        @graph.nodes.flat_map do |node_id, model|
+          ToolRefs.node_tool_ids(model).filter_map do |id|
+            tool = @graph.tool_refs[id]
+            next if tool.nil? || ids_by_name.key?(tool.name)
+
+            WorkflowIssue.new(
+              code: 'unresolved_tool',
+              severity: 'error',
+              message: "Node \"#{node_id}\" uses tool \"#{tool.name}\", which has no id yet. Push the agent with " \
+                       'agents.push, or pass build(tool_ids: ...)',
+              node_id: node_id,
+            )
+          end
+        end
       end
 
       # A loaded node's order for the edges it still has, then any others in edge-list order.
