@@ -153,10 +153,11 @@ module Elevenlabs
 
       # Every webhook and client tool the agent and its workflow use, each once, in first-use order: the tools
       # agents.push creates or updates. System tools aren't included; they live inside the agent's config.
+      # Other kinds (such as MCP tools) aren't either: they stay attached by the id the agent was loaded with.
       def tools
         seen = {}.compare_by_identity
         (@tools + workflow_tools).each_with_object([]) do |tool, result|
-          next if tool.kind == 'system' || seen.key?(tool)
+          next if !managed?(tool) || seen.key?(tool)
 
           seen[tool] = true
           result << tool
@@ -322,14 +323,46 @@ module Elevenlabs
           rescue StandardError => e
             issues << AgentIssue.error('invalid_tool', "tools.#{tool.name}", e.message)
           end
+          check_attached(tool, issues)
         end
       end
 
+      # A tool of another kind (such as MCP) isn't created or updated by agents.push, so it needs the id the agent
+      # was loaded with to stay attached.
+      def check_attached(tool, issues)
+        return if tool.kind == 'system' || managed?(tool) || !known_id(tool).nil?
+
+        type = begin
+          tool.to_json['type']
+        rescue StandardError
+          nil
+        end
+        issues << AgentIssue.error('invalid_tool', "tools.#{tool.name}",
+                                   "Tool \"#{tool.name}\" has type \"#{type}\", which push doesn't create or update: " \
+                                   'load it with its id or attach it with tool_ids')
+      end
+
+      # Webhook and client tools: the ones agents.push creates or updates.
+      def managed?(tool)
+        %w[webhook client].include?(tool.kind)
+      end
+
+      # The id the agent was loaded with for +tool+, matched by identity.
+      def known_id(tool)
+        @tools_by_id.each { |id, loaded| return id if loaded.equal?(tool) }
+        nil
+      end
+
+      # A tool's id in the config: a managed tool's from +id_of+, any other's the id it was loaded with.
+      def attached_id(tool, id_of)
+        managed?(tool) ? id_of.call(tool) : known_id(tool) || "<tool:#{tool.name}>"
+      end
+
       def set_tools(config, raw, issues, id_of)
-        managed = @tools.reject { |tool| tool.kind == 'system' }
+        attached = @tools.reject { |tool| tool.kind == 'system' }.map { |tool| attached_id(tool, id_of) }
         if @tool_list_given
           issues << conflict('tools', TOOL_IDS_PATH) if AgentWire.path?(raw, TOOL_IDS_PATH)
-          AgentWire.set_path(config, TOOL_IDS_PATH, keep_order(@tool_ids + managed.map(&id_of), @loaded_tool_ids))
+          AgentWire.set_path(config, TOOL_IDS_PATH, keep_order(@tool_ids + attached, @loaded_tool_ids))
         end
         @tools.select { |tool| tool.kind == 'system' }.each do |system_tool|
           path = BUILT_IN_TOOLS_PATH + [system_tool.as_system.system_tool_type]
@@ -355,7 +388,7 @@ module Elevenlabs
             issues << AgentIssue.error('system_tool_in_workflow', "workflow.tools.#{tool.name}",
                                        "System tool \"#{tool.name}\" can't be used in a workflow node; add it to the agent's tools")
           end
-          ids = wf.tools.to_h { |tool| [tool.name, id_of.call(tool)] }
+          ids = wf.tools.to_h { |tool| [tool.name, attached_id(tool, id_of)] }
           begin
             config['workflow'] = wf.to_json(tool_ids: ids)
           rescue StandardError => e
@@ -371,7 +404,7 @@ module Elevenlabs
           # Its managed tools may have new ids, e.g. when pushed as a new agent.
           config['workflow'] = AgentWire.map_raw_workflow_tool_ids(AgentWire.deep_copy(@raw_workflow)) do |id|
             tool = @tools_by_id[id]
-            tool.nil? || tool_ids.nil? ? id : tool_ids.fetch(tool.name, id)
+            tool.nil? || tool_ids.nil? || !managed?(tool) ? id : tool_ids.fetch(tool.name, id)
           end
         end
       end

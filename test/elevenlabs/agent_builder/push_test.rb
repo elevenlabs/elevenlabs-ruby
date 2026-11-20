@@ -430,6 +430,82 @@ module Elevenlabs
         assert_match(/has no config file/, error.message)
         assert_empty server.calls
       end
+
+      def test_rejects_a_branch_entry_without_a_config_file_before_any_write
+        files = fixture_files
+        agents = JSON.parse(files['agents.json'])
+        agents['agents'][0]['branches']['beta'].delete('config')
+        files['agents.json'] = dumps(agents)
+        project = AgentProject.from_files(files.except('agent_configs/support.beta.json'))
+        server = FakeServer.new
+        client = server.client
+        beta = Agent.from_json(files['agent_configs/support.beta.json'])
+
+        push_error = assert_raises(AgentProjectError) { client.agents.push(beta, project: project, branch_id: 'agtbrch_beta') }
+        pull_error = assert_raises(AgentProjectError) { client.agents.pull('agent_support', project: project, branch_id: 'agtbrch_beta') }
+
+        assert_match(/has no config file/, push_error.message)
+        assert_match(/has no config file/, pull_error.message)
+        assert_empty server.calls
+        assert_empty project.changed_files
+        assert_equal files['agent_configs/support.json'], project.to_files['agent_configs/support.json']
+      end
+    end
+
+    # Tools of kinds push doesn't manage (MCP...) stay attached by id.
+    class OtherToolKindsTest < Minitest::Test
+      include PushSupport
+
+      MCP = { 'type' => 'mcp', 'name' => 'docs_search', 'description' => 'Search the docs' }.freeze
+
+      def test_pushes_a_loaded_mcp_tool_by_its_id_without_creating_or_updating_it
+        server = FakeServer.new
+        server.add_tool('tool_mcp', MCP.dup, ['agent_1'])
+        server.add_agent('agent_1', {})
+        agent = Agent.from_json(
+          { 'name' => 'A', 'conversation_config' => { 'agent' => { 'prompt' => { 'prompt' => 'p', 'tool_ids' => ['tool_mcp'] } } } },
+          tools_by_id: { 'tool_mcp' => Tool.from_json(MCP) },
+        )
+
+        assert_empty agent.tools
+        result = server.client.agents.push(agent, agent_id: 'agent_1')
+
+        assert_equal ['PATCH /v1/convai/agents/agent_1'], server.writes
+        assert_empty result.tools
+        assert_equal ['tool_mcp'], server.agents['agent_1'].dig('conversation_config', 'agent', 'prompt', 'tool_ids')
+      end
+
+      def test_keeps_a_loaded_mcp_tool_in_a_workflow_node_by_its_id
+        mcp = Tool.from_json(MCP)
+        agent = Agent.from_json(
+          { 'name' => 'A', 'conversation_config' => { 'agent' => { 'prompt' => { 'prompt' => 'p' } } },
+            'workflow' => { 'nodes' => { 'run' => { 'type' => 'tool', 'tools' => [{ 'tool_id' => 'tool_mcp' }] } }, 'edges' => {} } },
+          tools_by_id: { 'tool_mcp' => mcp },
+        )
+        agent.workflow # Load it, so the node holds the Tool object.
+
+        assert_empty agent.tools
+        assert_equal [{ 'tool_id' => 'tool_mcp' }], agent.to_json(tool_ids: {}).dig('workflow', 'nodes', 'run', 'tools')
+      end
+
+      def test_rejects_an_mcp_tool_with_no_id_before_any_request
+        server = FakeServer.new
+        agent = Agent.new('A', prompt: 'p')
+        agent.add_tool(Tool.from_json(MCP))
+        wf = Workflow.new
+        wf.tool('run', [Tool.from_json(MCP.merge('name' => 'wf_search'))])
+        agent.update(workflow: wf)
+
+        error = assert_raises(AgentValidationError) { server.client.agents.push(agent) }
+
+        assert_equal(
+          [%w[invalid_tool tools.docs_search], %w[invalid_tool tools.wf_search]],
+          error.issues.map { |issue| [issue.code, issue.path] },
+        )
+        assert_equal "Tool \"docs_search\" has type \"mcp\", which push doesn't create or update: " \
+                     'load it with its id or attach it with tool_ids', error.issues[0].message
+        assert_empty server.calls
+      end
     end
 
     class PullTest < Minitest::Test

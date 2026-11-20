@@ -176,6 +176,7 @@ module Elevenlabs
         slot.agent = agent if branch.nil?
         # Like the CLI: the version the server reports, on the entry it belongs to.
         (branch || slot.entry)['version_id'] = version_id unless version_id.nil?
+        # check_branch ran first, so a branch has its own config path; it never writes the main branch's file.
         write(branch.nil? ? slot.entry['config'] : branch['config'], ProjectFormat.format_config(config))
         write(AGENTS_FILE, agents_index)
       end
@@ -213,7 +214,8 @@ module Elevenlabs
 
       def check_branch_of(slot, label, branch_id)
         return if !slot.nil? && slot.entry['branch_id'] == branch_id
-        return if !slot.nil? && branch_entries(slot).any? { |branch| branch['branch_id'] == branch_id }
+        branch = slot.nil? ? nil : branch_entries(slot).find { |b| b['branch_id'] == branch_id }
+        return if branch.is_a?(::Hash) && branch['config'].is_a?(::String) && !branch['config'].empty?
 
         raise AgentProjectError, "Branch #{branch_id} of \"#{label}\" has no config file in #{AGENTS_FILE}. Add it under " \
                                  "\"branches\" (the CLI's `agents pull --all-branches` does), or push the main branch"
