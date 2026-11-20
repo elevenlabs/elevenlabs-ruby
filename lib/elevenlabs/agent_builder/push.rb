@@ -180,11 +180,36 @@ module Elevenlabs
       # Whether the server already has this tool as defined. Modeled fields are compared through the builder,
       # so both sides normalize alike; the config to send must also be contained in the server's, so a change
       # to a field the builder doesn't model still counts.
+      # Whether the server already has the config push would send. Both sides are compared as the
+      # generated config model declares them: the builder (and the generated models) keep fields the SDK
+      # doesn't model, and the API adds some on get, at any level, so comparing everything would see every
+      # tool as changed and PATCH it on every push. The config to send must also be contained in the
+      # server's copy, so a change to any field it carries, a loaded tool's unmodeled ones included, still
+      # counts.
       def same_tool?(remote, tool, config)
-        AgentTools::Tool.from_response(remote).to_json_string == tool.to_json_string &&
+        declared(AgentTools::Tool.from_response(remote).build_config) == declared(tool.build_config) &&
           AgentWire.subset?(config, AgentTools::ToolWire.parse(remote.tool_config))
       rescue StandardError
         false
+      end
+
+      # A generated model as a Hash of only the fields its class declares (recursively), with nils left
+      # out: extra fields and the API's nulls for unset fields don't count.
+      def declared(value)
+        case value
+        when ::Elevenlabs::Internal::Types::Model
+          data = value.instance_variable_get(:@data) || {}
+          out = value.class.fields.each_with_object({}) do |(name, field), acc|
+            acc[field.api_name.to_s] = declared(data[name]) unless data[name].nil?
+          end
+          key = value.instance_variable_get(:@_fern_union_discriminant_key)
+          discriminant = value.instance_variable_get(:@_fern_union_discriminant_value)
+          out[key.to_s] ||= discriminant if key && discriminant
+          out
+        when ::Array then value.map { |item| declared(item) }
+        when ::Hash then value.to_h { |k, v| [k.to_s, declared(v)] }.compact
+        else value
+        end
       end
 
       def with_body(request_options, body)

@@ -328,6 +328,24 @@ module Elevenlabs
         assert_equal %w[agent_configs/a.json agents.json tool_configs/t.json tools.json], project.changed_files.sort
       end
 
+      def test_tools_the_server_adds_fields_to_still_count_as_unchanged
+        server = FakeServer.new
+        client = server.client
+        agent_id = client.agents.push(support_agent).agent_id
+        # The API's copy carries fields the builder doesn't model, at the top level and nested, plus nulls.
+        config = server.tools['tool_new_2']['config']
+        config['server_only'] = 'x'
+        config['assignments'] = nil
+        config['api_schema']['server_nested'] = { 'a' => 1 }
+        server.calls.clear
+
+        again = client.agents.push(support_agent, agent_id: agent_id)
+
+        assert_equal ["PATCH /v1/convai/agents/#{agent_id}"], server.writes
+        assert_equal 'unchanged', again.tools['get_order'].action
+        assert_equal 'x', server.tools['tool_new_2']['config']['server_only']
+      end
+
       def test_updates_a_project_tool_whose_only_change_is_a_field_the_sdk_does_not_model
         server = FakeServer.new
         server.add_tool('tool_1', { 'type' => 'client', 'name' => 'ping', 'description' => 'd', 'future_field' => 1 }, ['agent_1'])
