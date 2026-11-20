@@ -114,7 +114,8 @@ module Elevenlabs
 
         # A loaded transfer_to_number tool may use transfer_rules instead of transfers; the API takes exactly one.
         has_transfers = entries?(@params['transfers'])
-        has_rules = entries?(@params['transfer_rules'])
+        # Only transfer_to_number has transfer_rules; transfer_to_agent needs transfers.
+        has_rules = @system_tool_type == 'transfer_to_number' && entries?(@params['transfer_rules'])
         return [ToolIssue.error('no_transfers', 'transfer', "#{@system_tool_type} needs at least one transfer")] unless has_transfers || has_rules
         if has_transfers && has_rules
           return [ToolIssue.error('conflicting_transfers', 'transfer',

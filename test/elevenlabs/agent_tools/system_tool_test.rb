@@ -67,6 +67,36 @@ module Elevenlabs
       def test_rejects_webhook_options
         assert_equal(['invalid_option'], codes_of { SystemTool.end_call.options(execution_mode: 'async').build })
       end
+
+      TRANSFER_RULE = {
+        'condition' => 'Caller asks for the front desk',
+        'provider_configs' => [{
+          'type' => 'twilio',
+          'config' => {
+            'type' => 'twilio_cold_blind_transfer',
+            'transfer_destination' => { 'type' => 'phone', 'destination' => '+15551234567' },
+          },
+        }],
+      }.freeze
+
+      def loaded_transfer(system_tool_type)
+        Tool.from_json({
+                         'type' => 'system',
+                         'name' => system_tool_type,
+                         'params' => { 'system_tool_type' => system_tool_type, 'transfers' => [],
+                                       'transfer_rules' => [TRANSFER_RULE] },
+                       })
+      end
+
+      def test_transfer_rules_do_not_satisfy_an_agent_transfer
+        assert_equal(['no_transfers'], codes_of { loaded_transfer('transfer_to_agent').build })
+      end
+
+      def test_sends_loaded_transfer_rules_in_the_built_request
+        sent = JSON.parse(::Elevenlabs::Types::ToolRequestModel.dump(loaded_transfer('transfer_to_number').build))
+
+        assert_equal [TRANSFER_RULE], sent['tool_config']['params']['transfer_rules']
+      end
     end
   end
 end
