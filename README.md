@@ -244,6 +244,66 @@ File.write("tool_configs/issue_refund.json", refund.to_json_string)
   and `Tool.from_response` the result of `tools.get`, so a tool can be edited and written back. Fields the
   builder doesn't model, and tool types it has no constructor for, round-trip unchanged.
 
+## Agents as code
+
+Require `elevenlabs/agent_builder` to define a whole agent (its settings, its tools and its workflow) in
+one place, and push it with `client.agents.push`, which creates or updates the tools and the agent in one
+call. `AgentProject` reads and writes the ElevenLabs CLI's project layout, so a repo works with both the
+SDK and the CLI.
+
+```ruby
+require "elevenlabs"
+require "elevenlabs/agent_builder"
+include Elevenlabs::AgentBuilder
+include Elevenlabs::AgentTools
+include Elevenlabs::AgentWorkflows
+
+show_order = Tool.client("show_order", "Show the order card")
+  .param("order_id", Schema.string.from_variable("order_id"))
+
+wf = Workflow.new
+wf.converse("triage", "Find out what the caller needs")
+  .when("Caller gave an order number")
+  .tool("lookup", [get_order]) # a Tool object: push fills in its id
+  .on_success
+  .converse("resolve", "Explain the order status")
+
+agent = Agent.new(
+  "Support line",
+  prompt: "You are a support agent for Acme.",
+  first_message: "Hi, how can I help?",
+  tools: [SystemTool.end_call, show_order],
+  workflow: wf,
+)
+
+result = client.agents.push(agent)          # creates get_order, show_order and the agent
+client.agents.push(agent, agent_id: result.agent_id) # later: updates only what changed
+
+project = AgentProject.open(".")            # agents.json, tools.json, agent_configs/, tool_configs/
+client.agents.push(agent, project: project) # the project records and reuses the ids
+pulled = client.agents.pull("agent_123", project: project)
+```
+
+- `push` validates first, so an invalid agent writes nothing. A tool counts as already on the server when
+  the project records its id or, without a project, when the agent (`agent_id`) already uses a tool of
+  that name. Tools other agents use are never touched. Unchanged tools aren't sent; tools the agent no
+  longer uses are reported as `"detached"`, not deleted. `branch_id:` and `version_description:` update a
+  branch or describe the new version.
+- `push` returns an `AgentPushResult` with `agent_id`, `action` (`"created"` or `"updated"`) and `tools`,
+  each tool's `id` and `action` by name. If a request fails partway, it raises `AgentPushError` whose
+  `result` lists what was already written; a project opened from a directory is saved even then.
+- `tool_ids:` attaches existing tools by id, as they are. `conversation_config:` and `platform_settings:`
+  take any other setting, as the generated models or wire-format hashes, merged under the typed options.
+- `agent.validate` checks everything that needs no API key, raising `AgentValidationError` (each issue
+  has a `code`, a `message` and a `path`). `to_json(tool_ids:)` gives the API-format config and
+  `build(tool_ids:)` the generated create request.
+- `Agent.from_json(config, tools_by_id:)` loads a CLI `agent_configs/*.json` file. Settings the SDK
+  doesn't model are kept and pushed. `pull` loads a live agent the same way, with its webhook and client
+  tools as `Tool` objects, and writes it into the project if one is given.
+- Project files use the CLI's format (4-space JSON, sorted keys in config files, owner-only permissions).
+  Files nothing changed keep their exact text. YAML and TOML configs aren't supported yet and raise
+  `AgentProjectError`.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the production environment.

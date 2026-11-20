@@ -13,6 +13,13 @@ lib/elevenlabs/agent_tools.rb
 lib/elevenlabs/agent_tools/
 test/elevenlabs/agent_tools/
 
+# Hand-written agents-as-code builder: the Agent builder, AgentProject (the ElevenLabs CLI's project layout)
+# and agents.push/pull, which it prepends to the generated agents client so no generated file changes. Its
+# tests vendor the shared cli-graph project fixture from elevenlabs-js (docs/agents-as-code/fixtures).
+lib/elevenlabs/agent_builder.rb
+lib/elevenlabs/agent_builder/
+test/elevenlabs/agent_builder/
+
 # Hand-written webhook signature verifier (Fern's generated verifier can't parse
 # the compound `t=...,v0=...` header).
 lib/elevenlabs/webhooks/verifier.rb

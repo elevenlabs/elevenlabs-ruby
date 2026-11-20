@@ -6,6 +6,49 @@ require_relative 'destination'
 
 module Elevenlabs
   module AgentWorkflows
+    # Workflow tool references. A tool node or subagent takes tool ids, Tool objects (from
+    # Elevenlabs::AgentTools), or a mix. A Tool object stands under the placeholder "<tool:NAME>" until
+    # build(tool_ids:) swaps in its id.
+    module ToolRefs
+      PLACEHOLDER = /\A<tool:(.*)>\z/m
+
+      module_function
+
+      # The placeholder a Tool object stands under in the graph until build swaps in its id.
+      def placeholder(name)
+        "<tool:#{name}>"
+      end
+
+      # A tool id as shown in messages: the name, for a Tool object's placeholder.
+      def display(id)
+        match = PLACEHOLDER.match(id)
+        match.nil? ? id : match[1]
+      end
+
+      # The tool ids (or placeholders) a node uses: a tool node's tools, or a subagent's extra tools.
+      def node_tool_ids(model)
+        tools = model['tools'].is_a?(::Array) ? model['tools'] : []
+        extra = model['additional_tool_ids'].is_a?(::Array) ? model['additional_tool_ids'] : []
+        tools.filter_map { |tool| tool['tool_id'] if tool.is_a?(::Hash) && tool['tool_id'].is_a?(::String) } +
+          extra.grep(::String)
+      end
+
+      # A copy of a tool node or subagent with each tool id passed through the block. Other nodes are
+      # returned as they are.
+      def map_node_tool_ids(model)
+        if model['type'] == 'tool' && model['tools'].is_a?(::Array)
+          tools = model['tools'].map do |tool|
+            tool.is_a?(::Hash) && tool['tool_id'].is_a?(::String) ? tool.merge('tool_id' => yield(tool['tool_id'])) : tool
+          end
+          return model.merge('tools' => tools)
+        end
+        if model['type'] == 'override_agent' && model['additional_tool_ids'].is_a?(::Array)
+          return model.merge('additional_tool_ids' => model['additional_tool_ids'].map { |id| id.is_a?(::String) ? yield(id) : id })
+        end
+        model
+      end
+    end
+
     # One edge in the graph. Compared by identity: two edges with the same fields are still two edges.
     class GraphEdge
       attr_accessor :source, :target, :forward_condition, :backward_condition, :id, :extra
@@ -65,7 +108,7 @@ module Elevenlabs
 
       TRANSFER_TYPES = %w[phone_number standalone_agent].freeze
 
-      attr_accessor :nodes, :edges, :issues, :start_id, :loaded_order, :prevent_subagent_loops
+      attr_accessor :nodes, :edges, :issues, :start_id, :loaded_order, :prevent_subagent_loops, :tool_refs
 
       def initialize
         @nodes = {}
@@ -75,6 +118,27 @@ module Elevenlabs
         # Each loaded node's edge_order, as edges. build() keeps this order and appends edges added since.
         @loaded_order = {}
         @prevent_subagent_loops = nil
+        # Tool objects referenced by nodes, by placeholder.
+        @tool_refs = {}
+      end
+
+      # Swaps Tool objects for placeholders, remembering each one. Ids are kept as they are.
+      def ref_tools(node_id, refs)
+        in_this_node = {}
+        refs.to_a.map do |ref|
+          next ref if ref.is_a?(::String)
+
+          key = ToolRefs.placeholder(ref.name)
+          known = @tool_refs[key]
+          # A different tool of the same name conflicts if this node or another node still uses it; one
+          # left behind by a removed or edited node doesn't.
+          clash = in_this_node[key]
+          clash = known if clash.nil? && !known.nil? && uses_placeholder?(key, node_id)
+          in_this_node[key] = ref
+          issue('duplicate_tool_name', "Node \"#{node_id}\" uses a different tool also named \"#{ref.name}\"", node_id) if !clash.nil? && !clash.equal?(ref)
+          @tool_refs[key] = ref
+          key
+        end
       end
 
       def add_node(id, model)
@@ -95,8 +159,13 @@ module Elevenlabs
         rest = {}
         options.each { |key, value| rest[key.to_s] = value unless value.nil? }
         destination = rest.delete('destination')
-        tool_ids = rest.delete('tool_ids')
-        schema_overrides = rest.delete('schema_overrides')
+        refs = rest.delete('tool_ids')
+        tool_ids = refs.nil? ? nil : ref_tools(id, refs)
+        # Overrides for a Tool object may be keyed by the tool's name.
+        schema_overrides = rest.delete('schema_overrides')&.to_h&.transform_keys do |key|
+          placeholder = ToolRefs.placeholder(key.to_s)
+          @tool_refs.key?(placeholder) ? placeholder : key
+        end
         node = model.dup
 
         node = apply_destination(id, node, destination) unless destination.nil?
@@ -191,7 +260,7 @@ module Elevenlabs
         (schema_overrides || {}).each_key do |tool_id|
           next if ids.include?(tool_id)
 
-          issue('invalid_option', "Node \"#{id}\" has schema overrides for tool \"#{tool_id}\", which it doesn't run", id)
+          issue('invalid_option', "Node \"#{id}\" has schema overrides for tool \"#{ToolRefs.display(tool_id)}\", which it doesn't run", id)
         end
         ids.map do |tool_id|
           overrides = (schema_overrides || {})[tool_id]
@@ -202,6 +271,10 @@ module Elevenlabs
                       end
           overrides.nil? ? { 'tool_id' => tool_id } : { 'tool_id' => tool_id, 'schema_overrides' => overrides }
         end
+      end
+
+      def uses_placeholder?(key, except_node_id)
+        @nodes.any? { |id, model| id != except_node_id && ToolRefs.node_tool_ids(model).include?(key) }
       end
 
       def _invalid_option(id, option, node_type)

@@ -80,21 +80,21 @@ module Elevenlabs
         end
       end
 
-      # +value+ as JSON with 2-space indentation, byte for byte what JavaScript's
+      # +value+ as JSON with 2-space indentation (or +step+), byte for byte what JavaScript's
       # JSON.stringify(value, null, 2) writes: numbers are formatted like Number.prototype.toString.
-      def json_string(value, indent = '')
+      def json_string(value, indent = '', step = '  ')
         case value
         when ::Hash
           return '{}' if value.empty?
 
-          inner = "#{indent}  "
-          members = value.map { |key, item| "#{inner}#{::JSON.generate(key.to_s)}: #{json_string(item, inner)}" }
+          inner = "#{indent}#{step}"
+          members = value.map { |key, item| "#{inner}#{::JSON.generate(key.to_s)}: #{json_string(item, inner, step)}" }
           "{\n#{members.join(",\n")}\n#{indent}}"
         when ::Array
           return '[]' if value.empty?
 
-          inner = "#{indent}  "
-          "[\n#{value.map { |item| "#{inner}#{json_string(item, inner)}" }.join(",\n")}\n#{indent}]"
+          inner = "#{indent}#{step}"
+          "[\n#{value.map { |item| "#{inner}#{json_string(item, inner, step)}" }.join(",\n")}\n#{indent}]"
         when ::Float
           js_number(value)
         when ::Integer
