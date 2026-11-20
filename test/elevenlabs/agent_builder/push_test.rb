@@ -493,6 +493,20 @@ module Elevenlabs
                      agent.to_json(tool_ids: { 'get_order' => 'tool_order' }).dig('conversation_config', 'agent', 'prompt', 'tool_ids')
       end
 
+      def test_attaches_a_loaded_mcp_tool_added_back_with_add_tool_once
+        mcp = Tool.from_json(MCP)
+        agent = Agent.from_json(
+          { 'name' => 'A',
+            'conversation_config' => { 'agent' => { 'prompt' => { 'prompt' => 'p', 'tool_ids' => %w[tool_mcp tool_ping] } } } },
+          tools_by_id: { 'tool_mcp' => mcp, 'tool_ping' => Tool.client('ping', 'Ping the client') },
+        )
+        agent.update(tools: [get_order])
+        agent.add_tool(mcp)
+
+        assert_equal %w[tool_mcp tool_order],
+                     agent.to_json(tool_ids: { 'get_order' => 'tool_order' }).dig('conversation_config', 'agent', 'prompt', 'tool_ids')
+      end
+
       def test_keeps_a_loaded_mcp_tool_in_a_workflow_node_by_its_id
         mcp = Tool.from_json(MCP)
         agent = Agent.from_json(

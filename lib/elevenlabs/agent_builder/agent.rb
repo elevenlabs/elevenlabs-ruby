@@ -360,7 +360,14 @@ module Elevenlabs
       end
 
       def set_tools(config, raw, issues, id_of)
-        attached = @tools.reject { |tool| tool.kind == 'system' }.map { |tool| attached_id(tool, id_of) }
+        attached = []
+        @tools.reject { |tool| tool.kind == 'system' }.each do |tool|
+          id = attached_id(tool, id_of)
+          # A tool of another kind (MCP...) added back while its id is still in tool_ids is attached once.
+          next if !managed?(tool) && (@tool_ids.include?(id) || attached.include?(id))
+
+          attached << id
+        end
         if @tool_list_given
           issues << conflict('tools', TOOL_IDS_PATH) if AgentWire.path?(raw, TOOL_IDS_PATH)
           AgentWire.set_path(config, TOOL_IDS_PATH, keep_order(@tool_ids + attached, @loaded_tool_ids))
