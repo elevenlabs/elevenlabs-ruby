@@ -110,8 +110,16 @@ module Elevenlabs
       protected
 
       def validate_tool
-        transfers = @params['transfers']
-        return [ToolIssue.error('no_transfers', 'transfer', "#{@system_tool_type} needs at least one transfer")] if TRANSFER_TYPES.include?(@system_tool_type) && (transfers.nil? || transfers.empty?)
+        return [] unless TRANSFER_TYPES.include?(@system_tool_type)
+
+        # A loaded transfer_to_number tool may use transfer_rules instead of transfers; the API takes exactly one.
+        has_transfers = entries?(@params['transfers'])
+        has_rules = entries?(@params['transfer_rules'])
+        return [ToolIssue.error('no_transfers', 'transfer', "#{@system_tool_type} needs at least one transfer")] unless has_transfers || has_rules
+        if has_transfers && has_rules
+          return [ToolIssue.error('conflicting_transfers', 'transfer',
+                                  "#{@system_tool_type} has both transfers and transfer_rules; the API takes only one")]
+        end
 
         []
       end
@@ -121,6 +129,10 @@ module Elevenlabs
       end
 
       private
+
+      def entries?(value)
+        value.is_a?(Array) && !value.empty?
+      end
 
       def add_transfer(condition, model, options)
         unless TRANSFER_TYPES.include?(@system_tool_type)
