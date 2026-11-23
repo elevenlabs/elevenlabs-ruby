@@ -267,6 +267,33 @@ module Elevenlabs
         end
       end
 
+      # Opens a WebSocket connection to the `agents` channel.
+      #
+      # @param agent_id [String]
+      # @param reconnect [Hash, true, nil] Reopens the connection after the server closes or drops it:
+      #   `:max_retries` (default 5) and `:backoff`, the first delay in seconds (default 1.0, doubling
+      #   each retry). Off unless given.
+      # @param connect_timeout [Numeric, nil] Seconds to wait for the handshake; 5 when nil.
+      # @param request_options [Hash] `:base_url` replaces the server URL for this connection;
+      #   `:additional_headers` and `:additional_query_parameters` are added to the handshake.
+      # @yieldparam socket [AgentsSocket] The connected socket; it is closed when the block returns.
+      # @return [AgentsSocket, Object] The connected socket, or the block's value when a block is given.
+      def conversation(agent_id:, reconnect: nil, connect_timeout: nil, request_options: {}, &block)
+        AgentsSocket.connect(
+          url: ::Elevenlabs::Internal::WebSocket::Handshake.url(
+            base_url: request_options[:base_url] || @client.websocket_base_url || @client.base_url || '',
+            path: '/v1/convai/conversation',
+            query: { 'agent_id' => agent_id },
+            client_query: @client.websocket_query,
+            request_options: request_options,
+          ),
+          headers: -> { ::Elevenlabs::Internal::WebSocket::Handshake.headers(client_headers: @client.websocket_headers, credentials: -> { @client.websocket_credentials }, request_options: request_options) },
+          reconnect: reconnect,
+          connect_timeout: connect_timeout,
+          &block
+        )
+      end
+
       def conversations
         @conversations ||= Conversations::Client.new(client: @client)
       end
