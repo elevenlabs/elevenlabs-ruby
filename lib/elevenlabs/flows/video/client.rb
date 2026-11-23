@@ -6,8 +6,10 @@ module Elevenlabs
   module Flows
     module Video
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the video generations created through this API, newest first.

@@ -3,8 +3,10 @@
 module Elevenlabs
   module AudioEffects
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Lists the filter presets, reverb environments, and background noises that `audio_effects` can reference in Text to Speech, Text to Dialogue, and agent configurations.

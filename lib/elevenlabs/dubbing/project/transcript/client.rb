@@ -7,8 +7,10 @@ module Elevenlabs
     module Project
       module Transcript
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # The project's source transcript, as editable segments. Available once the project is `ready`.

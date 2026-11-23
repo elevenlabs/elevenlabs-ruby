@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module TriageTickets
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List an agent's issues, ordered by most recently created first unless sorted by priority. These are issues about the agent's own performance on a conversation (to work on with Architect), not tickets an agent opens for end users.

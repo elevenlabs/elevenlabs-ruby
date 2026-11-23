@@ -8,8 +8,10 @@ module Elevenlabs
       module Documents
         module Chunks
           class Client
-            def initialize(client:)
+            def initialize(client:, base_url: nil, environment: nil)
               @client = client
+              @base_url = base_url
+              @environment = environment
             end
 
             # Get all RAG chunks for a specific knowledge base document.

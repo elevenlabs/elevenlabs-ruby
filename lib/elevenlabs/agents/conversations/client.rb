@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Conversations
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Get a signed url to start a conversation with an agent with an agent that requires authorization
@@ -387,31 +389,31 @@ module Elevenlabs
         end
 
         def audio
-          @audio ||= Audio::Client.new(client: @client)
+          @audio ||= Audio::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def files
-          @files ||= Files::Client.new(client: @client)
+          @files ||= Files::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def feedback
-          @feedback ||= Feedback::Client.new(client: @client)
+          @feedback ||= Feedback::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def messages
-          @messages ||= Messages::Client.new(client: @client)
+          @messages ||= Messages::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def tags
-          @tags ||= Tags::Client.new(client: @client)
+          @tags ||= Tags::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def topics
-          @topics ||= Topics::Client.new(client: @client)
+          @topics ||= Topics::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def analysis
-          @analysis ||= Analysis::Client.new(client: @client)
+          @analysis ||= Analysis::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

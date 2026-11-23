@@ -5,8 +5,10 @@ module Elevenlabs
     module Dashboard
       module Settings
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Retrieve Convai dashboard settings for the workspace

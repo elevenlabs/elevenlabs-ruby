@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module LlmUsage
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Calculates expected number of LLM tokens needed for the specified agent.

@@ -4,8 +4,10 @@ module Elevenlabs
   module Voices
     module Ivc
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Create a voice clone and add it to your Voices

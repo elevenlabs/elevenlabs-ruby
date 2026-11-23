@@ -7,8 +7,10 @@ module Elevenlabs
     module OutboundCampaigns
       module Attention
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # List problems in the workspace's outbound campaigns that need you to act, such as an agent or phone number that can no longer be used, newest first. A campaign with an open item holds back the calls it affects.

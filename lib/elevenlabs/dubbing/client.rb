@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module Dubbing
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # List the dubs you have access to.
@@ -171,15 +173,15 @@ module Elevenlabs
       end
 
       def project
-        @project ||= Project::Client.new(client: @client)
+        @project ||= Project::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def audio
-        @audio ||= Audio::Client.new(client: @client)
+        @audio ||= Audio::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def transcripts
-        @transcripts ||= Transcripts::Client.new(client: @client)
+        @transcripts ||= Transcripts::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

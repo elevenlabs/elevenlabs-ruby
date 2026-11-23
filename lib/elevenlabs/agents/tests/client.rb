@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Tests
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Creates a new agent response test.
@@ -180,11 +182,11 @@ module Elevenlabs
         end
 
         def folders
-          @folders ||= Folders::Client.new(client: @client)
+          @folders ||= Folders::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def invocations
-          @invocations ||= Invocations::Client.new(client: @client)
+          @invocations ||= Invocations::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

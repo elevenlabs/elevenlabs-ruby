@@ -6,8 +6,10 @@ module Elevenlabs
   module Voices
     module Pvc
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Creates a new PVC voice with metadata but no samples
@@ -86,11 +88,11 @@ module Elevenlabs
         end
 
         def samples
-          @samples ||= Samples::Client.new(client: @client)
+          @samples ||= Samples::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def verification
-          @verification ||= Verification::Client.new(client: @client)
+          @verification ||= Verification::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

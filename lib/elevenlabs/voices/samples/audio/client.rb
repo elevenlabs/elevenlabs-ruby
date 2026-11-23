@@ -7,8 +7,10 @@ module Elevenlabs
     module Samples
       module Audio
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Returns the audio corresponding to a sample attached to a voice.

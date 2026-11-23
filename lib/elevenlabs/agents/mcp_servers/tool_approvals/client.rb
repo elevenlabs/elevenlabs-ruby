@@ -7,8 +7,10 @@ module Elevenlabs
     module McpServers
       module ToolApprovals
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Add approval for a specific MCP tool when using per-tool approval mode.

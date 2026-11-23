@@ -4,8 +4,10 @@ module Elevenlabs
   module Workspace
     module AuditLogs
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Returns the audit log for the workspace. Requires enterprise tier and the audit_log_read permission.

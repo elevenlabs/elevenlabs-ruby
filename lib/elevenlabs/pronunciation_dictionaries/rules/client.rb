@@ -6,8 +6,10 @@ module Elevenlabs
   module PronunciationDictionaries
     module Rules
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Replaces all existing rules on the pronunciation dictionary with the provided ones.

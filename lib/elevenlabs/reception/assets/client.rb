@@ -6,8 +6,10 @@ module Elevenlabs
   module Reception
     module Assets
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the workspace's bookable assets, such as rooms or equipment.

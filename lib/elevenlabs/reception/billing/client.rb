@@ -6,8 +6,10 @@ module Elevenlabs
   module Reception
     module Billing
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the invoices charged to the reseller's card, newest first, one per workspace invoice

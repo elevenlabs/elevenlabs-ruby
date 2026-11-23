@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Widget
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Retrieve the widget configuration for an agent
@@ -36,7 +38,7 @@ module Elevenlabs
         end
 
         def avatar
-          @avatar ||= Avatar::Client.new(client: @client)
+          @avatar ||= Avatar::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

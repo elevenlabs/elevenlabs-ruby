@@ -3,8 +3,10 @@
 module Elevenlabs
   module Studio
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Create and auto-convert a podcast project. Currently, the LLM cost is covered by us but you will still be charged for the audio generation. In the future, you will be charged for both the LLM and audio generation costs.
@@ -36,7 +38,7 @@ module Elevenlabs
       end
 
       def projects
-        @projects ||= Projects::Client.new(client: @client)
+        @projects ||= Projects::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

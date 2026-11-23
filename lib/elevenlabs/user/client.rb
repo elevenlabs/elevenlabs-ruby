@@ -3,8 +3,10 @@
 module Elevenlabs
   module User
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Gets information about the user
@@ -29,7 +31,7 @@ module Elevenlabs
       end
 
       def subscription
-        @subscription ||= Subscription::Client.new(client: @client)
+        @subscription ||= Subscription::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

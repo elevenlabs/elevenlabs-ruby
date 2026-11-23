@@ -7,8 +7,10 @@ module Elevenlabs
     module Pvc
       module Verification
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Request manual verification for a PVC voice.
@@ -38,7 +40,7 @@ module Elevenlabs
           end
 
           def captcha
-            @captcha ||= Captcha::Client.new(client: @client)
+            @captcha ||= Captcha::Client.new(client: @client, base_url: @base_url, environment: @environment)
           end
         end
       end

@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Realtime
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the realtime conversation groups the current user can view.

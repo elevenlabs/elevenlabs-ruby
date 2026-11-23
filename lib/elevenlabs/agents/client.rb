@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module Agents
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Create an agent from a config object
@@ -267,140 +269,167 @@ module Elevenlabs
         end
       end
 
+      # Opens a WebSocket connection to the `agents` channel.
+      #
+      # @param agent_id [String]
+      # @param reconnect [Hash, true, nil] Reopens the connection after the server closes or drops it:
+      #   `:max_retries` (default 5) and `:backoff`, the first delay in seconds (default 1.0, doubling
+      #   each retry). Off unless given.
+      # @param connect_timeout [Numeric, nil] Seconds to wait for the handshake; 5 when nil.
+      # @param request_options [Hash] `:base_url` replaces the server URL for this connection;
+      #   `:additional_headers` and `:additional_query_parameters` are added to the handshake.
+      # @yieldparam socket [AgentsSocket] The connected socket; it is closed when the block returns.
+      # @return [AgentsSocket, Object] The connected socket, or the block's value when a block is given.
+      def conversation(agent_id:, reconnect: nil, connect_timeout: nil, request_options: {}, &block)
+        AgentsSocket.connect(
+          url: ::Elevenlabs::Internal::WebSocket::Handshake.url(
+            base_url: request_options[:base_url] || @client.environment_url(:production) || 'wss://api.elevenlabs.io',
+            path: '/v1/convai/conversation',
+            query: { 'agent_id' => agent_id },
+            client_query: @client.websocket_query,
+            request_options: request_options,
+          ),
+          headers: -> { ::Elevenlabs::Internal::WebSocket::Handshake.headers(client_headers: @client.websocket_headers, credentials: -> { @client.websocket_credentials }, request_options: request_options) },
+          reconnect: reconnect,
+          connect_timeout: connect_timeout,
+          &block
+        )
+      end
+
       def conversations
-        @conversations ||= Conversations::Client.new(client: @client)
+        @conversations ||= Conversations::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def twilio
-        @twilio ||= Twilio::Client.new(client: @client)
+        @twilio ||= Twilio::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def exotel
-        @exotel ||= Exotel::Client.new(client: @client)
+        @exotel ||= Exotel::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def whatsapp
-        @whatsapp ||= Whatsapp::Client.new(client: @client)
+        @whatsapp ||= Whatsapp::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def summaries
-        @summaries ||= Summaries::Client.new(client: @client)
+        @summaries ||= Summaries::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def subagents
-        @subagents ||= Subagents::Client.new(client: @client)
+        @subagents ||= Subagents::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def widget
-        @widget ||= Widget::Client.new(client: @client)
+        @widget ||= Widget::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def link
-        @link ||= Link::Client.new(client: @client)
+        @link ||= Link::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def hold_audio
-        @hold_audio ||= HoldAudio::Client.new(client: @client)
+        @hold_audio ||= HoldAudio::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def knowledge_base
-        @knowledge_base ||= KnowledgeBase::Client.new(client: @client)
+        @knowledge_base ||= KnowledgeBase::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def llm_usage
-        @llm_usage ||= LlmUsage::Client.new(client: @client)
+        @llm_usage ||= LlmUsage::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def tests
-        @tests ||= Tests::Client.new(client: @client)
+        @tests ||= Tests::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def users
-        @users ||= Users::Client.new(client: @client)
+        @users ||= Users::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def triage_tickets
-        @triage_tickets ||= TriageTickets::Client.new(client: @client)
+        @triage_tickets ||= TriageTickets::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def phone_numbers
-        @phone_numbers ||= PhoneNumbers::Client.new(client: @client)
+        @phone_numbers ||= PhoneNumbers::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def llm
-        @llm ||= Llm::Client.new(client: @client)
+        @llm ||= Llm::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def analytics
-        @analytics ||= Analytics::Client.new(client: @client)
+        @analytics ||= Analytics::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def tools
-        @tools ||= Tools::Client.new(client: @client)
+        @tools ||= Tools::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def analysis_items
-        @analysis_items ||= AnalysisItems::Client.new(client: @client)
+        @analysis_items ||= AnalysisItems::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def settings
-        @settings ||= Settings::Client.new(client: @client)
+        @settings ||= Settings::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def dashboard
-        @dashboard ||= Dashboard::Client.new(client: @client)
+        @dashboard ||= Dashboard::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def secrets
-        @secrets ||= Secrets::Client.new(client: @client)
+        @secrets ||= Secrets::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def batch_calls
-        @batch_calls ||= BatchCalls::Client.new(client: @client)
+        @batch_calls ||= BatchCalls::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def sip_trunk
-        @sip_trunk ||= SipTrunk::Client.new(client: @client)
+        @sip_trunk ||= SipTrunk::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def mcp_servers
-        @mcp_servers ||= McpServers::Client.new(client: @client)
+        @mcp_servers ||= McpServers::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def whatsapp_accounts
-        @whatsapp_accounts ||= WhatsappAccounts::Client.new(client: @client)
+        @whatsapp_accounts ||= WhatsappAccounts::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def branches
-        @branches ||= Branches::Client.new(client: @client)
+        @branches ||= Branches::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def versions
-        @versions ||= Versions::Client.new(client: @client)
+        @versions ||= Versions::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def deployments
-        @deployments ||= Deployments::Client.new(client: @client)
+        @deployments ||= Deployments::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def drafts
-        @drafts ||= Drafts::Client.new(client: @client)
+        @drafts ||= Drafts::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def merge_proposals
-        @merge_proposals ||= MergeProposals::Client.new(client: @client)
+        @merge_proposals ||= MergeProposals::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def outbound_campaigns
-        @outbound_campaigns ||= OutboundCampaigns::Client.new(client: @client)
+        @outbound_campaigns ||= OutboundCampaigns::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def procedures
-        @procedures ||= Procedures::Client.new(client: @client)
+        @procedures ||= Procedures::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def realtime
-        @realtime ||= Realtime::Client.new(client: @client)
+        @realtime ||= Realtime::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

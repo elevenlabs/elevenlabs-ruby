@@ -3,8 +3,10 @@
 module Elevenlabs
   module ServiceAccounts
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # List all service accounts in the workspace
@@ -54,7 +56,7 @@ module Elevenlabs
       end
 
       def api_keys
-        @api_keys ||= APIKeys::Client.new(client: @client)
+        @api_keys ||= APIKeys::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

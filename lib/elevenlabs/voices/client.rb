@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module Voices
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Returns metadata about a specific voice.
@@ -250,27 +252,27 @@ module Elevenlabs
       end
 
       def samples
-        @samples ||= Samples::Client.new(client: @client)
+        @samples ||= Samples::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def collections
-        @collections ||= Collections::Client.new(client: @client)
+        @collections ||= Collections::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def settings
-        @settings ||= Settings::Client.new(client: @client)
+        @settings ||= Settings::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def accents
-        @accents ||= Accents::Client.new(client: @client)
+        @accents ||= Accents::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def ivc
-        @ivc ||= Ivc::Client.new(client: @client)
+        @ivc ||= Ivc::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def pvc
-        @pvc ||= Pvc::Client.new(client: @client)
+        @pvc ||= Pvc::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

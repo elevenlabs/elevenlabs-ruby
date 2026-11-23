@@ -7,8 +7,10 @@ module Elevenlabs
     module Projects
       module Snapshots
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Retrieves a list of snapshots for a Studio project.

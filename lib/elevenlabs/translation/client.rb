@@ -3,8 +3,10 @@
 module Elevenlabs
   module Translation
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Opens a WebSocket connection to the `translation` channel.

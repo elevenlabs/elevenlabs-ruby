@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Subagents
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Get a list of agents that use this agent as a subagent.

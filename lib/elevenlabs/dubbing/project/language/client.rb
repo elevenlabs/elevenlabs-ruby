@@ -7,8 +7,10 @@ module Elevenlabs
     module Project
       module Language
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # List a project's language targets, cursor-paginated, each with signed output URLs once it has produced an output.
@@ -108,7 +110,7 @@ module Elevenlabs
           end
 
           def transcript
-            @transcript ||= Transcript::Client.new(client: @client)
+            @transcript ||= Transcript::Client.new(client: @client, base_url: @base_url, environment: @environment)
           end
         end
       end

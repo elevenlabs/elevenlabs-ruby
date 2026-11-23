@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module TextToSpeech
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Converts text into speech using a voice of your choice and returns audio.

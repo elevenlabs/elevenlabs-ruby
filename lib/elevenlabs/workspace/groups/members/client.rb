@@ -7,8 +7,10 @@ module Elevenlabs
     module Groups
       module Members
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Removes a member from the specified group. Requires `group_members_manage` permission.

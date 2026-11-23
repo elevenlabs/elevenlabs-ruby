@@ -6,8 +6,10 @@ module Elevenlabs
   module Reception
     module Subscriptions
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Subscribe a reseller-attributed workspace to one of the reseller's tiers

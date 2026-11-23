@@ -6,8 +6,10 @@ module Elevenlabs
   module Voices
     module Collections
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Returns all the voice collections the user has access to, sorted by title.

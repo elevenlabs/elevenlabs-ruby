@@ -4,8 +4,10 @@ module Elevenlabs
   module Workspaces
     module APIKeys
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Disable the API key used to authenticate this request. Requires the query parameter `api_key_name=self` as an explicit confirmation.

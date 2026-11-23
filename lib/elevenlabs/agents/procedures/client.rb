@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Procedures
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the procedures attached to this agent branch. By default, unpublished drafts take precedence over the latest committed version. Pass agent_version_id to list a published snapshot instead. has_draft is true when a procedure has unpublished draft changes on this branch. Procedure content is not included; use Get Procedure to read a procedure's body.
@@ -129,7 +131,7 @@ module Elevenlabs
         end
 
         def drafts
-          @drafts ||= Drafts::Client.new(client: @client)
+          @drafts ||= Drafts::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

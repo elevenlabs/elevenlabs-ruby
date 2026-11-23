@@ -4,8 +4,10 @@ module Elevenlabs
   module Workspace
     module Groups
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Get all groups in the workspace
@@ -53,7 +55,7 @@ module Elevenlabs
         end
 
         def members
-          @members ||= Members::Client.new(client: @client)
+          @members ||= Members::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

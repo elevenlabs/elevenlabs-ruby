@@ -3,8 +3,10 @@
 module Elevenlabs
   module SpeechToText
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Transcribe an audio or video file. If webhook is set to true, the request will be processed asynchronously and results sent to configured webhooks. When use_multi_channel is true and the provided audio has multiple channels, a 'transcripts' object with separate transcripts for each channel is returned; set multichannel_output_style='combined' to instead receive a single transcript with all channels merged and sorted by time. Otherwise, returns a single transcript. The optional webhook_metadata parameter allows you to attach custom data that will be included in webhook responses for request correlation and tracking.
@@ -117,7 +119,7 @@ module Elevenlabs
       end
 
       def transcripts
-        @transcripts ||= Transcripts::Client.new(client: @client)
+        @transcripts ||= Transcripts::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

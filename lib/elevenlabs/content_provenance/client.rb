@@ -3,8 +3,10 @@
 module Elevenlabs
   module ContentProvenance
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Check an audio file for an embedded ElevenLabs watermark. This endpoint is in beta and may change.

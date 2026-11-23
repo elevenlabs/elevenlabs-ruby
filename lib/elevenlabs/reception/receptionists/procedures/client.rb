@@ -7,8 +7,10 @@ module Elevenlabs
     module Receptionists
       module Procedures
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # List the procedures (SOPs) on the named receptionist, with the tools each one is missing.

@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module TextToVoice
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Create a voice from previously generated voice preview. This endpoint should be called after you fetched a generated_voice_id using POST /v1/text-to-voice/design or POST /v1/text-to-voice/:voice_id/remix.
@@ -91,7 +93,7 @@ module Elevenlabs
       end
 
       def preview
-        @preview ||= Preview::Client.new(client: @client)
+        @preview ||= Preview::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

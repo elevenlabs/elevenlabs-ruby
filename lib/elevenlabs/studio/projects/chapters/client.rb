@@ -7,8 +7,10 @@ module Elevenlabs
     module Projects
       module Chapters
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Returns a list of a Studio project's chapters.
@@ -150,7 +152,7 @@ module Elevenlabs
           end
 
           def snapshots
-            @snapshots ||= Snapshots::Client.new(client: @client)
+            @snapshots ||= Snapshots::Client.new(client: @client, base_url: @base_url, environment: @environment)
           end
         end
       end

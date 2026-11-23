@@ -3,8 +3,10 @@
 module Elevenlabs
   module Music
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Generate background music from one or more video files. Videos are combined in order. Optional description and style tags influence the generated music.
@@ -233,11 +235,11 @@ module Elevenlabs
       end
 
       def composition_plan
-        @composition_plan ||= CompositionPlan::Client.new(client: @client)
+        @composition_plan ||= CompositionPlan::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def finetunes
-        @finetunes ||= Finetunes::Client.new(client: @client)
+        @finetunes ||= Finetunes::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

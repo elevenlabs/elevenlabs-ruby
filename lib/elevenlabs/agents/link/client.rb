@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module Link
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Get the current link used to share the agent with others

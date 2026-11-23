@@ -6,8 +6,10 @@ module Elevenlabs
   module Reception
     module Receptionists
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List every customer-facing receptionist for the workspace.
@@ -89,15 +91,15 @@ module Elevenlabs
         end
 
         def rules
-          @rules ||= Rules::Client.new(client: @client)
+          @rules ||= Rules::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def procedures
-          @procedures ||= Procedures::Client.new(client: @client)
+          @procedures ||= Procedures::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def transfer_rules
-          @transfer_rules ||= TransferRules::Client.new(client: @client)
+          @transfer_rules ||= TransferRules::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

@@ -7,8 +7,10 @@ module Elevenlabs
     module Orders
       module Items
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Adds or updates an order item on an open order. Returns the item ID and the quoted price.

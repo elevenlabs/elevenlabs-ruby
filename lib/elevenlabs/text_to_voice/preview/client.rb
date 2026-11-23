@@ -6,8 +6,10 @@ module Elevenlabs
   module TextToVoice
     module Preview
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Stream a voice preview that was created via the /v1/text-to-voice/design endpoint.

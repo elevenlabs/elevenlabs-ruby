@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module KnowledgeBase
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Returns the number of pages in the agent's knowledge base.
@@ -119,15 +121,15 @@ module Elevenlabs
         end
 
         def documents
-          @documents ||= Documents::Client.new(client: @client)
+          @documents ||= Documents::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def crawl_jobs
-          @crawl_jobs ||= CrawlJobs::Client.new(client: @client)
+          @crawl_jobs ||= CrawlJobs::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def document
-          @document ||= Document::Client.new(client: @client)
+          @document ||= Document::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

@@ -8,8 +8,10 @@ module Elevenlabs
       module Samples
         module Waveform
           class Client
-            def initialize(client:)
+            def initialize(client:, base_url: nil, environment: nil)
               @client = client
+              @base_url = base_url
+              @environment = environment
             end
 
             # Retrieve the visual waveform of a voice sample.

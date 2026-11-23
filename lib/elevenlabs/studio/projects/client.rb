@@ -6,8 +6,10 @@ module Elevenlabs
   module Studio
     module Projects
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Returns a list of your Studio projects with metadata.
@@ -201,19 +203,19 @@ module Elevenlabs
         end
 
         def pronunciation_dictionaries
-          @pronunciation_dictionaries ||= PronunciationDictionaries::Client.new(client: @client)
+          @pronunciation_dictionaries ||= PronunciationDictionaries::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def content
-          @content ||= Content::Client.new(client: @client)
+          @content ||= Content::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def snapshots
-          @snapshots ||= Snapshots::Client.new(client: @client)
+          @snapshots ||= Snapshots::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def chapters
-          @chapters ||= Chapters::Client.new(client: @client)
+          @chapters ||= Chapters::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

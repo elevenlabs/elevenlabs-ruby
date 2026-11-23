@@ -5,8 +5,10 @@ module Elevenlabs
     module OutboundCampaigns
       module Config
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Get the workspace's outbound campaign configuration: the default policy new campaigns take, and per-agent overrides.

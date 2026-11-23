@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module AnalysisItems
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List analysis items available in the workspace.
@@ -206,7 +208,7 @@ module Elevenlabs
         end
 
         def dependent_agents
-          @dependent_agents ||= DependentAgents::Client.new(client: @client)
+          @dependent_agents ||= DependentAgents::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

@@ -7,8 +7,10 @@ module Elevenlabs
     module Tests
       module Invocations
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Lists all test invocations with pagination support and optional search filtering.

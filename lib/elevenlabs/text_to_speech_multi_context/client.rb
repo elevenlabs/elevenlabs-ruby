@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module TextToSpeechMultiContext
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Opens a WebSocket connection to the `text_to_speech_multi_context` channel.

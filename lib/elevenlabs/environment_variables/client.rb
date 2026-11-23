@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module EnvironmentVariables
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # List all environment variables for the workspace with optional filtering

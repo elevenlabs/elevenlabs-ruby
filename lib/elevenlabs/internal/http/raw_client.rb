@@ -102,7 +102,9 @@ module Elevenlabs
         #   URL the caller gave it; `:query`, credentials a handshake sends as query parameters;
         #   `:omitted_headers`, headers a handshake leaves out because `:query` carries them; and
         #   `:token_manager`, the OAuth token manager whose token a handshake sends.
-        def initialize(base_url:, max_retries: 2, timeout: nil, headers: {}, token_provider: nil, retry_config: {}, allow_insecure_http: false, websocket: {})
+        # @param environment [Hash{Symbol=>String}, nil] A URL per environment slot; nil when the
+        #   caller gave a base URL, which then serves every slot.
+        def initialize(base_url:, max_retries: 2, timeout: nil, headers: {}, token_provider: nil, retry_config: {}, allow_insecure_http: false, websocket: {}, environment: nil)
           @base_url = base_url
           @allow_insecure_http = allow_insecure_http
           @max_retries = max_retries
@@ -110,12 +112,20 @@ module Elevenlabs
           @token_provider = token_provider
           @retry_config = DEFAULT_RETRY_CONFIG.merge(retry_config.to_h.transform_keys(&:to_sym))
           @default_headers = {
-            'User-Agent': 'elevenlabs/1.0.1',
+            'User-Agent': 'elevenlabs/1.0.2',
             'X-Fern-Language': 'Ruby',
             'X-Fern-SDK-Name': 'elevenlabs',
-            'X-Fern-SDK-Version': '1.0.1',
+            'X-Fern-SDK-Version': '1.0.2',
           }.merge(headers)
           @websocket = websocket
+          @environment = environment
+        end
+
+        # @param slot [Symbol]
+        # @return [String, nil] The URL of an environment slot, or the base URL the caller gave the
+        #   client in place of an environment.
+        def environment_url(slot)
+          @environment ? @environment[slot] : @base_url
         end
 
         # @return [String, nil] The base URL the caller gave the client, which WebSocket channels

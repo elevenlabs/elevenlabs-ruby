@@ -8,8 +8,10 @@ module Elevenlabs
       module Chapters
         module Snapshots
           class Client
-            def initialize(client:)
+            def initialize(client:, base_url: nil, environment: nil)
               @client = client
+              @base_url = base_url
+              @environment = environment
             end
 
             # Gets information about all the snapshots of a chapter. Each snapshot can be downloaded as audio. Whenever a chapter is converted a snapshot will automatically be created.

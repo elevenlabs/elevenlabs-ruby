@@ -3,8 +3,10 @@
 module Elevenlabs
   module ForcedAlignment
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Force align an audio file to text. Use this endpoint to get the timing information for each character and word in an audio file based on a provided text transcript.

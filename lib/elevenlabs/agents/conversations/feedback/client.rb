@@ -7,8 +7,10 @@ module Elevenlabs
     module Conversations
       module Feedback
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Send the feedback for the given conversation

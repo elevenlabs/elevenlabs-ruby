@@ -7,8 +7,10 @@ module Elevenlabs
     module Conversations
       module Analysis
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Run the analysis for a conversation using the agent's current evaluation criteria and data collection settings.

@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module SpeechToSpeech
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Transform audio from one voice to another. Maintain full control over emotion, timing and delivery.

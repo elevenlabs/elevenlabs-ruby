@@ -3,8 +3,10 @@
 module Elevenlabs
   module Workspace
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Set the workspace-wide Third-Party Disabling policy. When set, it forces, for every API key in the workspace, whether the holder of a key (potentially a third party who found it) may disable it via the self-disable endpoint or when it leaks publicly — overriding each key's own setting. Pass `true` to allow it for all keys, `false` to forbid it for all keys, or `null` to clear the override so per-key values and the plan default apply again. Workspace admins only.
@@ -31,35 +33,35 @@ module Elevenlabs
       end
 
       def audit_logs
-        @audit_logs ||= AuditLogs::Client.new(client: @client)
+        @audit_logs ||= AuditLogs::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def auth_connections
-        @auth_connections ||= AuthConnections::Client.new(client: @client)
+        @auth_connections ||= AuthConnections::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def groups
-        @groups ||= Groups::Client.new(client: @client)
+        @groups ||= Groups::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def invites
-        @invites ||= Invites::Client.new(client: @client)
+        @invites ||= Invites::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def members
-        @members ||= Members::Client.new(client: @client)
+        @members ||= Members::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def resources
-        @resources ||= Resources::Client.new(client: @client)
+        @resources ||= Resources::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def usage
-        @usage ||= Usage::Client.new(client: @client)
+        @usage ||= Usage::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
 
       def analytics
-        @analytics ||= Analytics::Client.new(client: @client)
+        @analytics ||= Analytics::Client.new(client: @client, base_url: @base_url, environment: @environment)
       end
     end
   end

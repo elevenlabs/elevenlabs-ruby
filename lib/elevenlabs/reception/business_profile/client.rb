@@ -4,8 +4,10 @@ module Elevenlabs
   module Reception
     module BusinessProfile
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Get the business profile the receptionists answer from, with the current time in the business's timezone.

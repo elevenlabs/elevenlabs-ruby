@@ -7,8 +7,10 @@ module Elevenlabs
     module McpServers
       module Tools
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Retrieve all tools available for a specific MCP server configuration.

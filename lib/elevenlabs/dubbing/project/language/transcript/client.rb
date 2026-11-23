@@ -8,8 +8,10 @@ module Elevenlabs
       module Language
         module Transcript
           class Client
-            def initialize(client:)
+            def initialize(client:, base_url: nil, environment: nil)
               @client = client
+              @base_url = base_url
+              @environment = environment
             end
 
             # A language target's transcript: source segments with their translations. Available once the target has produced an output. Returns a conflict while the target is still on its first dub, since it has no translations to return yet.

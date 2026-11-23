@@ -7,8 +7,10 @@ module Elevenlabs
     module Receptionists
       module Rules
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Add a behavioral rule to the named receptionist.

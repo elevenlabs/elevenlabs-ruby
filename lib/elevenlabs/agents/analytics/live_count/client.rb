@@ -5,8 +5,10 @@ module Elevenlabs
     module Analytics
       module LiveCount
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Get the live count of the ongoing conversations.

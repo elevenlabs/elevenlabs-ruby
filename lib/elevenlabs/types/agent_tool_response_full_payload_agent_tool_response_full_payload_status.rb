@@ -2,10 +2,13 @@
 
 module Elevenlabs
   module Types
-    module Type
+    module AgentToolResponseFullPayloadAgentToolResponseFullPayloadStatus
       extend ::Elevenlabs::Internal::Types::Enum
 
-      AGENT_RESPONSE = :agent_response
+      SUCCESS = :success
+      ERROR = :error
+      BLOCKED = :blocked
+      SKIPPED = :skipped
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

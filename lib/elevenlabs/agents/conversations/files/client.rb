@@ -7,8 +7,10 @@ module Elevenlabs
     module Conversations
       module Files
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Download a file the user attached to a conversation, including while the conversation is still active.

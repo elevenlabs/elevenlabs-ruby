@@ -3,8 +3,10 @@
 module Elevenlabs
   module TextToDialogue
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Converts a list of text and voice ID pairs into speech (dialogue) and returns audio.

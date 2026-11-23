@@ -5,8 +5,10 @@ require 'uri'
 module Elevenlabs
   module AudioNative
     class Client
-      def initialize(client:)
+      def initialize(client:, base_url: nil, environment: nil)
         @client = client
+        @base_url = base_url
+        @environment = environment
       end
 
       # Creates Audio Native enabled project, optionally starts conversion and returns project ID and embeddable HTML snippet.

@@ -4,8 +4,10 @@ module Elevenlabs
   module Agents
     module Exotel
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Handle an outbound call via Exotel Connect API

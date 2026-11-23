@@ -5,8 +5,10 @@ module Elevenlabs
     module Conversations
       module Messages
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Search through conversation transcript messages by full-text and fuzzy search

@@ -7,8 +7,10 @@ module Elevenlabs
     module Orders
       module Deliverables
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Retrieves the delivered files for a completed order. Returns an empty list if the order is not yet completed.

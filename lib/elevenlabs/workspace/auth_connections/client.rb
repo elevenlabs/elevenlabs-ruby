@@ -6,8 +6,10 @@ module Elevenlabs
   module Workspace
     module AuthConnections
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Get all auth connections for the workspace

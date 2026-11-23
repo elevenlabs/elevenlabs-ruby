@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module McpServers
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Retrieve all MCP server configurations available in the workspace.
@@ -124,15 +126,15 @@ module Elevenlabs
         end
 
         def tools
-          @tools ||= Tools::Client.new(client: @client)
+          @tools ||= Tools::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def tool_approvals
-          @tool_approvals ||= ToolApprovals::Client.new(client: @client)
+          @tool_approvals ||= ToolApprovals::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def tool_configs
-          @tool_configs ||= ToolConfigs::Client.new(client: @client)
+          @tool_configs ||= ToolConfigs::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

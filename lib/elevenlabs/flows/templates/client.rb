@@ -6,8 +6,10 @@ module Elevenlabs
   module Flows
     module Templates
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the published flows templates in your workspace, together with each runnable version's inputs and outputs. Use the ids here as `template_id` / `version_id` on `POST /v1/flows/templates/{template_id}/runs`. Versions built on models that are not available to you through the API are left out, so `versions` is empty when none of a template's published versions is runnable through this API. Templates shared with you by link, or published to Explore from another workspace, are not listed but can still be fetched and run by `template_id`.
@@ -64,7 +66,7 @@ module Elevenlabs
         end
 
         def runs
-          @runs ||= Runs::Client.new(client: @client)
+          @runs ||= Runs::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

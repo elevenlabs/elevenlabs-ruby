@@ -7,8 +7,10 @@ module Elevenlabs
     module Receptionists
       module TransferRules
         class Client
-          def initialize(client:)
+          def initialize(client:, base_url: nil, environment: nil)
             @client = client
+            @base_url = base_url
+            @environment = environment
           end
 
           # Add a phone forwarding rule to the named receptionist.

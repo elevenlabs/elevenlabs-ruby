@@ -6,8 +6,10 @@ module Elevenlabs
   module Reception
     module Products
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the workspace's products, optionally filtered by group or active state.
@@ -144,7 +146,7 @@ module Elevenlabs
         end
 
         def stock
-          @stock ||= Stock::Client.new(client: @client)
+          @stock ||= Stock::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

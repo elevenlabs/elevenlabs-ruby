@@ -6,8 +6,10 @@ module Elevenlabs
   module Dubbing
     module Transcripts
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Fetch the transcript for one of the languages in a dub.

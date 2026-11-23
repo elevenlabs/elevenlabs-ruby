@@ -8,8 +8,10 @@ module Elevenlabs
       module Samples
         module Speakers
           class Client
-            def initialize(client:)
+            def initialize(client:, base_url: nil, environment: nil)
               @client = client
+              @base_url = base_url
+              @environment = environment
             end
 
             # Retrieve the status of the speaker separation process and the list of detected speakers if complete.
@@ -57,7 +59,7 @@ module Elevenlabs
             end
 
             def audio
-              @audio ||= Audio::Client.new(client: @client)
+              @audio ||= Audio::Client.new(client: @client, base_url: @base_url, environment: @environment)
             end
           end
         end

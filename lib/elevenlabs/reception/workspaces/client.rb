@@ -6,8 +6,10 @@ module Elevenlabs
   module Reception
     module Workspaces
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List workspaces attributed to the caller's reseller, with cursor-based pagination

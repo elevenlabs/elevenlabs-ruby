@@ -6,8 +6,10 @@ module Elevenlabs
   module Workspace
     module Members
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Gets a list of all members of the workspace, including locked members. Service accounts are excluded. Requires the workspace_members_read permission.

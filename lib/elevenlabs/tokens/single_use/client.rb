@@ -6,8 +6,10 @@ module Elevenlabs
   module Tokens
     module SingleUse
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Generate a time limited single-use token with embedded authentication for frontend clients.

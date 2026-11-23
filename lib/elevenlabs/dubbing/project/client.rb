@@ -6,8 +6,10 @@ module Elevenlabs
   module Dubbing
     module Project
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the dubbing projects in your workspace that you can access, newest first, cursor-paginated. Listed projects carry no `language_ids`; fetch a project, or list its language targets, to see them.
@@ -118,11 +120,11 @@ module Elevenlabs
         end
 
         def language
-          @language ||= Language::Client.new(client: @client)
+          @language ||= Language::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def transcript
-          @transcript ||= Transcript::Client.new(client: @client)
+          @transcript ||= Transcript::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

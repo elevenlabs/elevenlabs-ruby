@@ -4,8 +4,10 @@ module Elevenlabs
   module Reception
     module Tiers
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # The tiers you can sell, cheapest first. The first is the trial. Retired tiers are left out.

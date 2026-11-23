@@ -6,8 +6,10 @@ module Elevenlabs
   module Productions
     module Orders
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Lists Productions orders in the workspace. Supports filtering by status and date range, with pagination.
@@ -138,19 +140,19 @@ module Elevenlabs
         end
 
         def media
-          @media ||= Media::Client.new(client: @client)
+          @media ||= Media::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def items
-          @items ||= Items::Client.new(client: @client)
+          @items ||= Items::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def deliverables
-          @deliverables ||= Deliverables::Client.new(client: @client)
+          @deliverables ||= Deliverables::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def languages
-          @languages ||= Languages::Client.new(client: @client)
+          @languages ||= Languages::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end

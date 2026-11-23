@@ -6,8 +6,10 @@ module Elevenlabs
   module SpeechToText
     module Transcripts
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # Retrieve a previously generated transcript by its ID.

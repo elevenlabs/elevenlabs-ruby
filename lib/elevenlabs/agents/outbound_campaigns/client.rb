@@ -6,8 +6,10 @@ module Elevenlabs
   module Agents
     module OutboundCampaigns
       class Client
-        def initialize(client:)
+        def initialize(client:, base_url: nil, environment: nil)
           @client = client
+          @base_url = base_url
+          @environment = environment
         end
 
         # List the workspace's outbound campaigns, newest first.
@@ -241,19 +243,19 @@ module Elevenlabs
         end
 
         def config
-          @config ||= Config::Client.new(client: @client)
+          @config ||= Config::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def leads
-          @leads ||= Leads::Client.new(client: @client)
+          @leads ||= Leads::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def calls
-          @calls ||= Calls::Client.new(client: @client)
+          @calls ||= Calls::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
 
         def attention
-          @attention ||= Attention::Client.new(client: @client)
+          @attention ||= Attention::Client.new(client: @client, base_url: @base_url, environment: @environment)
         end
       end
     end
