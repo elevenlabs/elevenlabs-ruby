@@ -47,3 +47,6 @@ test/elevenlabs/speech_engine/jwt_verifier_test.rb
 test/elevenlabs/speech_engine/session_test.rb
 test/elevenlabs/speech_engine/server_test.rb
 test/elevenlabs/speech_engine/resource_test.rb
+
+# The org allowlist only permits rubygems/configure-rubygems-credentials pinned to a commit hash.
+.github/workflows/ci.yml
