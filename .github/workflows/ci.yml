@@ -88,7 +88,7 @@ jobs:
         run: bundle install
 
       - name: Configure RubyGems credentials
-        uses: rubygems/configure-rubygems-credentials@v1.0.0
+        uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
 
       - name: Build gem
         run: bundle exec rake build
