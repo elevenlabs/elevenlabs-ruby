@@ -9,7 +9,6 @@ require 'elevenlabs/agent_tools'
 module Elevenlabs
   module AgentWorkflows
     # Some cases check a built workflow end to end, so they assert on several of its parts.
-    # rubocop:disable Minitest/MultipleAssertions
     # Tool nodes and subagents that take Tool objects, which build(tool_ids:) resolves to ids.
     class ToolRefsTest < Minitest::Test
       Tool = ::Elevenlabs::AgentTools::Tool
@@ -115,6 +114,5 @@ module Elevenlabs
         assert_equal ['tool_9'], wf.to_json(tool_ids: { get_order: 'tool_9' })['nodes']['a']['additional_tool_ids']
       end
     end
-    # rubocop:enable Minitest/MultipleAssertions
   end
 end

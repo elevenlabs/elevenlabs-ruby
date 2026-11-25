@@ -96,7 +96,6 @@ module Elevenlabs
         end
       end
 
-      # rubocop:disable Minitest/MultipleAssertions
       def test_ping_is_answered_while_a_slow_transcript_stream_runs
         started = Thread::Queue.new
         blocker = Thread::Queue.new
@@ -140,7 +139,6 @@ module Elevenlabs
         server&.stop
         server_thread&.join(2)
       end
-      # rubocop:enable Minitest/MultipleAssertions
 
       def test_serve_returns_without_error_when_stopped
         server = Server.new(port: 0, api_key: API_KEY)

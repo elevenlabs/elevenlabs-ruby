@@ -42,7 +42,6 @@ module Elevenlabs
         assert_equal [{ 'type' => 'pong' }], decoded_sent
       end
 
-      # rubocop:disable Minitest/MultipleAssertions
       def test_transcript_delivers_messages_and_string_response
         s = session
         received = nil
@@ -64,7 +63,6 @@ module Elevenlabs
           { 'type' => 'agent_response', 'content' => '', 'event_id' => 7, 'is_final' => true },
         ], decoded_sent
       end
-      # rubocop:enable Minitest/MultipleAssertions
 
       def test_streamed_response_sends_chunks_then_final
         s = session
@@ -95,7 +93,6 @@ module Elevenlabs
         assert_equal(['Hel', 'lo', ''], contents)
       end
 
-      # rubocop:disable Minitest/MultipleAssertions
       def test_extracts_anthropic_and_gemini_chunks
         assert_equal 'ant', Session.extract_text(
           'type' => 'content_block_delta', 'delta' => { 'type' => 'text_delta', 'text' => 'ant' },
@@ -108,7 +105,6 @@ module Elevenlabs
         )
         assert_nil Session.extract_text('candidates' => [{ 'content' => { 'parts' => [{ 'thought' => true, 'text' => 'x' }] } }])
       end
-      # rubocop:enable Minitest/MultipleAssertions
 
       def test_send_response_outside_handler_is_suppressed
         s = session

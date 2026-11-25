@@ -8,7 +8,6 @@ require 'elevenlabs/agent_builder'
 module Elevenlabs
   module AgentBuilder
     # Several cases check one assembled config end to end, so they assert on its parts together.
-    # rubocop:disable Minitest/MultipleAssertions
     class AgentTest < Minitest::Test
       Tool = ::Elevenlabs::AgentTools::Tool
       Schema = ::Elevenlabs::AgentTools::Schema
@@ -276,6 +275,5 @@ module Elevenlabs
         assert_equal({ 'turn' => { 'turn_timeout' => 7 }, 'tags' => ['a'] }, target)
       end
     end
-    # rubocop:enable Minitest/MultipleAssertions
   end
 end
