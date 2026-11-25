@@ -66,7 +66,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/music',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'audio/*',
           request_options: request_options,
         )
@@ -99,7 +99,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/music/detailed',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'multipart/mixed',
           request_options: request_options,
         )
@@ -124,7 +124,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/music/detailed/stream',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'text/event-stream',
           request_options: request_options,
         )
@@ -158,7 +158,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/music/stream',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'audio/*',
           request_options: request_options,
         )

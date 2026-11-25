@@ -5,6 +5,7 @@ module Elevenlabs
     module PhoneNumbers
       module Types
         class UpdatePhoneNumberRequest < ::Elevenlabs::Internal::Types::Model
+          field :phone_number_id, -> { String }, optional: false, nullable: false
           field :agent_id, -> { String }, optional: true, nullable: true
           field :label, -> { String }, optional: true, nullable: true
           field :inbound_trunk_config, -> { ::Elevenlabs::Types::InboundSipTrunkConfigRequestModel }, optional: true, nullable: false

@@ -5,6 +5,7 @@ module Elevenlabs
     module APIKeys
       module Types
         class BodyCreateServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysPost < ::Elevenlabs::Internal::Types::Model
+          field :service_account_user_id, -> { String }, optional: false, nullable: false
           field :name, -> { String }, optional: false, nullable: false
           field :permissions, -> { ::Elevenlabs::ServiceAccounts::APIKeys::Types::BodyCreateServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysPostPermissions }, optional: false, nullable: false
           field :character_limit, -> { Integer }, optional: true, nullable: true

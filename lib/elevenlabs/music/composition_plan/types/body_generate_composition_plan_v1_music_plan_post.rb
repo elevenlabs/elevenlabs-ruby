@@ -5,6 +5,7 @@ module Elevenlabs
     module CompositionPlan
       module Types
         class BodyGenerateCompositionPlanV1MusicPlanPost < ::Elevenlabs::Internal::Types::Model
+          field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
           field :prompt, -> { String }, optional: false, nullable: false
           field :music_length_ms, -> { Integer }, optional: true, nullable: true
           field :source_composition_plan, -> { ::Elevenlabs::Music::CompositionPlan::Types::BodyGenerateCompositionPlanV1MusicPlanPostSourceCompositionPlan }, optional: true, nullable: true

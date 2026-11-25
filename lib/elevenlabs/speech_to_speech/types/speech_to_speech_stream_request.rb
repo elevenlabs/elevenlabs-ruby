@@ -4,6 +4,10 @@ module Elevenlabs
   module SpeechToSpeech
     module Types
       class SpeechToSpeechStreamRequest < ::Elevenlabs::Internal::Types::Model
+        field :voice_id, -> { String }, optional: false, nullable: false
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
+        field :optimize_streaming_latency, -> { Integer }, optional: true, nullable: true
+        field :output_format, -> { ::Elevenlabs::SpeechToSpeech::Types::StreamSpeechToSpeechRequestOutputFormat }, optional: true, nullable: true
         field :audio, -> { String }, optional: false, nullable: false
         field :model_id, -> { String }, optional: true, nullable: false
         field :voice_settings, -> { String }, optional: true, nullable: true

@@ -21,6 +21,8 @@ module Elevenlabs
         field :search, -> { String }, optional: true, nullable: true
 
         field :source, -> { ::Elevenlabs::History::Types::ListHistoryRequestSource }, optional: true, nullable: true
+
+        field :sources, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::History::Types::ListHistoryRequestSourcesItem] }, optional: true, nullable: true
       end
     end
   end

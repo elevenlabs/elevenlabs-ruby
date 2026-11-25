@@ -65,7 +65,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PUT',
             path: "v1/workspace/members/#{URI.encode_uri_component(params[:user_id].to_s)}/usage-limit",
-            body: request_body.to_h,
+            body: request_body.to_h.except('user_id'),
             request_options: request_options,
           )
           response = @client.send(request)

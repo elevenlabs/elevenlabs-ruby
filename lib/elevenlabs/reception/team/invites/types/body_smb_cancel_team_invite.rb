@@ -6,6 +6,7 @@ module Elevenlabs
       module Invites
         module Types
           class BodySmbCancelTeamInvite < ::Elevenlabs::Internal::Types::Model
+            field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
             field :email, -> { String }, optional: false, nullable: false
 
             def self.load(str)

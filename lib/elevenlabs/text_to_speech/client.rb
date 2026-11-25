@@ -31,7 +31,7 @@ module Elevenlabs
           method: 'POST',
           path: "v1/text-to-speech/#{URI.encode_uri_component(params[:voice_id].to_s)}",
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('voice_id', 'enable_logging', 'optimize_streaming_latency', 'output_format'),
           accept: 'audio/mpeg',
           request_options: request_options,
         )
@@ -57,7 +57,7 @@ module Elevenlabs
           method: 'POST',
           path: "v1/text-to-speech/#{URI.encode_uri_component(params[:voice_id].to_s)}/with-timestamps",
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('voice_id', 'enable_logging', 'optimize_streaming_latency', 'output_format'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -95,7 +95,7 @@ module Elevenlabs
           method: 'POST',
           path: "v1/text-to-speech/#{URI.encode_uri_component(params[:voice_id].to_s)}/stream",
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('voice_id', 'enable_logging', 'optimize_streaming_latency', 'output_format'),
           accept: 'audio/mpeg',
           request_options: request_options,
         )
@@ -121,7 +121,7 @@ module Elevenlabs
           method: 'POST',
           path: "v1/text-to-speech/#{URI.encode_uri_component(params[:voice_id].to_s)}/stream/with-timestamps",
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('voice_id', 'enable_logging', 'optimize_streaming_latency', 'output_format'),
           request_options: request_options,
         )
         chunks = ::Elevenlabs::Internal::Http::ByteStream.decode(@client, request) do |response|

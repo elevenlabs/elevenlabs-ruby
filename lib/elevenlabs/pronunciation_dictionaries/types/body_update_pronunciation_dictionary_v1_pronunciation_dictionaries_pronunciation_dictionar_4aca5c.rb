@@ -4,6 +4,7 @@ module Elevenlabs
   module PronunciationDictionaries
     module Types
       class BodyUpdatePronunciationDictionaryV1PronunciationDictionariesPronunciationDictionaryIDPatch < ::Elevenlabs::Internal::Types::Model
+        field :pronunciation_dictionary_id, -> { String }, optional: false, nullable: false
         field :archived, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
         field :name, -> { String }, optional: true, nullable: false
 

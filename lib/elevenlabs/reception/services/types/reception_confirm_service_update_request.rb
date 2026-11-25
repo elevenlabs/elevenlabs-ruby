@@ -5,6 +5,9 @@ module Elevenlabs
     module Services
       module Types
         class ReceptionConfirmServiceUpdateRequest < ::Elevenlabs::Internal::Types::Model
+          field :service_id, -> { String }, optional: false, nullable: false
+          field :reprice, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :pricing_mode, -> { ::Elevenlabs::Types::PricingMode }, optional: true, nullable: false
           field :intake_questions, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::ReceptionIntakeQuestion] }, optional: true, nullable: false
           field :groups, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::ReceptionGroupMembership] }, optional: true, nullable: false

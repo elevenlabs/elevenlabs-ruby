@@ -4,6 +4,10 @@ module Elevenlabs
   module Agents
     module Types
       class UpdateAgentRequest < ::Elevenlabs::Internal::Types::Model
+        field :agent_id, -> { String }, optional: false, nullable: false
+        field :enable_versioning_if_not_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
+        field :branch_id, -> { String }, optional: true, nullable: true
+        field :include_procedure_generated_workflow_elements, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :conversation_config, -> { ::Elevenlabs::Types::ConversationalConfig }, optional: true, nullable: false
         field :platform_settings, -> { ::Elevenlabs::Types::AgentPlatformSettingsRequestModel }, optional: true, nullable: false
         field :workflow, -> { ::Elevenlabs::Types::AgentWorkflowRequestModel }, optional: true, nullable: false

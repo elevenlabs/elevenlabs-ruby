@@ -5,6 +5,7 @@ module Elevenlabs
     module TriageTickets
       module Types
         class AddTurnCommentRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :agentqa_ticket_id, -> { String }, optional: false, nullable: false
           field :turn_index, -> { Integer }, optional: false, nullable: false
           field :comment, -> { String }, optional: false, nullable: false
 

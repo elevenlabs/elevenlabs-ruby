@@ -6,6 +6,7 @@ module Elevenlabs
       module Transcript
         module Types
           class DubbingBulkSegmentUpdateRequest < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
             field :segments, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Dubbing::Project::Transcript::Types::DubbingSegmentUpdateRequest] }, optional: false, nullable: false
 
             def self.load(str)

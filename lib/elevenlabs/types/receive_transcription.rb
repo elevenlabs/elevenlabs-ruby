@@ -10,6 +10,7 @@ module Elevenlabs
       member -> { ::Elevenlabs::Types::CommittedTranscript }
       member -> { ::Elevenlabs::Types::DiarizedTranscript }
       member -> { ::Elevenlabs::Types::SpeakersMerged }
+      member -> { ::Elevenlabs::Types::SpeakerNames }
       member -> { ::Elevenlabs::Types::CommittedTranscriptWithTimestamps }
       member -> { ::Elevenlabs::Types::CommittedTranscriptEntities }
       member -> { ::Elevenlabs::Types::RedactedTranscript }

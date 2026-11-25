@@ -6,6 +6,7 @@ module Elevenlabs
       module Invites
         module Types
           class CreateTeamInviteRequest < ::Elevenlabs::Internal::Types::Model
+            field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
             field :email, -> { String }, optional: false, nullable: false
             field :role, -> { ::Elevenlabs::Reception::Team::Invites::Types::CreateTeamInviteRequestRole }, optional: true, nullable: false
 

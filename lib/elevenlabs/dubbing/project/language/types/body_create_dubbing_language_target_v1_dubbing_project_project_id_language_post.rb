@@ -6,6 +6,7 @@ module Elevenlabs
       module Language
         module Types
           class BodyCreateDubbingLanguageTargetV1DubbingProjectProjectIDLanguagePost < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
             field :target_language, -> { String }, optional: false, nullable: false
             field :voice_settings, -> { ::Elevenlabs::Types::DubbingVoiceSettings }, optional: true, nullable: false
             field :translations, -> { ::Elevenlabs::Internal::Types::Hash[String, String] }, optional: true, nullable: true

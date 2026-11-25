@@ -7,6 +7,9 @@ module Elevenlabs
         module Transcript
           module Types
             class DubbingTargetSegmentUpdateRequest < ::Elevenlabs::Internal::Types::Model
+              field :project_id, -> { String }, optional: false, nullable: false
+              field :language_id, -> { String }, optional: false, nullable: false
+              field :segment_id, -> { String }, optional: false, nullable: false
               field :translation, -> { String }, optional: true, nullable: true
 
               def self.load(str)

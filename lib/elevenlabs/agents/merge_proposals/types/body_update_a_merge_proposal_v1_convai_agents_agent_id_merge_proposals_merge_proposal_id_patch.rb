@@ -5,6 +5,8 @@ module Elevenlabs
     module MergeProposals
       module Types
         class BodyUpdateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsMergeProposalIDPatch < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :merge_proposal_id, -> { String }, optional: false, nullable: false
           field :title, -> { String }, optional: true, nullable: true
           field :description, -> { String }, optional: true, nullable: true
           field :requested_reviewer_user_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true

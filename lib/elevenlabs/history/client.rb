@@ -22,6 +22,7 @@ module Elevenlabs
         query_params['sort_direction'] = params[:sort_direction] if params.key?(:sort_direction)
         query_params['search'] = params[:search] if params.key?(:search)
         query_params['source'] = params[:source] if params.key?(:source)
+        query_params['sources'] = params[:sources] if params.key?(:sources)
         request = ::Elevenlabs::Internal::JSON::Request.new(
           base_url: request_options[:base_url],
           method: 'GET',

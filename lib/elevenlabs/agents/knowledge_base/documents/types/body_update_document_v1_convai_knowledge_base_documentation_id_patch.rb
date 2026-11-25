@@ -6,6 +6,7 @@ module Elevenlabs
       module Documents
         module Types
           class BodyUpdateDocumentV1ConvaiKnowledgeBaseDocumentationIDPatch < ::Elevenlabs::Internal::Types::Model
+            field :documentation_id, -> { String }, optional: false, nullable: false
             field :name, -> { String }, optional: true, nullable: true
             field :content, -> { String }, optional: true, nullable: true
             field :enable_auto_sync, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true

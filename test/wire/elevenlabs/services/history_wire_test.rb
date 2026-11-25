@@ -54,7 +54,7 @@ class HistoryWireTest < Minitest::Test
     end
 
     client = ::Elevenlabs::Client.new(base_url: BASE_URL)
-    result = client.history.list(page_size: 1, start_after_history_item_id: 'test-value', voice_id: 'test-value', model_id: 'test-value', date_before_unix: 1, date_after_unix: 1, sort_direction: 'asc', search: 'test-value', source: 'TTS')
+    result = client.history.list(page_size: 1, start_after_history_item_id: 'test-value', voice_id: 'test-value', model_id: 'test-value', date_before_unix: 1, date_after_unix: 1, sort_direction: 'asc', search: 'test-value', source: 'TTS', sources: ['TTS'])
 
     refute_nil(captured)
     assert_equal('GET', captured.method.to_s.upcase)
@@ -68,6 +68,7 @@ class HistoryWireTest < Minitest::Test
     assert_equal(['asc'], wire_test_query(captured.uri)['sort_direction'])
     assert_equal(['test-value'], wire_test_query(captured.uri)['search'])
     assert_equal(['TTS'], wire_test_query(captured.uri)['source'])
+    assert_equal(['TTS'], wire_test_query(captured.uri)['sources'])
     refute_nil(result)
   end
 
@@ -83,7 +84,7 @@ class HistoryWireTest < Minitest::Test
     end
 
     client = ::Elevenlabs::Client.new(base_url: BASE_URL)
-    assert_raises(::Elevenlabs::Errors::UnprocessableEntityError) { client.history.list(page_size: 1, start_after_history_item_id: 'test-value', voice_id: 'test-value', model_id: 'test-value', date_before_unix: 1, date_after_unix: 1, sort_direction: 'asc', search: 'test-value', source: 'TTS') }
+    assert_raises(::Elevenlabs::Errors::UnprocessableEntityError) { client.history.list(page_size: 1, start_after_history_item_id: 'test-value', voice_id: 'test-value', model_id: 'test-value', date_before_unix: 1, date_after_unix: 1, sort_direction: 'asc', search: 'test-value', source: 'TTS', sources: ['TTS']) }
     # `assert_raises` only proves the right CLASS was raised, not that the mocked endpoint was
     # ever hit -- a bug that raises before the HTTP call (e.g. argument validation) would satisfy
     # it just as well. This is the same proof every other test in this file already requires.

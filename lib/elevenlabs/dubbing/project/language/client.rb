@@ -51,7 +51,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/dubbing/project/#{URI.encode_uri_component(params[:project_id].to_s)}/language",
-              body: request_body.to_h,
+              body: request_body.to_h.except('project_id'),
               request_options: request_options,
             )
             response = @client.send(request)

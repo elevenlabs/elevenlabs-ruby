@@ -70,7 +70,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/convai/outbound-campaigns/attention/#{URI.encode_uri_component(params[:attention_id].to_s)}/resolve",
-              body: request_body.to_h,
+              body: request_body.to_h.except('attention_id'),
               request_options: request_options,
             )
             response = @client.send(request)

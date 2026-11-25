@@ -20,7 +20,7 @@ module Elevenlabs
             method: 'POST',
             path: 'v1/music/plan',
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('enable_logging'),
             request_options: request_options,
           )
           response = @client.send(request)

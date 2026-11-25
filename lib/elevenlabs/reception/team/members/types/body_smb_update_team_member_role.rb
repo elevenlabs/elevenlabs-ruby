@@ -6,6 +6,8 @@ module Elevenlabs
       module Members
         module Types
           class BodySmbUpdateTeamMemberRole < ::Elevenlabs::Internal::Types::Model
+            field :user_id, -> { String }, optional: false, nullable: false
+            field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
             field :role, -> { ::Elevenlabs::Reception::Team::Members::Types::BodySmbUpdateTeamMemberRoleRole }, optional: false, nullable: false
 
             def self.load(str)

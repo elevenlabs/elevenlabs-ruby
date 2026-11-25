@@ -5,6 +5,7 @@ module Elevenlabs
     module Rules
       module Types
         class BodySetRulesOnThePronunciationDictionaryV1PronunciationDictionariesPronunciationDictionaryIDSetRulesPost < ::Elevenlabs::Internal::Types::Model
+          field :pronunciation_dictionary_id, -> { String }, optional: false, nullable: false
           field :rules, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::PronunciationDictionaries::Rules::Types::BodySetRulesOnThePronunciationDictionaryV1PronunciationDictionariesPronunciationDictionaryIDSetRulesPostRulesItem] }, optional: false, nullable: false
 
           def self.load(str)

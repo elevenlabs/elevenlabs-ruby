@@ -5,6 +5,8 @@ module Elevenlabs
     module Branches
       module Types
         class BodyUpdateAgentBranchV1ConvaiAgentsAgentIDBranchesBranchIDPatch < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :branch_id, -> { String }, optional: false, nullable: false
           field :name, -> { String }, optional: true, nullable: true
           field :description, -> { String }, optional: true, nullable: true
           field :is_archived, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true

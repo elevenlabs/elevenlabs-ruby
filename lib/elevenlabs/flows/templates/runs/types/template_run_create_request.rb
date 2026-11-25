@@ -6,6 +6,7 @@ module Elevenlabs
       module Runs
         module Types
           class TemplateRunCreateRequest < ::Elevenlabs::Internal::Types::Model
+            field :template_id, -> { String }, optional: false, nullable: false
             field :inputs, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::TemplateRunInput] }, optional: false, nullable: false
             field :version_id, -> { String }, optional: true, nullable: true
             field :webhook, -> { ::Elevenlabs::Types::WebhookTarget }, optional: true, nullable: false

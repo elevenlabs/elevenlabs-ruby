@@ -5,6 +5,7 @@ module Elevenlabs
     module Realtime
       module Types
         class UpdateRealtimeConversationGroupRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :conversation_group_id, -> { String }, optional: false, nullable: false
           field :title, -> { String }, optional: true, nullable: true
           field :description, -> { String }, optional: true, nullable: true
 

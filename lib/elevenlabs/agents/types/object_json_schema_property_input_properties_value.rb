@@ -9,6 +9,7 @@ module Elevenlabs
         member -> { ::Elevenlabs::Types::LiteralJSONSchemaProperty }
         member -> { ::Elevenlabs::Types::ObjectJSONSchemaPropertyInput }
         member -> { ::Elevenlabs::Types::ArrayJSONSchemaPropertyInput }
+        member -> { ::Elevenlabs::Types::AnyOfJSONSchemaPropertyInput }
 
         def self.load(str)
           coerce(::JSON.parse(str, symbolize_names: true))

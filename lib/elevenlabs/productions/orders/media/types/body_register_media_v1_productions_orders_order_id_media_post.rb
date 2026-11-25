@@ -6,6 +6,7 @@ module Elevenlabs
       module Media
         module Types
           class BodyRegisterMediaV1ProductionsOrdersOrderIDMediaPost < ::Elevenlabs::Internal::Types::Model
+            field :order_id, -> { String }, optional: false, nullable: false
             field :declared_language, -> { String }, optional: false, nullable: false
             field :media, -> { String }, optional: true, nullable: true
             field :media_url, -> { String }, optional: true, nullable: true

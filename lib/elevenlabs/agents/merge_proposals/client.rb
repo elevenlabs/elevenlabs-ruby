@@ -49,7 +49,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -96,7 +96,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -121,7 +121,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}/reviews",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -146,7 +146,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}/comments",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -171,7 +171,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}/merge",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)

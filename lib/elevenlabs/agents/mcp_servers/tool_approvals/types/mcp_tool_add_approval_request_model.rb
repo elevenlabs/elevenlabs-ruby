@@ -6,6 +6,7 @@ module Elevenlabs
       module ToolApprovals
         module Types
           class McpToolAddApprovalRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :mcp_server_id, -> { String }, optional: false, nullable: false
             field :tool_name, -> { String }, optional: false, nullable: false
             field :tool_description, -> { String }, optional: false, nullable: false
             field :input_schema, -> { Object }, optional: true, nullable: false

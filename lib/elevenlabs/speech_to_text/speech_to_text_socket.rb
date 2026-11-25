@@ -16,6 +16,7 @@ module Elevenlabs
         [::Elevenlabs::Types::RedactedTranscript, { 'message_type' => 'redacted_transcript' }, %w[text redacted_text]],
         [::Elevenlabs::Types::PartialTranscript, { 'message_type' => 'partial_transcript' }, ['text']],
         [::Elevenlabs::Types::CommittedTranscript, { 'message_type' => 'committed_transcript' }, ['text']],
+        [::Elevenlabs::Types::SpeakerNames, { 'message_type' => 'speaker_names' }, ['speaker_names']],
         [::Elevenlabs::Types::CommittedTranscriptWithTimestamps, { 'message_type' => 'committed_transcript_with_timestamps' }, ['text']],
         [::Elevenlabs::Types::CommittedTranscriptEntities, { 'message_type' => 'committed_transcript_entities' }, ['text']],
         [::Elevenlabs::Types::ScribeWarning, { 'message_type' => 'warning' }, ['warning']],

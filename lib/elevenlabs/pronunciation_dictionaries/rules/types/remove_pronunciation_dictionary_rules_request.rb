@@ -5,6 +5,7 @@ module Elevenlabs
     module Rules
       module Types
         class RemovePronunciationDictionaryRulesRequest < ::Elevenlabs::Internal::Types::Model
+          field :pronunciation_dictionary_id, -> { String }, optional: false, nullable: false
           field :rule_strings, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
 
           def self.load(str)

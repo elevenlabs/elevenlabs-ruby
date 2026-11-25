@@ -73,7 +73,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/analysis-items/#{URI.encode_uri_component(params[:analysis_item_id].to_s)}/attachments",
-            body: request_body.to_h,
+            body: request_body.to_h.except('analysis_item_id'),
             request_options: request_options,
           )
           response = @client.send(request)

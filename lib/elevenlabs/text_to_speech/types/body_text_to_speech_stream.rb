@@ -4,6 +4,10 @@ module Elevenlabs
   module TextToSpeech
     module Types
       class BodyTextToSpeechStream < ::Elevenlabs::Internal::Types::Model
+        field :voice_id, -> { String }, optional: false, nullable: false
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
+        field :optimize_streaming_latency, -> { Integer }, optional: true, nullable: true
+        field :output_format, -> { ::Elevenlabs::TextToSpeech::Types::StreamTextToSpeechRequestOutputFormat }, optional: true, nullable: true
         field :text, -> { String }, optional: false, nullable: false
         field :model_id, -> { String }, optional: true, nullable: false
         field :language_code, -> { String }, optional: true, nullable: true

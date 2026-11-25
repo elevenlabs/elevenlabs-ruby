@@ -147,7 +147,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/convai/knowledge-base/#{URI.encode_uri_component(params[:documentation_id].to_s)}",
-              body: request_body.to_h,
+              body: request_body.to_h.except('documentation_id'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -217,7 +217,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/convai/knowledge-base/#{URI.encode_uri_component(params[:documentation_id].to_s)}/chunking-override",
-              body: request_body.to_h,
+              body: request_body.to_h.except('documentation_id'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -274,7 +274,7 @@ module Elevenlabs
               method: 'POST',
               path: 'v1/convai/knowledge-base/dependent-agents',
               query: query_params,
-              body: request_body.to_h,
+              body: request_body.to_h.except('dependent_type', 'page_size', 'cursor'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -342,7 +342,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/convai/knowledge-base/#{URI.encode_uri_component(params[:document_id].to_s)}/move",
-              body: request_body.to_h,
+              body: request_body.to_h.except('document_id'),
               request_options: request_options,
             )
             response = @client.send(request)

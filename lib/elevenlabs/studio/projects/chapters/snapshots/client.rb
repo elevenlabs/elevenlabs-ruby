@@ -73,7 +73,7 @@ module Elevenlabs
                 base_url: request_options[:base_url],
                 method: 'POST',
                 path: "v1/studio/projects/#{URI.encode_uri_component(params[:project_id].to_s)}/chapters/#{URI.encode_uri_component(params[:chapter_id].to_s)}/snapshots/#{URI.encode_uri_component(params[:chapter_snapshot_id].to_s)}/stream",
-                body: request_body.to_h,
+                body: request_body.to_h.except('project_id', 'chapter_id', 'chapter_snapshot_id'),
                 accept: 'audio/mpeg',
                 request_options: request_options,
               )

@@ -20,7 +20,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/convai/conversations/#{URI.encode_uri_component(params[:conversation_id].to_s)}/tags",
-              body: request_body.to_h,
+              body: request_body.to_h.except('conversation_id'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -132,7 +132,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/convai/tags/#{URI.encode_uri_component(params[:tag_id].to_s)}",
-              body: request_body.to_h,
+              body: request_body.to_h.except('tag_id'),
               request_options: request_options,
             )
             response = @client.send(request)

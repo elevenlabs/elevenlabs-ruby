@@ -6,6 +6,8 @@ module Elevenlabs
       module Transcript
         module Types
           class DubbingSegmentUpdateRequest < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
+            field :segment_id, -> { String }, optional: false, nullable: false
             field :text, -> { String }, optional: true, nullable: true
             field :speaker_id, -> { String }, optional: true, nullable: true
             field :start_s, -> { Float }, optional: true, nullable: true

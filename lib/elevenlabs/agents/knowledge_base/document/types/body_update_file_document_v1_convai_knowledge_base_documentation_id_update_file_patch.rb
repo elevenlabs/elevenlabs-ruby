@@ -6,6 +6,7 @@ module Elevenlabs
       module Document
         module Types
           class BodyUpdateFileDocumentV1ConvaiKnowledgeBaseDocumentationIDUpdateFilePatch < ::Elevenlabs::Internal::Types::Model
+            field :documentation_id, -> { String }, optional: false, nullable: false
             field :file, -> { String }, optional: false, nullable: false
 
             def self.load(str)

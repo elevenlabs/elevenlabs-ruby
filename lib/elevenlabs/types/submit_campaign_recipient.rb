@@ -7,6 +7,7 @@ module Elevenlabs
       field :phone_numbers, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
       field :whatsapp_user_id, -> { String }, optional: true, nullable: true
       field :id, -> { String }, optional: true, nullable: true
+      field :timezone_override, -> { String }, optional: true, nullable: true
       field :conversation_initiation_client_data, -> { ::Elevenlabs::Types::ConversationInitiationClientDataRequestInput }, optional: true, nullable: false
 
       def validate!

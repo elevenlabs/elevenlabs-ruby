@@ -46,7 +46,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/text-to-voice/design',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -74,7 +74,7 @@ module Elevenlabs
           method: 'POST',
           path: "v1/text-to-voice/#{URI.encode_uri_component(params[:voice_id].to_s)}/remix",
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('voice_id', 'output_format'),
           request_options: request_options,
         )
         response = @client.send(request)

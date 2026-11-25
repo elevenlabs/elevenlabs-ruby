@@ -4,6 +4,8 @@ module Elevenlabs
   module Music
     module Types
       class BodyComposeMusicV1MusicPost < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::Music::Types::ComposeMusicRequestOutputFormat }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :prompt, -> { String }, optional: true, nullable: true
         field :composition_plan, -> { ::Elevenlabs::Music::Types::BodyComposeMusicV1MusicPostCompositionPlan }, optional: true, nullable: true
         field :music_length_ms, -> { Integer }, optional: true, nullable: true

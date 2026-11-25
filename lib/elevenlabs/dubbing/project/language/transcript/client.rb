@@ -43,7 +43,7 @@ module Elevenlabs
                 base_url: request_options[:base_url],
                 method: 'PATCH',
                 path: "v1/dubbing/project/#{URI.encode_uri_component(params[:project_id].to_s)}/language/#{URI.encode_uri_component(params[:language_id].to_s)}/transcript/segment/#{URI.encode_uri_component(params[:segment_id].to_s)}",
-                body: request_body.to_h,
+                body: request_body.to_h.except('project_id', 'language_id', 'segment_id'),
                 request_options: request_options,
               )
               response = @client.send(request)
@@ -68,7 +68,7 @@ module Elevenlabs
                 base_url: request_options[:base_url],
                 method: 'PATCH',
                 path: "v1/dubbing/project/#{URI.encode_uri_component(params[:project_id].to_s)}/language/#{URI.encode_uri_component(params[:language_id].to_s)}/transcript/segments",
-                body: request_body.to_h,
+                body: request_body.to_h.except('project_id', 'language_id'),
                 request_options: request_options,
               )
               response = @client.send(request)

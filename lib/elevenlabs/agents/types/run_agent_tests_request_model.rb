@@ -4,6 +4,7 @@ module Elevenlabs
   module Agents
     module Types
       class RunAgentTestsRequestModel < ::Elevenlabs::Internal::Types::Model
+        field :agent_id, -> { String }, optional: false, nullable: false
         field :name, -> { String }, optional: true, nullable: true
         field :tests, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::SingleTestRunRequestModel] }, optional: false, nullable: false
         field :agent_config_override, -> { ::Elevenlabs::Types::AdhocAgentConfigOverrideForTestRequestModel }, optional: true, nullable: true

@@ -5,6 +5,8 @@ module Elevenlabs
     module MergeProposals
       module Types
         class BodyReviewAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsMergeProposalIDReviewsPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :merge_proposal_id, -> { String }, optional: false, nullable: false
           field :state, -> { ::Elevenlabs::Types::MergeProposalReviewState }, optional: false, nullable: false
           field :comment, -> { String }, optional: true, nullable: false
 

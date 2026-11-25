@@ -8,7 +8,7 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class LlmUsageOutputTest < Minitest::Test
   def test_round_trip
-    wire = { 'model_usage' => { 'key' => { 'input' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_read' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_write' => { 'tokens' => 1, 'price' => 1 }, 'output_total' => { 'tokens' => 1, 'price' => 1 } } } }
+    wire = { 'model_usage' => { 'key' => { 'input' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_read' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_write' => { 'tokens' => 1, 'price' => 1 }, 'output_total' => { 'tokens' => 1, 'price' => 1 }, 'output_total_reasoning_portion' => { 'tokens' => 1, 'price' => 1 } } } }
 
     instance = ::Elevenlabs::Types::LlmUsageOutput.new(wire)
 

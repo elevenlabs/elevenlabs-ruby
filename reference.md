@@ -19,6 +19,7 @@ Get generated items
 - `sort_direction`
 - `search`
 - `source`
+- `sources`
 
 ### `elevenlabs.history.get`
 
@@ -898,6 +899,14 @@ List similar voices
 
 **Parameters:**
 
+- `category`
+- `gender`
+- `age`
+- `use_cases`
+- `min_notice_period_days`
+- `include_custom_rates`
+- `include_live_moderated`
+- `owner_id`
 - `audio_file`
 - `similarity_threshold`
 - `top_k`
@@ -1336,6 +1345,66 @@ Convert Chapter
 - `project_id` (required)
 - `chapter_id` (required)
 
+## AudioNative
+
+### `elevenlabs.audio_native.create`
+
+`POST /v1/audio-native`
+
+Create audio native project
+
+**Parameters:**
+
+- `name` (required)
+- `image`
+- `author`
+- `title`
+- `small`
+- `text_color`
+- `background_color`
+- `sessionization`
+- `voice_id`
+- `model_id`
+- `file`
+- `auto_convert`
+- `apply_text_normalization`
+- `pronunciation_dictionary_locators`
+
+### `elevenlabs.audio_native.get_settings`
+
+`GET /v1/audio-native/{project_id}/settings`
+
+Get Audio Native Project Settings
+
+**Parameters:**
+
+- `project_id` (required)
+
+### `elevenlabs.audio_native.update`
+
+`POST /v1/audio-native/{project_id}/content`
+
+Update audio native project
+
+**Parameters:**
+
+- `project_id` (required)
+- `file`
+- `auto_convert`
+- `auto_publish`
+
+### `elevenlabs.audio_native.update_content_from_url`
+
+`POST /v1/audio-native/content`
+
+Update Audio-Native Content From Url
+
+**Parameters:**
+
+- `url` (required)
+- `author`
+- `title`
+
 ## Dubbing Project
 
 ### `elevenlabs.dubbing.project.list`
@@ -1660,66 +1729,6 @@ Delete Transcript By Id
 `GET /v1/models`
 
 List models
-
-## AudioNative
-
-### `elevenlabs.audio_native.create`
-
-`POST /v1/audio-native`
-
-Create audio native project
-
-**Parameters:**
-
-- `name` (required)
-- `image`
-- `author`
-- `title`
-- `small`
-- `text_color`
-- `background_color`
-- `sessionization`
-- `voice_id`
-- `model_id`
-- `file`
-- `auto_convert`
-- `apply_text_normalization`
-- `pronunciation_dictionary_locators`
-
-### `elevenlabs.audio_native.get_settings`
-
-`GET /v1/audio-native/{project_id}/settings`
-
-Get Audio Native Project Settings
-
-**Parameters:**
-
-- `project_id` (required)
-
-### `elevenlabs.audio_native.update`
-
-`POST /v1/audio-native/{project_id}/content`
-
-Update audio native project
-
-**Parameters:**
-
-- `project_id` (required)
-- `file`
-- `auto_convert`
-- `auto_publish`
-
-### `elevenlabs.audio_native.update_content_from_url`
-
-`POST /v1/audio-native/content`
-
-Update Audio-Native Content From Url
-
-**Parameters:**
-
-- `url` (required)
-- `author`
-- `title`
 
 ## ContentProvenance
 
@@ -6966,6 +6975,7 @@ Create Reseller Workspace
 
 - `business_name` (required)
 - `vertical`
+- `charge_customer`
 - `subscription`
 - `phone_number`
 - `members`

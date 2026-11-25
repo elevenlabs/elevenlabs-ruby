@@ -7,6 +7,7 @@ module Elevenlabs
       field :model_id, -> { String }, optional: true, nullable: true
       field :api_key, -> { ::Elevenlabs::Types::CustomLlmAPIKey }, optional: true, nullable: true
       field :auth_connection, -> { ::Elevenlabs::Types::CustomLlmAuthConnection }, optional: true, nullable: true
+      field :mtls_auth_connection, -> { ::Elevenlabs::Types::CustomLlmMtlsAuthConnection }, optional: true, nullable: true
       field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::CustomLlmRequestHeadersValue] }, optional: true, nullable: false
       field :api_version, -> { String }, optional: true, nullable: true
       field :api_type, -> { ::Elevenlabs::Types::CustomLlmapiType }, optional: true, nullable: false

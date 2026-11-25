@@ -4,6 +4,8 @@ module Elevenlabs
   module Music
     module Types
       class BodyStemSeparationV1MusicStemSeparationPost < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::Types::AllowedOutputFormats }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :file, -> { String }, optional: false, nullable: false
         field :stem_variation_id, -> { ::Elevenlabs::Music::Types::BodyStemSeparationV1MusicStemSeparationPostStemVariationID }, optional: true, nullable: false
         field :sign_with_c2pa, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

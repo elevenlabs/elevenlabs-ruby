@@ -5,6 +5,8 @@ module Elevenlabs
     module MergeProposals
       module Types
         class BodyMergeAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsMergeProposalIDMergePost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :merge_proposal_id, -> { String }, optional: false, nullable: false
           field :archive_source_branch, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
           field :force, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

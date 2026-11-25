@@ -23,7 +23,7 @@ module Elevenlabs
               method: 'POST',
               path: "v1/convai/mcp-servers/#{URI.encode_uri_component(params[:mcp_server_id].to_s)}/tool-configs",
               query: query_params,
-              body: request_body.to_h,
+              body: request_body.to_h.except('mcp_server_id', 'environment'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -73,7 +73,7 @@ module Elevenlabs
               method: 'PATCH',
               path: "v1/convai/mcp-servers/#{URI.encode_uri_component(params[:mcp_server_id].to_s)}/tool-configs/#{URI.encode_uri_component(params[:tool_name].to_s)}",
               query: query_params,
-              body: request_body.to_h,
+              body: request_body.to_h.except('mcp_server_id', 'tool_name', 'environment'),
               request_options: request_options,
             )
             response = @client.send(request)

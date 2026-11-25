@@ -46,7 +46,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -93,7 +93,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:branch_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -148,7 +148,7 @@ module Elevenlabs
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:source_branch_id].to_s)}/merge",
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'source_branch_id', 'target_branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -200,7 +200,7 @@ module Elevenlabs
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:branch_id].to_s)}/rebase",
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'branch_id', 'source_branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)

@@ -6,6 +6,9 @@ module Elevenlabs
       module Drafts
         module Types
           class UpdateProcedureDraftRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :agent_id, -> { String }, optional: false, nullable: false
+            field :branch_id, -> { String }, optional: false, nullable: false
+            field :procedure_id, -> { String }, optional: false, nullable: false
             field :name, -> { String }, optional: false, nullable: false
             field :content, -> { String }, optional: false, nullable: false
             field :type, -> { ::Elevenlabs::Types::ProcedureType }, optional: false, nullable: false

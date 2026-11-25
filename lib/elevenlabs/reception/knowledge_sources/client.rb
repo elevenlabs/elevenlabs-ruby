@@ -122,7 +122,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: 'v1/reception/knowledge-sources/urls',
-            body: request_body.to_h,
+            body: request_body.to_h.except('xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

@@ -139,7 +139,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'POST',
           path: "v1/voices/#{URI.encode_uri_component(params[:voice_id].to_s)}/replicate-to-isolated-environment",
-          body: request_body.to_h,
+          body: request_body.to_h.except('voice_id'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -164,7 +164,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'POST',
           path: "v1/voices/add/#{URI.encode_uri_component(params[:public_user_id].to_s)}/#{URI.encode_uri_component(params[:voice_id].to_s)}",
-          body: request_body.to_h,
+          body: request_body.to_h.except('public_user_id', 'voice_id'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -183,6 +183,15 @@ module Elevenlabs
       # Returns a list of shared voices similar to the provided audio sample. If neither similarity_threshold nor top_k is provided, we will apply default values.
       def find_similar_voices(request_options: {}, **params)
         params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+        query_params = {}
+        query_params['category'] = params[:category] if params.key?(:category)
+        query_params['gender'] = params[:gender] if params.key?(:gender)
+        query_params['age'] = params[:age] if params.key?(:age)
+        query_params['use_cases'] = params[:use_cases] if params.key?(:use_cases)
+        query_params['min_notice_period_days'] = params[:min_notice_period_days] if params.key?(:min_notice_period_days)
+        query_params['include_custom_rates'] = params[:include_custom_rates] if params.key?(:include_custom_rates)
+        query_params['include_live_moderated'] = params[:include_live_moderated] if params.key?(:include_live_moderated)
+        query_params['owner_id'] = params[:owner_id] if params.key?(:owner_id)
         body = ::Elevenlabs::Internal::Multipart::FormData.new
         body.add_file(name: 'audio_file', file: params[:audio_file]) if params.key?(:audio_file)
         body.add(name: 'similarity_threshold', value: params[:similarity_threshold]) if params.key?(:similarity_threshold)
@@ -191,6 +200,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'POST',
           path: 'v1/similar-voices',
+          query: query_params,
           body: body,
           request_options: request_options,
         )

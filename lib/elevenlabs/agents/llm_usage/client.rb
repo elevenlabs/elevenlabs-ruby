@@ -19,7 +19,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agent/#{URI.encode_uri_component(params[:agent_id].to_s)}/llm-usage/calculate",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id'),
             request_options: request_options,
           )
           response = @client.send(request)

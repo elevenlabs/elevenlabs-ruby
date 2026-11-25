@@ -5,6 +5,7 @@ module Elevenlabs
     module PhoneNumbers
       module Types
         class CreatePhoneAssignmentRequest < ::Elevenlabs::Internal::Types::Model
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :customer_facing_agent_id, -> { String }, optional: false, nullable: false
           field :area_codes, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
           field :number_type, -> { ::Elevenlabs::Types::ApplicationNumberType }, optional: true, nullable: false

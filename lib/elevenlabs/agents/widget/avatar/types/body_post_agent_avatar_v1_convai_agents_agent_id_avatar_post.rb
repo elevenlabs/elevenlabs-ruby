@@ -6,6 +6,7 @@ module Elevenlabs
       module Avatar
         module Types
           class BodyPostAgentAvatarV1ConvaiAgentsAgentIDAvatarPost < ::Elevenlabs::Internal::Types::Model
+            field :agent_id, -> { String }, optional: false, nullable: false
             field :avatar_file, -> { String }, optional: false, nullable: false
 
             def self.load(str)
