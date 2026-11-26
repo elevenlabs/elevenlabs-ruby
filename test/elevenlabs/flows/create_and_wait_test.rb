@@ -8,7 +8,6 @@ require 'elevenlabs/flows/create_and_wait'
 module Elevenlabs
   module Flows
     # Each case checks one wait end to end, so it asserts on the result, the sleeps and the requests together.
-    # rubocop:disable Minitest/MultipleAssertions
     class CreateAndWaitTest < Minitest::Test
       BASE = 'https://api.test'
       IMAGE = { model_id: 'gpt-image-2', prompt: 'A lighthouse at dusk' }.freeze

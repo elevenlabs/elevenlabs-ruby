@@ -42,7 +42,6 @@ module Elevenlabs
         assert_equal [{ 'type' => 'pong' }], decoded_sent
       end
 
-      # rubocop:disable Minitest/MultipleAssertions
       def test_transcript_delivers_messages_and_string_response
         s = session
         received = nil

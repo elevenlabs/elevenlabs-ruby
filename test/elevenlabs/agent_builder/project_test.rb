@@ -9,7 +9,6 @@ require_relative 'fake_server'
 module Elevenlabs
   module AgentBuilder
     # Each case checks one project load or write end to end, so it asserts on the files, ids and changes together.
-    # rubocop:disable Minitest/MultipleAssertions
     module ProjectSupport
       Tool = ::Elevenlabs::AgentTools::Tool
       # A project in the CLI's layout, shared by every SDK and copied from the reference SDK (elevenlabs-js,

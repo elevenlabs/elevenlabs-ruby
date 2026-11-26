@@ -8,7 +8,6 @@ require_relative 'fake_server'
 module Elevenlabs
   module AgentBuilder
     # Each case checks one push or pull end to end, so it asserts on the result, the requests and the project together.
-    # rubocop:disable Minitest/MultipleAssertions
     # agents.push and agents.pull against FakeServer, through the generated client.
     module PushSupport
       Tool = ::Elevenlabs::AgentTools::Tool
