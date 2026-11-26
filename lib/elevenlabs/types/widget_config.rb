@@ -51,6 +51,7 @@ module Elevenlabs
       field :end_confirmation_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :mobile_fullscreen, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :transcript_speech_sync_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
+      field :layout, -> { ::Elevenlabs::Types::WidgetLayout }, optional: true, nullable: false
       field :language_selector, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :supports_text_only, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :custom_avatar_path, -> { String }, optional: true, nullable: true

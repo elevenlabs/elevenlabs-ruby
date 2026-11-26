@@ -12,4 +12,5 @@ client.history.list(
   sort_direction: 'asc',
   search: 'search',
   source: 'TTS',
+  sources: ['TTS'],
 )

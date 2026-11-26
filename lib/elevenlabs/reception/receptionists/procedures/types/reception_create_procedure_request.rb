@@ -6,6 +6,8 @@ module Elevenlabs
       module Procedures
         module Types
           class ReceptionCreateProcedureRequest < ::Elevenlabs::Internal::Types::Model
+            field :agent_id, -> { String }, optional: false, nullable: false
+            field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
             field :name, -> { String }, optional: false, nullable: false
             field :trigger, -> { String }, optional: false, nullable: false
             field :body, -> { String }, optional: true, nullable: false

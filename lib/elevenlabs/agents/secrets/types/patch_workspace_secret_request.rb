@@ -5,6 +5,7 @@ module Elevenlabs
     module Secrets
       module Types
         class PatchWorkspaceSecretRequest < ::Elevenlabs::Internal::Types::Model
+          field :secret_id, -> { String }, optional: false, nullable: false
           field :type, -> { ::Elevenlabs::Agents::Secrets::Types::PatchWorkspaceSecretRequestType }, optional: false, nullable: false
           field :name, -> { String }, optional: false, nullable: false
           field :value, -> { String }, optional: false, nullable: false

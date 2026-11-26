@@ -5,6 +5,7 @@ module Elevenlabs
     module Members
       module Types
         class UpdateMemberUsageLimitRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :user_id, -> { String }, optional: false, nullable: false
           field :usage_limit, -> { Integer }, optional: false, nullable: true
 
           def validate!

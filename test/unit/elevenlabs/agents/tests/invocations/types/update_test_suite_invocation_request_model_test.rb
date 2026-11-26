@@ -12,6 +12,6 @@ class UpdateTestSuiteInvocationRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Tests::Invocations::Types::UpdateTestSuiteInvocationRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('test_invocation_id'))
   end
 end

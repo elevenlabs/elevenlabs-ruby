@@ -6,6 +6,7 @@ module Elevenlabs
       module Invocations
         module Types
           class UpdateTestSuiteInvocationRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :test_invocation_id, -> { String }, optional: false, nullable: false
             field :name, -> { String }, optional: false, nullable: true
 
             def validate!

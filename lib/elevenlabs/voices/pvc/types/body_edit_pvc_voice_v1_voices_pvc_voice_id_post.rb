@@ -5,6 +5,7 @@ module Elevenlabs
     module Pvc
       module Types
         class BodyEditPvcVoiceV1VoicesPvcVoiceIDPost < ::Elevenlabs::Internal::Types::Model
+          field :voice_id, -> { String }, optional: false, nullable: false
           field :name, -> { String }, optional: true, nullable: false
           field :language, -> { String }, optional: true, nullable: false
           field :description, -> { String }, optional: true, nullable: true

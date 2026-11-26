@@ -93,7 +93,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'PATCH',
           path: "v1/pronunciation-dictionaries/#{URI.encode_uri_component(params[:pronunciation_dictionary_id].to_s)}",
-          body: request_body.to_h,
+          body: request_body.to_h.except('pronunciation_dictionary_id'),
           request_options: request_options,
         )
         response = @client.send(request)

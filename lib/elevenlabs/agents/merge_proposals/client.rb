@@ -40,7 +40,7 @@ module Elevenlabs
           end
         end
 
-        # Record a request to merge a source branch into a target branch. Anyone with edit access can open one; merging it later is gated on write access to the target branch, so this is how a change reaches a protected branch the author cannot merge into themselves.
+        # Create a request to merge a source branch into a target branch. Callers with only propose access can open a proposal from a branch they own into its parent. Merging requires write access to the target branch.
         def create(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::MergeProposals::Types::BodyCreateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsPost.new(params.except(:agent_id))
@@ -49,7 +49,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -96,7 +96,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -121,7 +121,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}/reviews",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -146,7 +146,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}/comments",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -171,7 +171,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/merge-proposals/#{URI.encode_uri_component(params[:merge_proposal_id].to_s)}/merge",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'merge_proposal_id'),
             request_options: request_options,
           )
           response = @client.send(request)

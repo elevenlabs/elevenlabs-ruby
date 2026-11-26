@@ -6,6 +6,7 @@ module Elevenlabs
       module Documents
         module Types
           class BodyMoveEntityToFolderV1ConvaiKnowledgeBaseDocumentIDMovePost < ::Elevenlabs::Internal::Types::Model
+            field :document_id, -> { String }, optional: false, nullable: false
             field :move_to, -> { String }, optional: true, nullable: true
 
             def self.load(str)

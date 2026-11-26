@@ -5,6 +5,7 @@ module Elevenlabs
     module Finetunes
       module Types
         class UpdateMusicFinetuneRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :finetune_id, -> { String }, optional: false, nullable: false
           field :name, -> { String }, optional: true, nullable: true
           field :tags, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
           field :primary_genre, -> { String }, optional: true, nullable: true

@@ -67,7 +67,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/convai/agent-testing/folders/#{URI.encode_uri_component(params[:folder_id].to_s)}",
-              body: request_body.to_h,
+              body: request_body.to_h.except('folder_id'),
               request_options: request_options,
             )
             response = @client.send(request)

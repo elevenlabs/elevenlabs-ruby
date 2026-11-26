@@ -12,6 +12,6 @@ class AssignResellerTierRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Subscriptions::Types::AssignResellerTierRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('workspace_id'))
   end
 end

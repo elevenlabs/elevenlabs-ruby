@@ -6,6 +6,7 @@ module Elevenlabs
       module Items
         module Types
           class BodyUpsertOrderItemV1ProductionsOrdersOrderIDItemsPost < ::Elevenlabs::Internal::Types::Model
+            field :order_id, -> { String }, optional: false, nullable: false
             field :request, -> { ::Elevenlabs::Types::UpsertOrderItemRequest }, optional: false, nullable: false
 
             def self.load(str)

@@ -5,6 +5,7 @@ module Elevenlabs
     module Pvc
       module Types
         class BodyRunPvcTrainingV1VoicesPvcVoiceIDTrainPost < ::Elevenlabs::Internal::Types::Model
+          field :voice_id, -> { String }, optional: false, nullable: false
           field :model_id, -> { String }, optional: true, nullable: true
 
           def self.load(str)

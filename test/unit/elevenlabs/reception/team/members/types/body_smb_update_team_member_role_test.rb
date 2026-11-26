@@ -12,6 +12,6 @@ class BodySmbUpdateTeamMemberRoleTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Team::Members::Types::BodySmbUpdateTeamMemberRole.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('user_id', 'xi-workspace-id'))
   end
 end

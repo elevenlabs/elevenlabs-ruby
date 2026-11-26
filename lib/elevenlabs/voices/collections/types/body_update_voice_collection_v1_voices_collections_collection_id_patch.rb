@@ -5,6 +5,7 @@ module Elevenlabs
     module Collections
       module Types
         class BodyUpdateVoiceCollectionV1VoicesCollectionsCollectionIDPatch < ::Elevenlabs::Internal::Types::Model
+          field :collection_id, -> { String }, optional: false, nullable: false
           field :title, -> { String }, optional: true, nullable: true
           field :icon, -> { String }, optional: true, nullable: true
 

@@ -6,6 +6,7 @@ module Elevenlabs
       module Verification
         module Types
           class BodyRequestManualVerificationV1VoicesPvcVoiceIDVerificationPost < ::Elevenlabs::Internal::Types::Model
+            field :voice_id, -> { String }, optional: false, nullable: false
             field :files, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
             field :extra_text, -> { String }, optional: true, nullable: true
 

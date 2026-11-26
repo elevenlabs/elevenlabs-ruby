@@ -4,6 +4,7 @@ module Elevenlabs
   module SpeechEngine
     module Types
       class UpdateSpeechEngineRequest < ::Elevenlabs::Internal::Types::Model
+        field :speech_engine_id, -> { String }, optional: false, nullable: false
         field :name, -> { String }, optional: true, nullable: true
         field :speech_engine, -> { ::Elevenlabs::Types::SpeechEngineConfig }, optional: true, nullable: false
         field :asr, -> { ::Elevenlabs::Types::AsrConversationalConfig }, optional: true, nullable: false

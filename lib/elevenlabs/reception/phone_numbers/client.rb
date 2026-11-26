@@ -46,7 +46,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: 'v1/reception/phone-numbers/assignments',
-            body: request_body.to_h,
+            body: request_body.to_h.except('xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )
@@ -74,7 +74,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/reception/phone-numbers/assignments/#{URI.encode_uri_component(params[:phone_assignment_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('phone_assignment_id', 'xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

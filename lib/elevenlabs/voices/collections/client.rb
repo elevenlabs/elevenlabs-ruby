@@ -87,7 +87,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/voices/collections/#{URI.encode_uri_component(params[:collection_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('collection_id'),
             request_options: request_options,
           )
           response = @client.send(request)

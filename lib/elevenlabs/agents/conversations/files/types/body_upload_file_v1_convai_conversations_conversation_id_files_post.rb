@@ -6,6 +6,7 @@ module Elevenlabs
       module Files
         module Types
           class BodyUploadFileV1ConvaiConversationsConversationIDFilesPost < ::Elevenlabs::Internal::Types::Model
+            field :conversation_id, -> { String }, optional: false, nullable: false
             field :file, -> { String }, optional: false, nullable: false
 
             def self.load(str)

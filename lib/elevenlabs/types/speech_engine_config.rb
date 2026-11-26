@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class SpeechEngineConfig < ::Elevenlabs::Internal::Types::Model
       field :ws_url, -> { String }, optional: false, nullable: false
-      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::SpeechEngine::Types::SpeechEngineConfigRequestHeadersValue] }, optional: true, nullable: false
+      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::SpeechEngineConfigRequestHeadersValue] }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

@@ -5,6 +5,7 @@ module Elevenlabs
     module TriageTickets
       module Types
         class PatchAgentConversationTicketRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :agentqa_ticket_id, -> { String }, optional: false, nullable: false
           field :title, -> { String }, optional: true, nullable: true
           field :qa_comment, -> { String }, optional: true, nullable: true
           field :status, -> { ::Elevenlabs::Types::AgentConversationTicketStatus }, optional: true, nullable: false

@@ -76,7 +76,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/convai/test-invocations/#{URI.encode_uri_component(params[:test_invocation_id].to_s)}",
-              body: request_body.to_h,
+              body: request_body.to_h.except('test_invocation_id'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -119,7 +119,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/convai/test-invocations/#{URI.encode_uri_component(params[:test_invocation_id].to_s)}/resubmit",
-              body: request_body.to_h,
+              body: request_body.to_h.except('test_invocation_id'),
               request_options: request_options,
             )
             response = @client.send(request)

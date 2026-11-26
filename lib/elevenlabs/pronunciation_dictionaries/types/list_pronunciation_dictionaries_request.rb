@@ -8,7 +8,7 @@ module Elevenlabs
 
         field :page_size, -> { Integer }, optional: true, nullable: true
 
-        field :sort, -> { ::Elevenlabs::Studio::Projects::PronunciationDictionaries::Types::ListPronunciationDictionariesRequestSort }, optional: true, nullable: true
+        field :sort, -> { ::Elevenlabs::PronunciationDictionaries::Types::ListPronunciationDictionariesRequestSort }, optional: true, nullable: true
 
         field :sort_direction, -> { String }, optional: true, nullable: true
 

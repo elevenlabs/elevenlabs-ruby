@@ -18,7 +18,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'POST',
           path: 'v1/studio/podcasts',
-          body: request_body.to_h,
+          body: request_body.to_h.except('safety-identifier'),
           headers: headers,
           request_options: request_options,
         )

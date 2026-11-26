@@ -5,6 +5,7 @@ module Elevenlabs
     module Branches
       module Types
         class BodyCreateANewBranchV1ConvaiAgentsAgentIDBranchesPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
           field :parent_version_id, -> { String }, optional: false, nullable: false
           field :name, -> { String }, optional: false, nullable: false
           field :description, -> { String }, optional: false, nullable: false

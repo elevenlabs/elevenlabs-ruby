@@ -12,6 +12,6 @@ class AssignConversationTagsRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Conversations::Tags::Types::AssignConversationTagsRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('conversation_id'))
   end
 end

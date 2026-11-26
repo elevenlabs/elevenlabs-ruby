@@ -4,6 +4,7 @@ module Elevenlabs
   module Voices
     module Types
       class EditVoiceRequest < ::Elevenlabs::Internal::Types::Model
+        field :voice_id, -> { String }, optional: false, nullable: false
         field :name, -> { String }, optional: false, nullable: false
         field :files, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
         field :remove_background_noise, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

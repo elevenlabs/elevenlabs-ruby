@@ -13,6 +13,7 @@ module Elevenlabs
       CONV_AI_ALERTING = :'ConvAI Alerting'
       FLOWS = :Flows
       DUBBING = :Dubbing
+      SUPPORT_TICKETS = :'Support Tickets'
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

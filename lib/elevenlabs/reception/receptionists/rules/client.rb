@@ -22,7 +22,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/reception/customer-facing-agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/rules",
-              body: request_body.to_h,
+              body: request_body.to_h.except('agent_id', 'xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )
@@ -50,7 +50,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PUT',
               path: "v1/reception/customer-facing-agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/rules/#{URI.encode_uri_component(params[:rule_id].to_s)}",
-              body: request_body.to_h,
+              body: request_body.to_h.except('agent_id', 'rule_id', 'xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )

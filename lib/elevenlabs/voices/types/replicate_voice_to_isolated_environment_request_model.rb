@@ -4,6 +4,7 @@ module Elevenlabs
   module Voices
     module Types
       class ReplicateVoiceToIsolatedEnvironmentRequestModel < ::Elevenlabs::Internal::Types::Model
+        field :voice_id, -> { String }, optional: false, nullable: false
         field :target_workspace_id, -> { String }, optional: false, nullable: false
         field :preserve_voice_id, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

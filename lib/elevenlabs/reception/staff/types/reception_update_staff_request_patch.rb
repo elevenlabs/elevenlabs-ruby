@@ -5,6 +5,8 @@ module Elevenlabs
     module Staff
       module Types
         class ReceptionUpdateStaffRequestPatch < ::Elevenlabs::Internal::Types::Model
+          field :staff_id, -> { String }, optional: false, nullable: false
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :groups, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::ReceptionGroupMembership] }, optional: true, nullable: false
           field :ungrouped_rank, -> { Integer }, optional: true, nullable: true
           field :name, -> { String }, optional: true, nullable: false

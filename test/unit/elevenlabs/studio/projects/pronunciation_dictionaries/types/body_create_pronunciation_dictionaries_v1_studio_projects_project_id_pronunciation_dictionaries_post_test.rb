@@ -12,6 +12,6 @@ class BodyCreatePronunciationDictionariesV1StudioProjectsProjectIDPronunciationD
 
     instance = ::Elevenlabs::Studio::Projects::PronunciationDictionaries::Types::BodyCreatePronunciationDictionariesV1StudioProjectsProjectIDPronunciationDictionariesPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('project_id'))
   end
 end

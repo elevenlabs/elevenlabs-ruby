@@ -9,6 +9,7 @@ module Elevenlabs
       field :use_llm_generated_message, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
       field :randomize_fillers, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
       field :max_soft_timeouts_per_generation, -> { Integer }, optional: true, nullable: true
+      field :pause_after_filler, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
       field :llm_generated_message_prompt_override, -> { String }, optional: true, nullable: true
       field :disable_until_first_user_message, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
 

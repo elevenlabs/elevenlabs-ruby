@@ -12,6 +12,6 @@ class UpdateMusicFinetuneRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Music::Finetunes::Types::UpdateMusicFinetuneRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('finetune_id'))
   end
 end

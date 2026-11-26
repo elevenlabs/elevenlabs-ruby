@@ -5,6 +5,7 @@ module Elevenlabs
     module HoldAudio
       module Types
         class BodyPostAgentHoldAudioV1ConvaiAgentsAgentIDHoldAudioPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
           field :hold_audio_file, -> { String }, optional: false, nullable: false
 
           def self.load(str)

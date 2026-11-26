@@ -5,6 +5,8 @@ module Elevenlabs
     module Drafts
       module Types
         class BodyCreateAgentDraftV1ConvaiAgentsAgentIDDraftsPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :branch_id, -> { String }, optional: false, nullable: false
           field :conversation_config, -> { Object }, optional: false, nullable: false
           field :platform_settings, -> { Object }, optional: false, nullable: false
           field :workflow, -> { ::Elevenlabs::Types::AgentWorkflowRequestModel }, optional: false, nullable: false

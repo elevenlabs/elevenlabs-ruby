@@ -6,6 +6,9 @@ module Elevenlabs
       module Documents
         module Types
           class BodyGetDependentAgentsForMultipleDocumentsV1ConvaiKnowledgeBaseDependentAgentsPost < ::Elevenlabs::Internal::Types::Model
+            field :dependent_type, -> { ::Elevenlabs::Types::KnowledgeBaseDependentType }, optional: true, nullable: true
+            field :page_size, -> { Integer }, optional: true, nullable: true
+            field :cursor, -> { String }, optional: true, nullable: true
             field :document_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
 
             def validate!

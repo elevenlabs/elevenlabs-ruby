@@ -8,7 +8,7 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class ReceptionProvisionResellerWorkspaceRequestTest < Minitest::Test
   def test_round_trip
-    wire = { 'business_name' => 'test-value', 'vertical' => 'salon_barbershop', 'subscription' => { 'tier_id' => 'test-value', 'billing_period' => 'monthly_period' }, 'phone_number' => 'test-value', 'members' => [{ 'email' => 'test-value', 'role' => 'workspace_admin' }], 'complete_onboarding' => true, 'idempotency_key' => 'test-value' }
+    wire = { 'business_name' => 'test-value', 'vertical' => 'salon_barbershop', 'charge_customer' => true, 'subscription' => { 'tier_id' => 'test-value', 'billing_period' => 'monthly_period' }, 'phone_number' => 'test-value', 'members' => [{ 'email' => 'test-value', 'role' => 'workspace_admin' }], 'complete_onboarding' => true, 'metadata' => { 'key' => 'test-value' }, 'idempotency_key' => 'test-value' }
 
     instance = ::Elevenlabs::Reception::Workspaces::Types::ReceptionProvisionResellerWorkspaceRequest.new(wire)
 

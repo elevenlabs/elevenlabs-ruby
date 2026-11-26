@@ -4,6 +4,7 @@ module Elevenlabs
   module EnvironmentVariables
     module Types
       class UpdateEnvironmentVariableRequest < ::Elevenlabs::Internal::Types::Model
+        field :env_var_id, -> { String }, optional: false, nullable: false
         field :values, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::EnvironmentVariables::Types::UpdateEnvironmentVariableRequestValuesValue] }, optional: false, nullable: false
 
         def self.load(str)

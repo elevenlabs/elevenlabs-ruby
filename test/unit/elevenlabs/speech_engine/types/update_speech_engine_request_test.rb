@@ -12,6 +12,6 @@ class UpdateSpeechEngineRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::SpeechEngine::Types::UpdateSpeechEngineRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('speech_engine_id'))
   end
 end

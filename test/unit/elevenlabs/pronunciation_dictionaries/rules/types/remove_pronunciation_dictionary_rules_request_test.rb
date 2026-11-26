@@ -12,6 +12,6 @@ class RemovePronunciationDictionaryRulesRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::PronunciationDictionaries::Rules::Types::RemovePronunciationDictionaryRulesRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('pronunciation_dictionary_id'))
   end
 end

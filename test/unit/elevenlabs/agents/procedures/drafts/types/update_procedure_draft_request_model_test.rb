@@ -12,6 +12,6 @@ class UpdateProcedureDraftRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Procedures::Drafts::Types::UpdateProcedureDraftRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'branch_id', 'procedure_id'))
   end
 end

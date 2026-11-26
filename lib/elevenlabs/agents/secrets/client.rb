@@ -94,7 +94,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/secrets/#{URI.encode_uri_component(params[:secret_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('secret_id'),
             request_options: request_options,
           )
           response = @client.send(request)

@@ -5,6 +5,9 @@ module Elevenlabs
     module Branches
       module Types
         class BodyMergeABranchIntoATargetBranchV1ConvaiAgentsAgentIDBranchesSourceBranchIDMergePost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :source_branch_id, -> { String }, optional: false, nullable: false
+          field :target_branch_id, -> { String }, optional: false, nullable: false
           field :archive_source_branch, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
           field :force, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
           field :conflict_resolutions, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::ConflictResolution] }, optional: true, nullable: true

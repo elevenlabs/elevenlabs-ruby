@@ -9,7 +9,7 @@ module Elevenlabs
 
           field :page_size, -> { Integer }, optional: true, nullable: true
 
-          field :status, -> { ::Elevenlabs::TextToSpeech::Types::ListTextToSpeechRequestStatus }, optional: true, nullable: true
+          field :status, -> { ::Elevenlabs::Flows::TextToSpeech::Types::ListTextToSpeechRequestStatus }, optional: true, nullable: true
 
           field :model_id, -> { String }, optional: true, nullable: true
         end

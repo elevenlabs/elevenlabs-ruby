@@ -19,6 +19,7 @@ Get generated items
 - `sort_direction`
 - `search`
 - `source`
+- `sources`
 
 ### `elevenlabs.history.get`
 
@@ -898,6 +899,14 @@ List similar voices
 
 **Parameters:**
 
+- `category`
+- `gender`
+- `age`
+- `use_cases`
+- `min_notice_period_days`
+- `include_custom_rates`
+- `include_live_moderated`
+- `owner_id`
 - `audio_file`
 - `similarity_threshold`
 - `top_k`
@@ -1336,6 +1345,66 @@ Convert Chapter
 - `project_id` (required)
 - `chapter_id` (required)
 
+## AudioNative
+
+### `elevenlabs.audio_native.create`
+
+`POST /v1/audio-native`
+
+Create audio native project
+
+**Parameters:**
+
+- `name` (required)
+- `image`
+- `author`
+- `title`
+- `small`
+- `text_color`
+- `background_color`
+- `sessionization`
+- `voice_id`
+- `model_id`
+- `file`
+- `auto_convert`
+- `apply_text_normalization`
+- `pronunciation_dictionary_locators`
+
+### `elevenlabs.audio_native.get_settings`
+
+`GET /v1/audio-native/{project_id}/settings`
+
+Get Audio Native Project Settings
+
+**Parameters:**
+
+- `project_id` (required)
+
+### `elevenlabs.audio_native.update`
+
+`POST /v1/audio-native/{project_id}/content`
+
+Update audio native project
+
+**Parameters:**
+
+- `project_id` (required)
+- `file`
+- `auto_convert`
+- `auto_publish`
+
+### `elevenlabs.audio_native.update_content_from_url`
+
+`POST /v1/audio-native/content`
+
+Update Audio-Native Content From Url
+
+**Parameters:**
+
+- `url` (required)
+- `author`
+- `title`
+
 ## Dubbing Project
 
 ### `elevenlabs.dubbing.project.list`
@@ -1660,66 +1729,6 @@ Delete Transcript By Id
 `GET /v1/models`
 
 List models
-
-## AudioNative
-
-### `elevenlabs.audio_native.create`
-
-`POST /v1/audio-native`
-
-Create audio native project
-
-**Parameters:**
-
-- `name` (required)
-- `image`
-- `author`
-- `title`
-- `small`
-- `text_color`
-- `background_color`
-- `sessionization`
-- `voice_id`
-- `model_id`
-- `file`
-- `auto_convert`
-- `apply_text_normalization`
-- `pronunciation_dictionary_locators`
-
-### `elevenlabs.audio_native.get_settings`
-
-`GET /v1/audio-native/{project_id}/settings`
-
-Get Audio Native Project Settings
-
-**Parameters:**
-
-- `project_id` (required)
-
-### `elevenlabs.audio_native.update`
-
-`POST /v1/audio-native/{project_id}/content`
-
-Update audio native project
-
-**Parameters:**
-
-- `project_id` (required)
-- `file`
-- `auto_convert`
-- `auto_publish`
-
-### `elevenlabs.audio_native.update_content_from_url`
-
-`POST /v1/audio-native/content`
-
-Update Audio-Native Content From Url
-
-**Parameters:**
-
-- `url` (required)
-- `author`
-- `title`
 
 ## ContentProvenance
 
@@ -3472,6 +3481,41 @@ Delete Conversation Tag
 
 - `tag_id` (required)
 
+### `elevenlabs.agents.conversations.tags.list`
+
+`GET /v1/support/tags`
+
+List Ticket Tags
+
+**Parameters:**
+
+- `ids`
+- `include_archived`
+- `page_size`
+- `cursor`
+
+### `elevenlabs.agents.conversations.tags.create`
+
+`POST /v1/support/tags`
+
+Create Ticket Tag
+
+**Parameters:**
+
+- `name` (required)
+
+### `elevenlabs.agents.conversations.tags.update`
+
+`PATCH /v1/support/tags/{tag_id}`
+
+Update Ticket Tag
+
+**Parameters:**
+
+- `tag_id` (required)
+- `name`
+- `archived`
+
 ## Agents TriageTickets
 
 ### `elevenlabs.agents.triage_tickets.list`
@@ -4760,6 +4804,7 @@ Update Agent Branch
 - `is_archived`
 - `protection_status`
 - `auto_rebase`
+- `sync_branch_id`
 
 ### `elevenlabs.agents.branches.preview_merge`
 
@@ -5580,6 +5625,175 @@ Delete Environment
 **Parameters:**
 
 - `environment` (required)
+
+## CustomerSupport Requesters
+
+### `elevenlabs.customer_support.requesters.list`
+
+`GET /v1/support/requesters`
+
+List Support Requesters
+
+**Parameters:**
+
+- `ids`
+- `page_size`
+- `cursor`
+
+### `elevenlabs.customer_support.requesters.sync_slack`
+
+`POST /v1/support/requesters/sync/slack`
+
+Sync Slack Requesters
+
+**Parameters:**
+
+- `integration_connection_id` (required)
+
+## CustomerSupport SLAPolicies
+
+### `elevenlabs.customer_support.sla_policies.list`
+
+`GET /v1/support/sla-policies`
+
+List Ticket Sla Policies
+
+**Parameters:**
+
+- `include_archived`
+- `page_size`
+- `cursor`
+
+### `elevenlabs.customer_support.sla_policies.create`
+
+`POST /v1/support/sla-policies`
+
+Create Ticket Sla Policy
+
+**Parameters:**
+
+- `name` (required)
+- `description`
+- `targets` (required)
+
+### `elevenlabs.customer_support.sla_policies.get`
+
+`GET /v1/support/sla-policies/{policy_id}`
+
+Get Ticket Sla Policy
+
+**Parameters:**
+
+- `policy_id` (required)
+
+### `elevenlabs.customer_support.sla_policies.update`
+
+`PATCH /v1/support/sla-policies/{policy_id}`
+
+Update Ticket Sla Policy
+
+**Parameters:**
+
+- `policy_id` (required)
+- `name`
+- `description`
+- `targets`
+- `archived`
+
+## CustomerSupport Tickets
+
+### `elevenlabs.customer_support.tickets.list`
+
+`GET /v1/support/tickets`
+
+List Tickets
+
+**Parameters:**
+
+- `page_size`
+- `cursor`
+- `search`
+- `status`
+- `priority`
+- `sla_status`
+- `deadline_status`
+- `requester_user_id`
+- `assignee_id`
+- `tag_ids`
+- `unassigned`
+- `sort_by`
+- `sort_direction`
+
+### `elevenlabs.customer_support.tickets.create`
+
+`POST /v1/support/tickets`
+
+Create Ticket
+
+**Parameters:**
+
+- `requester` (required)
+- `author` (required)
+- `subject` (required)
+- `description`
+- `priority`
+- `deadline_at_unix_secs`
+- `tag_ids`
+- `assignee`
+- `secondary_assignee`
+- `subscribers`
+
+### `elevenlabs.customer_support.tickets.create_message`
+
+`POST /v1/support/tickets/{ticket_id}/messages`
+
+Create Ticket Message
+
+**Parameters:**
+
+- `ticket_id` (required)
+- `author` (required)
+- `body` (required)
+- `visibility` (required)
+- `status`
+
+### `elevenlabs.customer_support.tickets.get`
+
+`GET /v1/support/tickets/{ticket_id}`
+
+Get Ticket
+
+**Parameters:**
+
+- `ticket_id` (required)
+
+### `elevenlabs.customer_support.tickets.update`
+
+`PATCH /v1/support/tickets/{ticket_id}`
+
+Update Ticket
+
+**Parameters:**
+
+- `ticket_id` (required)
+- `subject`
+- `status`
+- `priority`
+- `deadline_at_unix_secs`
+- `tag_ids`
+- `assignee`
+- `secondary_assignee`
+- `subscribers`
+
+### `elevenlabs.customer_support.tickets.delete`
+
+`DELETE /v1/support/tickets/{ticket_id}`
+
+Delete Ticket
+
+**Parameters:**
+
+- `ticket_id` (required)
 
 ## Agents Realtime
 
@@ -6966,11 +7180,24 @@ Create Reseller Workspace
 
 - `business_name` (required)
 - `vertical`
+- `charge_customer`
 - `subscription`
 - `phone_number`
 - `members`
 - `complete_onboarding`
+- `metadata`
 - `idempotency_key`
+
+### `elevenlabs.reception.workspaces.update`
+
+`PATCH /v1/reception/reseller/workspaces/{workspace_id}`
+
+Update Reseller Workspace
+
+**Parameters:**
+
+- `workspace_id` (required)
+- `metadata`
 
 ### `elevenlabs.reception.workspaces.complete_onboarding`
 

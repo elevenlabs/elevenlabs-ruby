@@ -3,10 +3,10 @@
 module Elevenlabs
   module Types
     class APIIntegrationWebhookOverrides < ::Elevenlabs::Internal::Types::Model
-      field :schema_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::APIIntegrationWebhookOverridesSchemaOverridesValue] }, optional: true, nullable: true
+      field :schema_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::APIIntegrationWebhookOverridesSchemaOverridesValue] }, optional: true, nullable: true
       field :response_filter_mode, -> { ::Elevenlabs::Types::ResponseFilterMode }, optional: true, nullable: false
       field :response_filters, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
-      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::APIIntegrationWebhookOverridesRequestHeadersValue] }, optional: true, nullable: true
+      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::APIIntegrationWebhookOverridesRequestHeadersValue] }, optional: true, nullable: true
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

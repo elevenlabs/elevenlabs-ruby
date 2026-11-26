@@ -5,6 +5,7 @@ module Elevenlabs
     module TriageTickets
       module Types
         class CreateManualTicketRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
           field :title, -> { String }, optional: true, nullable: true
           field :qa_comment, -> { String }, optional: false, nullable: false
           field :priority, -> { ::Elevenlabs::Types::AgentConversationTicketPriority }, optional: true, nullable: false

@@ -5,6 +5,7 @@ module Elevenlabs
     class ResellerTierResponse < ::Elevenlabs::Internal::Types::Model
       field :tier_id, -> { String }, optional: false, nullable: false
       field :display_name, -> { String }, optional: false, nullable: false
+      field :currency, -> { ::Elevenlabs::Types::ResellerTierResponseCurrency }, optional: false, nullable: false
       field :tier_economics, -> { ::Elevenlabs::Types::ResellerTierEconomics }, optional: false, nullable: false
 
       def self.load(str)

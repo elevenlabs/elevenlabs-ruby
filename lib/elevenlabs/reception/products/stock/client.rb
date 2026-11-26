@@ -22,7 +22,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/reception/products/#{URI.encode_uri_component(params[:product_id].to_s)}/stock",
-              body: request_body.to_h,
+              body: request_body.to_h.except('product_id', 'xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )
@@ -50,7 +50,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/reception/products/#{URI.encode_uri_component(params[:product_id].to_s)}/stock/adjust",
-              body: request_body.to_h,
+              body: request_body.to_h.except('product_id', 'xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )

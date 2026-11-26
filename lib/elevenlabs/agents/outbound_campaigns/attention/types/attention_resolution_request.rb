@@ -6,6 +6,7 @@ module Elevenlabs
       module Attention
         module Types
           class AttentionResolutionRequest < ::Elevenlabs::Internal::Types::Model
+            field :attention_id, -> { String }, optional: false, nullable: false
             field :resolution, -> { String }, optional: false, nullable: false
 
             def validate!

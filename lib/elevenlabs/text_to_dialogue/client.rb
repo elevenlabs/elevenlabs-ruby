@@ -28,7 +28,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/text-to-dialogue',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'audio/mpeg',
           request_options: request_options,
         )
@@ -61,7 +61,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/text-to-dialogue/stream',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'audio/mpeg',
           request_options: request_options,
         )
@@ -86,7 +86,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/text-to-dialogue/stream/with-timestamps',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           request_options: request_options,
         )
         chunks = ::Elevenlabs::Internal::Http::ByteStream.decode(@client, request) do |response|
@@ -115,7 +115,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/text-to-dialogue/with-timestamps',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           request_options: request_options,
         )
         response = @client.send(request)

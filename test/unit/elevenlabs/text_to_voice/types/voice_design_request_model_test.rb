@@ -12,6 +12,6 @@ class VoiceDesignRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::TextToVoice::Types::VoiceDesignRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('output_format'))
   end
 end

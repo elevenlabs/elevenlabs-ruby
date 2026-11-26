@@ -6,6 +6,8 @@ module Elevenlabs
       module Samples
         module Types
           class BodyUpdatePvcVoiceSampleV1VoicesPvcVoiceIDSamplesSampleIDPost < ::Elevenlabs::Internal::Types::Model
+            field :voice_id, -> { String }, optional: false, nullable: false
+            field :sample_id, -> { String }, optional: false, nullable: false
             field :remove_background_noise, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
             field :selected_speaker_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
             field :trim_start_time, -> { Integer }, optional: true, nullable: true

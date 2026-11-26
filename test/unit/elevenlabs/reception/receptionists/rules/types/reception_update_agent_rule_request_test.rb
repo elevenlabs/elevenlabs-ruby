@@ -12,6 +12,6 @@ class ReceptionUpdateAgentRuleRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Receptionists::Rules::Types::ReceptionUpdateAgentRuleRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'rule_id', 'xi-workspace-id'))
   end
 end

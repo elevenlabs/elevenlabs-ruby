@@ -65,16 +65,16 @@ module Elevenlabs
       @studio ||= Studio::Client.new(client: @raw_client)
     end
 
+    def audio_native
+      @audio_native ||= AudioNative::Client.new(client: @raw_client)
+    end
+
     def dubbing
       @dubbing ||= Dubbing::Client.new(client: @raw_client)
     end
 
     def models
       @models ||= Models::Client.new(client: @raw_client)
-    end
-
-    def audio_native
-      @audio_native ||= AudioNative::Client.new(client: @raw_client)
     end
 
     def content_provenance
@@ -133,6 +133,10 @@ module Elevenlabs
       @environments ||= Environments::Client.new(client: @raw_client)
     end
 
+    def customer_support
+      @customer_support ||= CustomerSupport::Client.new(client: @raw_client)
+    end
+
     def productions
       @productions ||= Productions::Client.new(client: @raw_client)
     end
@@ -159,6 +163,10 @@ module Elevenlabs
 
     def translation
       @translation ||= Translation::Client.new(client: @raw_client)
+    end
+
+    def subtitling
+      @subtitling ||= Subtitling::Client.new(client: @raw_client)
     end
   end
 end

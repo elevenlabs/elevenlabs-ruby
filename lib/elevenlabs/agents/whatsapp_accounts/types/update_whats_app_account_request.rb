@@ -5,6 +5,7 @@ module Elevenlabs
     module WhatsappAccounts
       module Types
         class UpdateWhatsAppAccountRequest < ::Elevenlabs::Internal::Types::Model
+          field :phone_number_id, -> { String }, optional: false, nullable: false
           field :assigned_agent_id, -> { String }, optional: true, nullable: true
           field :enable_messaging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
           field :enable_audio_message_response, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true

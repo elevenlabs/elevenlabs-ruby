@@ -12,6 +12,6 @@ class CreateManualTicketRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::TriageTickets::Types::CreateManualTicketRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id'))
   end
 end

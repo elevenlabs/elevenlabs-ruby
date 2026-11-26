@@ -12,6 +12,6 @@ class ReceptionCreateStaffRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Staff::Types::ReceptionCreateStaffRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('xi-workspace-id'))
   end
 end

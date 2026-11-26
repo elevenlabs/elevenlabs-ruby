@@ -12,6 +12,6 @@ class BodyUpdateAgentTestFolderV1ConvaiAgentTestingFoldersFolderIDPatchTest < Mi
 
     instance = ::Elevenlabs::Agents::Tests::Folders::Types::BodyUpdateAgentTestFolderV1ConvaiAgentTestingFoldersFolderIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('folder_id'))
   end
 end

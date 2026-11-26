@@ -5,6 +5,7 @@ module Elevenlabs
     module TriageTickets
       module Types
         class AddTicketCommentRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :agentqa_ticket_id, -> { String }, optional: false, nullable: false
           field :comment, -> { String }, optional: false, nullable: false
 
           def validate!

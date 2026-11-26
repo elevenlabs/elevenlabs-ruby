@@ -8,10 +8,10 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class BodyUpdateAgentBranchV1ConvaiAgentsAgentIDBranchesBranchIDPatchTest < Minitest::Test
   def test_round_trip
-    wire = { 'name' => 'test-value', 'description' => 'test-value', 'is_archived' => true, 'protection_status' => 'writer_perms_required', 'auto_rebase' => true }
+    wire = { 'name' => 'test-value', 'description' => 'test-value', 'is_archived' => true, 'protection_status' => 'writer_perms_required', 'auto_rebase' => true, 'sync_branch_id' => 'test-value' }
 
     instance = ::Elevenlabs::Agents::Branches::Types::BodyUpdateAgentBranchV1ConvaiAgentsAgentIDBranchesBranchIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'branch_id'))
   end
 end

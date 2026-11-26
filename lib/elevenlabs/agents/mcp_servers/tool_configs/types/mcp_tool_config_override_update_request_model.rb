@@ -6,6 +6,9 @@ module Elevenlabs
       module ToolConfigs
         module Types
           class McpToolConfigOverrideUpdateRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :mcp_server_id, -> { String }, optional: false, nullable: false
+            field :tool_name, -> { String }, optional: false, nullable: false
+            field :environment, -> { String }, optional: true, nullable: true
             field :force_pre_tool_speech, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
             field :pre_tool_speech, -> { ::Elevenlabs::Types::PreToolSpeechMode }, optional: true, nullable: false
             field :disable_interruptions, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true

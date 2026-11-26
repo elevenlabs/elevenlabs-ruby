@@ -10,8 +10,10 @@ module Elevenlabs
       field :calls_last30days, -> { Integer }, optional: false, nullable: false, api_name: 'calls_last_30_days'
       field :created_at_unix, -> { Integer }, optional: false, nullable: false
       field :subscription, -> { ::Elevenlabs::Types::ResellerWorkspaceSubscription }, optional: true, nullable: true
+      field :charge_customer, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :has_payment_issue, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :onboarding_completed_at_unix, -> { Integer }, optional: true, nullable: true
+      field :metadata, -> { ::Elevenlabs::Internal::Types::Hash[String, String] }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

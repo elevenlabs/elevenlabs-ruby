@@ -12,6 +12,6 @@ class DubbingBulkTargetSegmentUpdateRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Dubbing::Project::Language::Transcript::Types::DubbingBulkTargetSegmentUpdateRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('project_id', 'language_id'))
   end
 end

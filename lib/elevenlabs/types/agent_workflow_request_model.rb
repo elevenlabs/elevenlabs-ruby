@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class AgentWorkflowRequestModel < ::Elevenlabs::Internal::Types::Model
       field :edges, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::WorkflowEdgeModelInput] }, optional: true, nullable: false
-      field :nodes, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::AgentWorkflowRequestModelNodesValue] }, optional: true, nullable: false
+      field :nodes, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::AgentWorkflowRequestModelNodesValue] }, optional: true, nullable: false
       field :prevent_subagent_loops, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 
       def self.load(str)

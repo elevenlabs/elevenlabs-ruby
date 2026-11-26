@@ -6,6 +6,7 @@ module Elevenlabs
       module Documents
         module Types
           class UpdateDocumentChunkingOverrideRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :documentation_id, -> { String }, optional: false, nullable: false
             field :chunking_override, -> { ::Elevenlabs::Types::ChunkingOverrideRequestModel }, optional: false, nullable: true
 
             def self.load(str)

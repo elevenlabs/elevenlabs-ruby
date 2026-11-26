@@ -5,6 +5,7 @@ module Elevenlabs
     module MergeProposals
       module Types
         class BodyCreateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
           field :source_branch_id, -> { String }, optional: false, nullable: false
           field :target_branch_id, -> { String }, optional: false, nullable: false
           field :title, -> { String }, optional: false, nullable: false

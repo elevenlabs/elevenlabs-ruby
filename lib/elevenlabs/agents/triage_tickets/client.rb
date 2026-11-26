@@ -55,7 +55,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/triage-tickets",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -185,7 +185,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/triage-tickets/#{URI.encode_uri_component(params[:agentqa_ticket_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agentqa_ticket_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -228,7 +228,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/triage-tickets/#{URI.encode_uri_component(params[:agentqa_ticket_id].to_s)}/comments",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agentqa_ticket_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -253,7 +253,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/triage-tickets/#{URI.encode_uri_component(params[:agentqa_ticket_id].to_s)}/merge",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agentqa_ticket_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -278,7 +278,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/triage-tickets/#{URI.encode_uri_component(params[:agentqa_ticket_id].to_s)}/turn-comments",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agentqa_ticket_id'),
             request_options: request_options,
           )
           response = @client.send(request)

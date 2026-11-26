@@ -6,6 +6,7 @@ module Elevenlabs
       module Samples
         module Types
           class BodyAddSamplesToPvcVoiceV1VoicesPvcVoiceIDSamplesPost < ::Elevenlabs::Internal::Types::Model
+            field :voice_id, -> { String }, optional: false, nullable: false
             field :files, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
             field :remove_background_noise, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

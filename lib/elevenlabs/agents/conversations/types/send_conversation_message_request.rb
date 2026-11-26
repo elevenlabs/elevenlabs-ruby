@@ -5,6 +5,7 @@ module Elevenlabs
     module Conversations
       module Types
         class SendConversationMessageRequest < ::Elevenlabs::Internal::Types::Model
+          field :conversation_id, -> { String }, optional: false, nullable: false
           field :input, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Agents::Conversations::Types::SendConversationMessageRequestInputItem] }, optional: false, nullable: false
           field :background, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

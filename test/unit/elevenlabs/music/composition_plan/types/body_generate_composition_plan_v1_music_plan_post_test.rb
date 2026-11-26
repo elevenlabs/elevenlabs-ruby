@@ -12,6 +12,6 @@ class BodyGenerateCompositionPlanV1MusicPlanPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Music::CompositionPlan::Types::BodyGenerateCompositionPlanV1MusicPlanPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('enable_logging'))
   end
 end

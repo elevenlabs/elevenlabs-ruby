@@ -5,6 +5,7 @@ module Elevenlabs
     module AnalysisItems
       module Types
         class UpdateAnalysisItemAttachmentsRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :analysis_item_id, -> { String }, optional: false, nullable: false
           field :source, -> { ::Elevenlabs::Types::AnalysisItemSource }, optional: false, nullable: false
           field :attach, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::AnalysisItemAttachmentDestination] }, optional: true, nullable: false
           field :detach, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::AnalysisItemAttachmentDestination] }, optional: true, nullable: false

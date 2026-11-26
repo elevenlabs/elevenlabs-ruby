@@ -5,6 +5,7 @@ module Elevenlabs
     module Conversations
       module Types
         class SendConversationMessageStreamRequest < ::Elevenlabs::Internal::Types::Model
+          field :conversation_id, -> { String }, optional: false, nullable: false
           field :input, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Agents::Conversations::Types::SendConversationMessageStreamRequestInputItem] }, optional: false, nullable: false
 
           def validate!

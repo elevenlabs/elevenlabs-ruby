@@ -97,7 +97,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/productions/orders/#{URI.encode_uri_component(params[:order_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('order_id'),
             request_options: request_options,
           )
           response = @client.send(request)

@@ -12,6 +12,6 @@ class AttentionResolutionRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::OutboundCampaigns::Attention::Types::AttentionResolutionRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('attention_id'))
   end
 end

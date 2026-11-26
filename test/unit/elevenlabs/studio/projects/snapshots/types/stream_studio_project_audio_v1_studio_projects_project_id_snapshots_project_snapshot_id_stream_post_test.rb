@@ -12,6 +12,6 @@ class BodyStreamStudioProjectAudioV1StudioProjectsProjectIDSnapshotsProjectSnaps
 
     instance = ::Elevenlabs::Studio::Projects::Snapshots::Types::BodyStreamStudioProjectAudioV1StudioProjectsProjectIDSnapshotsProjectSnapshotIDStreamPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('project_id', 'project_snapshot_id'))
   end
 end

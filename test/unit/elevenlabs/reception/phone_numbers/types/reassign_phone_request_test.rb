@@ -12,6 +12,6 @@ class ReassignPhoneRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::PhoneNumbers::Types::ReassignPhoneRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('phone_assignment_id', 'xi-workspace-id'))
   end
 end

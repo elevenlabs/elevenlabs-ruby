@@ -28,7 +28,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/sound-generation',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('output_format', 'enable_logging'),
           accept: 'audio/mpeg',
           request_options: request_options,
         )

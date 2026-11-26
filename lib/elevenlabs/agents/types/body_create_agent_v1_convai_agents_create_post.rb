@@ -4,6 +4,7 @@ module Elevenlabs
   module Agents
     module Types
       class BodyCreateAgentV1ConvaiAgentsCreatePost < ::Elevenlabs::Internal::Types::Model
+        field :enable_versioning, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :conversation_config, -> { ::Elevenlabs::Types::ConversationalConfig }, optional: false, nullable: false
         field :platform_settings, -> { ::Elevenlabs::Types::AgentPlatformSettingsRequestModel }, optional: true, nullable: true
         field :workflow, -> { ::Elevenlabs::Types::AgentWorkflowRequestModel }, optional: true, nullable: false

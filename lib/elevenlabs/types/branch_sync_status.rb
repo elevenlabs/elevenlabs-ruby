@@ -3,6 +3,7 @@
 module Elevenlabs
   module Types
     class BranchSyncStatus < ::Elevenlabs::Internal::Types::Model
+      field :branch_id, -> { String }, optional: false, nullable: false
       field :last_attempt, -> { ::Elevenlabs::Types::AutoRebaseAttempt }, optional: true, nullable: true
 
       def self.load(str)

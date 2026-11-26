@@ -7,7 +7,9 @@ module Elevenlabs
         module Transcript
           module Types
             class DubbingBulkTargetSegmentUpdateRequest < ::Elevenlabs::Internal::Types::Model
-              field :segments, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Dubbing::Project::Language::Transcript::Types::DubbingTargetSegmentUpdateRequest] }, optional: false, nullable: false
+              field :project_id, -> { String }, optional: false, nullable: false
+              field :language_id, -> { String }, optional: false, nullable: false
+              field :segments, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::DubbingTargetSegmentUpdateRequest] }, optional: false, nullable: false
 
               def self.load(str)
                 coerce(::JSON.parse(str, symbolize_names: true))

@@ -12,6 +12,6 @@ class ReceptionUpdateAssetRequestPatchTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Assets::Types::ReceptionUpdateAssetRequestPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('asset_id', 'xi-workspace-id'))
   end
 end

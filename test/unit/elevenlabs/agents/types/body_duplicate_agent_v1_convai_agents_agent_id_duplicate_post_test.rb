@@ -12,6 +12,6 @@ class BodyDuplicateAgentV1ConvaiAgentsAgentIDDuplicatePostTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Types::BodyDuplicateAgentV1ConvaiAgentsAgentIDDuplicatePost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id'))
   end
 end

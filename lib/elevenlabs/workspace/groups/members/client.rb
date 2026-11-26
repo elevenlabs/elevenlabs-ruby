@@ -20,7 +20,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/workspace/groups/#{URI.encode_uri_component(params[:group_id].to_s)}/members/remove",
-              body: request_body.to_h,
+              body: request_body.to_h.except('group_id'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -45,7 +45,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/workspace/groups/#{URI.encode_uri_component(params[:group_id].to_s)}/members",
-              body: request_body.to_h,
+              body: request_body.to_h.except('group_id'),
               request_options: request_options,
             )
             response = @client.send(request)

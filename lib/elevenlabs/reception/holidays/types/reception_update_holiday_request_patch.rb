@@ -5,6 +5,8 @@ module Elevenlabs
     module Holidays
       module Types
         class ReceptionUpdateHolidayRequestPatch < ::Elevenlabs::Internal::Types::Model
+          field :holiday_id, -> { String }, optional: false, nullable: false
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :name, -> { String }, optional: true, nullable: false
           field :start_date, -> { ::Elevenlabs::Types::DateModel }, optional: true, nullable: false
           field :end_date, -> { ::Elevenlabs::Types::DateModel }, optional: true, nullable: false

@@ -12,6 +12,6 @@ class BodyCreateServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeys
 
     instance = ::Elevenlabs::ServiceAccounts::APIKeys::Types::BodyCreateServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('service_account_user_id'))
   end
 end

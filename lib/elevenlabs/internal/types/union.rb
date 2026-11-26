@@ -168,6 +168,76 @@ module Elevenlabs
           end
         end
 
+        # Resolves a Hash to a Model member. A member whose enum fields match the payload wins over
+        # an earlier member that merely fits structurally; when none match, the first structural
+        # fit is taken. Each member is coerced at most once.
+        #
+        # @param value [::Hash]
+        # @return [Class, nil]
+        def resolve_hash_member(value)
+          payload = Utils.symbolize_keys(value)
+          present_keys = payload.keys
+          several_models = model_member_count > 1
+          first_fit = nil
+
+          members.each do |entry|
+            member_type = Utils.unwrap_type(entry.last)
+            next unless model_candidate?(member_type, value, present_keys, several_models)
+            return entry.last.call if enum_fields_match?(member_type, payload)
+
+            first_fit ||= entry.last
+          end
+          first_fit&.call
+        end
+
+        # Whether the hash can be coerced into this member and carries every required field.
+        #
+        # With one Model member there is nothing to disambiguate against, so the key check would
+        # only reject a payload that member is the only candidate for.
+        #
+        # @param member_type [Object]
+        # @param value [::Hash]
+        # @param present_keys [Array<Symbol>]
+        # @param several_models [Boolean]
+        # @return [Boolean]
+        def model_candidate?(member_type, value, present_keys, several_models)
+          return false unless member_type.is_a?(Class) && member_type <= Model
+
+          # A member whose fields are every one optional coerces from ANY hash, so in
+          # declaration order it takes every later member's payload. Require the hash to carry
+          # at least one of the member's own keys; the required-field check below is what
+          # discriminates every other member.
+          return false if several_models && lacks_own_key?(member_type, present_keys)
+
+          candidate = Utils.coerce(member_type, value, strict: true)
+          data = candidate.instance_variable_get(:@data)
+          member_type.fields.none? { |field_name, field| data[field_name].nil? && !field.optional }
+        rescue Errors::TypeError
+          false
+        end
+
+        # Whether the payload sets at least one of the member's enum fields to a value that enum
+        # declares and sets none to a value it does not. Absent and null fields say nothing, so a
+        # payload with no enum value matches no member and a value added after generation matches
+        # none either.
+        #
+        # @param member_type [Object]
+        # @param payload [::Hash{Symbol => Object}]
+        # @return [Boolean]
+        def enum_fields_match?(member_type, payload)
+          verdicts = member_type.fields.each_value.filter_map do |field|
+            enum = Utils.unwrap_type(field.type)
+            next unless enum.is_a?(::Module) && enum.singleton_class.include?(Enum)
+
+            key = [field.api_name.to_sym, field.name.to_sym].find { |name| !payload[name].nil? }
+            next if key.nil?
+
+            declared = enum.values
+            declared.include?(Utils.coerce(Symbol, payload[key]))
+          end
+          !verdicts.empty? && verdicts.all?
+        end
+
         # Resolves the type of a value to be one of the members
         #
         # @param value [Object]
@@ -205,38 +275,7 @@ module Elevenlabs
             return result if result
 
             # For Hash values, try to coerce into Model member types
-            if value.is_a?(::Hash)
-              present_keys = Utils.symbolize_keys(value).keys
-              # With one Model member there is nothing to disambiguate against, so the key check
-              # below would only reject a payload that member is the only candidate for.
-              several_models = model_member_count > 1
-              members.find do |_key, mem|
-                member_type = Utils.unwrap_type(mem)
-                # Check if member_type is a Model class
-                next unless member_type.is_a?(Class) && member_type <= Model
-
-                # A member whose fields are every one optional coerces from ANY hash, so in
-                # declaration order it takes every later member's payload. Require the hash to carry
-                # at least one of the member's own keys; the required-field check below is what
-                # discriminates every other member.
-                next false if several_models && lacks_own_key?(member_type, present_keys)
-
-                # Try to coerce the hash into this model type with strict mode
-                begin
-                  candidate = Utils.coerce(member_type, value, strict: true)
-
-                  # Validate that all required (non-optional) fields are present
-                  # This ensures undiscriminated unions properly distinguish between member types
-                  member_type.fields.each do |field_name, field|
-                    raise Errors::TypeError, "Required field `#{field_name}` missing for union member #{member_type.name}" if candidate.instance_variable_get(:@data)[field_name].nil? && !field.optional
-                  end
-
-                  true
-                rescue Errors::TypeError
-                  false
-                end
-              end&.last&.call
-            end
+            resolve_hash_member(value) if value.is_a?(::Hash)
           end
         end
       end

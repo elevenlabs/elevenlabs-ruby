@@ -7,6 +7,7 @@ module Elevenlabs
       field :input_cache_read, -> { ::Elevenlabs::Types::LlmTokensCategoryUsage }, optional: true, nullable: false
       field :input_cache_write, -> { ::Elevenlabs::Types::LlmTokensCategoryUsage }, optional: true, nullable: false
       field :output_total, -> { ::Elevenlabs::Types::LlmTokensCategoryUsage }, optional: true, nullable: false
+      field :output_total_reasoning_portion, -> { ::Elevenlabs::Types::LlmTokensCategoryUsage }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

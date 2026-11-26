@@ -12,6 +12,6 @@ class BodyVerifyPvcVoiceCaptchaV1VoicesPvcVoiceIDCaptchaPostTest < Minitest::Tes
 
     instance = ::Elevenlabs::Voices::Pvc::Verification::Captcha::Types::BodyVerifyPvcVoiceCaptchaV1VoicesPvcVoiceIDCaptchaPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id'))
   end
 end

@@ -5,6 +5,7 @@ module Elevenlabs
     module McpServers
       module Types
         class McpServerConfigUpdateRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :mcp_server_id, -> { String }, optional: false, nullable: false
           field :approval_policy, -> { ::Elevenlabs::Types::McpApprovalPolicy }, optional: true, nullable: false
           field :force_pre_tool_speech, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
           field :pre_tool_speech, -> { ::Elevenlabs::Types::PreToolSpeechMode }, optional: true, nullable: false

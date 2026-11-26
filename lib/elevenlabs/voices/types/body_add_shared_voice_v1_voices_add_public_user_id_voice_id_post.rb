@@ -4,6 +4,8 @@ module Elevenlabs
   module Voices
     module Types
       class BodyAddSharedVoiceV1VoicesAddPublicUserIDVoiceIDPost < ::Elevenlabs::Internal::Types::Model
+        field :public_user_id, -> { String }, optional: false, nullable: false
+        field :voice_id, -> { String }, optional: false, nullable: false
         field :new_name, -> { String }, optional: false, nullable: false
         field :bookmarked, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

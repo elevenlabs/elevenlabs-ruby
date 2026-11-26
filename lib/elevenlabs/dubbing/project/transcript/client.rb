@@ -36,7 +36,7 @@ module Elevenlabs
           # Enterprise only. Edit a source segment's text, speaker, or timing. Omitted fields are left unchanged. Bumps the project's `revision`, discards the affected translations in every language target, and marks any target that had already completed `stale`. No audio changes until you regenerate a target.
           def update_segment(request_options: {}, **params)
             params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
-            request_body = ::Elevenlabs::Dubbing::Project::Transcript::Types::DubbingSegmentUpdateRequest.new(params.except(:project_id, :segment_id))
+            request_body = ::Elevenlabs::Types::DubbingSegmentUpdateRequest.new(params.except(:project_id, :segment_id))
             request_body.validate! if request_body.respond_to?(:validate!)
             request = ::Elevenlabs::Internal::JSON::Request.new(
               base_url: request_options[:base_url],
@@ -89,7 +89,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/dubbing/project/#{URI.encode_uri_component(params[:project_id].to_s)}/transcript/segments",
-              body: request_body.to_h,
+              body: request_body.to_h.except('project_id'),
               request_options: request_options,
             )
             response = @client.send(request)
@@ -114,7 +114,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/dubbing/project/#{URI.encode_uri_component(params[:project_id].to_s)}/transcript/segment",
-              body: request_body.to_h,
+              body: request_body.to_h.except('project_id'),
               request_options: request_options,
             )
             response = @client.send(request)

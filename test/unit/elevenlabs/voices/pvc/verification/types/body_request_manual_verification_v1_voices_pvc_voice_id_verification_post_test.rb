@@ -12,6 +12,6 @@ class BodyRequestManualVerificationV1VoicesPvcVoiceIDVerificationPostTest < Mini
 
     instance = ::Elevenlabs::Voices::Pvc::Verification::Types::BodyRequestManualVerificationV1VoicesPvcVoiceIDVerificationPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id'))
   end
 end

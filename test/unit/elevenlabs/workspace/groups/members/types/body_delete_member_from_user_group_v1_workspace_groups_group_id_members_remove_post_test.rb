@@ -12,6 +12,6 @@ class BodyDeleteMemberFromUserGroupV1WorkspaceGroupsGroupIDMembersRemovePostTest
 
     instance = ::Elevenlabs::Workspace::Groups::Members::Types::BodyDeleteMemberFromUserGroupV1WorkspaceGroupsGroupIDMembersRemovePost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('group_id'))
   end
 end

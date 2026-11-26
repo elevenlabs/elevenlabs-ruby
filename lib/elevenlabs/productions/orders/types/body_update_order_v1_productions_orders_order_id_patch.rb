@@ -5,6 +5,7 @@ module Elevenlabs
     module Orders
       module Types
         class BodyUpdateOrderV1ProductionsOrdersOrderIDPatch < ::Elevenlabs::Internal::Types::Model
+          field :order_id, -> { String }, optional: false, nullable: false
           field :request, -> { ::Elevenlabs::Types::UpdateOrderRequest }, optional: false, nullable: false
 
           def self.load(str)

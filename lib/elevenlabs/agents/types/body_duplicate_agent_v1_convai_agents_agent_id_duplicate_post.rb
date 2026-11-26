@@ -4,6 +4,7 @@ module Elevenlabs
   module Agents
     module Types
       class BodyDuplicateAgentV1ConvaiAgentsAgentIDDuplicatePost < ::Elevenlabs::Internal::Types::Model
+        field :agent_id, -> { String }, optional: false, nullable: false
         field :name, -> { String }, optional: true, nullable: true
 
         def self.load(str)

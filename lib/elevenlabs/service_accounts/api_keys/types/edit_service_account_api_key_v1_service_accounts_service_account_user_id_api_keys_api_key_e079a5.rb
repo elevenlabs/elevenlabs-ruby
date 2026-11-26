@@ -5,6 +5,8 @@ module Elevenlabs
     module APIKeys
       module Types
         class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysApiKeyIdPatch < ::Elevenlabs::Internal::Types::Model
+          field :service_account_user_id, -> { String }, optional: false, nullable: false
+          field :api_key_id, -> { String }, optional: false, nullable: false
           field :is_enabled, -> { ::Elevenlabs::ServiceAccounts::APIKeys::Types::BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysApiKeyIdPatchIsEnabled }, optional: true, nullable: false
           field :name, -> { String }, optional: true, nullable: true
           field :permissions, -> { ::Elevenlabs::ServiceAccounts::APIKeys::Types::BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysApiKeyIdPatchPermissions }, optional: true, nullable: false

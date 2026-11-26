@@ -12,6 +12,6 @@ class ReceptionUpdateProcedureRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Receptionists::Procedures::Types::ReceptionUpdateProcedureRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'procedure_id', 'xi-workspace-id'))
   end
 end

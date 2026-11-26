@@ -12,6 +12,6 @@ class SetConversationGroupRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Realtime::Types::SetConversationGroupRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('conversation_id'))
   end
 end

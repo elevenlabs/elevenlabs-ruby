@@ -7,17 +7,30 @@ module Elevenlabs
       field :start_call, -> { String }, optional: true, nullable: true
       field :start_chat, -> { String }, optional: true, nullable: true
       field :new_call, -> { String }, optional: true, nullable: true
+      field :resume_call, -> { String }, optional: true, nullable: true
       field :end_call, -> { String }, optional: true, nullable: true
+      field :end_chat, -> { String }, optional: true, nullable: true
       field :mute_microphone, -> { String }, optional: true, nullable: true
       field :change_language, -> { String }, optional: true, nullable: true
       field :collapse, -> { String }, optional: true, nullable: true
       field :expand, -> { String }, optional: true, nullable: true
+      field :expand_widget, -> { String }, optional: true, nullable: true
+      field :collapse_widget, -> { String }, optional: true, nullable: true
+      field :dismiss, -> { String }, optional: true, nullable: true
+      field :open_chat, -> { String }, optional: true, nullable: true
       field :copied, -> { String }, optional: true, nullable: true
       field :accept_terms, -> { String }, optional: true, nullable: true
       field :dismiss_terms, -> { String }, optional: true, nullable: true
+      field :end_chat_confirmation_title, -> { String }, optional: true, nullable: true
+      field :end_chat_confirmation_description, -> { String }, optional: true, nullable: true
+      field :end_call_confirmation_title, -> { String }, optional: true, nullable: true
+      field :end_call_confirmation_description, -> { String }, optional: true, nullable: true
+      field :end_call_confirm, -> { String }, optional: true, nullable: true
+      field :cancel_end_confirmation, -> { String }, optional: true, nullable: true
       field :listening_status, -> { String }, optional: true, nullable: true
       field :speaking_status, -> { String }, optional: true, nullable: true
       field :connecting_status, -> { String }, optional: true, nullable: true
+      field :reconnecting_status, -> { String }, optional: true, nullable: true
       field :chatting_status, -> { String }, optional: true, nullable: true
       field :queue_waiting_status, -> { String }, optional: true, nullable: true
       field :queue_waiting_status_short, -> { String }, optional: true, nullable: true
@@ -41,6 +54,8 @@ module Elevenlabs
       field :send_message, -> { String }, optional: true, nullable: true
       field :text_mode, -> { String }, optional: true, nullable: true
       field :voice_mode, -> { String }, optional: true, nullable: true
+      field :voice_mode_label, -> { String }, optional: true, nullable: true
+      field :text_mode_label, -> { String }, optional: true, nullable: true
       field :switched_to_text_mode, -> { String }, optional: true, nullable: true
       field :switched_to_voice_mode, -> { String }, optional: true, nullable: true
       field :copy, -> { String }, optional: true, nullable: true
@@ -56,7 +71,12 @@ module Elevenlabs
       field :file_too_large, -> { String }, optional: true, nullable: true
       field :file_limit_reached, -> { String }, optional: true, nullable: true
       field :typing_indicator, -> { String }, optional: true, nullable: true
+      field :thinking_status, -> { String }, optional: true, nullable: true
       field :rich_content_unavailable, -> { String }, optional: true, nullable: true
+      field :carousel_previous, -> { String }, optional: true, nullable: true
+      field :carousel_next, -> { String }, optional: true, nullable: true
+      field :new_message, -> { String }, optional: true, nullable: true
+      field :new_messages, -> { String }, optional: true, nullable: true
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

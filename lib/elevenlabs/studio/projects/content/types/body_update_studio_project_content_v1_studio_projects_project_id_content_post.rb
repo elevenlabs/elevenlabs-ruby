@@ -6,6 +6,7 @@ module Elevenlabs
       module Content
         module Types
           class BodyUpdateStudioProjectContentV1StudioProjectsProjectIDContentPost < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
             field :from_url, -> { String }, optional: true, nullable: true
             field :from_document, -> { String }, optional: true, nullable: true
             field :from_content_json, -> { String }, optional: true, nullable: false

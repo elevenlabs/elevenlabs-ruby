@@ -12,6 +12,6 @@ class MergeAgentConversationTicketsRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::TriageTickets::Types::MergeAgentConversationTicketsRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agentqa_ticket_id'))
   end
 end

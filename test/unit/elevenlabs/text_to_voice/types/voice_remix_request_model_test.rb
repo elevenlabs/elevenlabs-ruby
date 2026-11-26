@@ -12,6 +12,6 @@ class VoiceRemixRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::TextToVoice::Types::VoiceRemixRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id', 'output_format'))
   end
 end

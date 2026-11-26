@@ -61,6 +61,31 @@ module Elevenlabs
           end
         end
 
+        # Update a customer workspace. Only the fields sent are changed.
+        def update(request_options: {}, **params)
+          params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
+          request_body = ::Elevenlabs::Reception::Workspaces::Types::UpdateResellerWorkspaceRequest.new(params.except(:workspace_id))
+          request_body.validate! if request_body.respond_to?(:validate!)
+          request = ::Elevenlabs::Internal::JSON::Request.new(
+            base_url: request_options[:base_url],
+            method: 'PATCH',
+            path: "v1/reception/reseller/workspaces/#{URI.encode_uri_component(params[:workspace_id].to_s)}",
+            body: request_body.to_h.except('workspace_id'),
+            request_options: request_options,
+          )
+          response = @client.send(request)
+          code = response.code.to_i
+          if code.between?(200, 299)
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Types::ResellerWorkspaceSummary.load(body) }
+            result.validate! if result.respond_to?(:validate!)
+            result
+          else
+            error_class = ::Elevenlabs::Errors::ResponseError.subclass_for_code(code)
+            error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
+            raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
+          end
+        end
+
         # Finish setting up the workspace: create its receptionist and assistant from the business profile, reusing a receptionist from a setup already started, and connect your phone number, if you supply one. Safe to retry.
         def complete_onboarding(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)

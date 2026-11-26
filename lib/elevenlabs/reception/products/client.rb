@@ -50,7 +50,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: 'v1/reception/products',
-            body: request_body.to_h,
+            body: request_body.to_h.except('xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )
@@ -103,7 +103,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PUT',
             path: "v1/reception/products/#{URI.encode_uri_component(params[:product_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('product_id', 'xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

@@ -12,6 +12,6 @@ class BodyUploadFileV1ConvaiConversationsConversationIDFilesPostTest < Minitest:
 
     instance = ::Elevenlabs::Agents::Conversations::Files::Types::BodyUploadFileV1ConvaiConversationsConversationIDFilesPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('conversation_id'))
   end
 end

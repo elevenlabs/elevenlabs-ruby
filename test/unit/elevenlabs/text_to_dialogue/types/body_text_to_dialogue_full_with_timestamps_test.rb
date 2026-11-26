@@ -12,6 +12,6 @@ class BodyTextToDialogueFullWithTimestampsTest < Minitest::Test
 
     instance = ::Elevenlabs::TextToDialogue::Types::BodyTextToDialogueFullWithTimestamps.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('output_format', 'enable_logging'))
   end
 end

@@ -8,7 +8,7 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class LlmCategoryUsageTest < Minitest::Test
   def test_round_trip
-    wire = { 'irreversible_generation' => { 'model_usage' => { 'key' => { 'input' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_read' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_write' => { 'tokens' => 1, 'price' => 1 }, 'output_total' => { 'tokens' => 1, 'price' => 1 } } } }, 'initiated_generation' => { 'model_usage' => { 'key' => { 'input' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_read' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_write' => { 'tokens' => 1, 'price' => 1 }, 'output_total' => { 'tokens' => 1, 'price' => 1 } } } } }
+    wire = { 'irreversible_generation' => { 'model_usage' => { 'key' => { 'input' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_read' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_write' => { 'tokens' => 1, 'price' => 1 }, 'output_total' => { 'tokens' => 1, 'price' => 1 }, 'output_total_reasoning_portion' => { 'tokens' => 1, 'price' => 1 } } } }, 'initiated_generation' => { 'model_usage' => { 'key' => { 'input' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_read' => { 'tokens' => 1, 'price' => 1 }, 'input_cache_write' => { 'tokens' => 1, 'price' => 1 }, 'output_total' => { 'tokens' => 1, 'price' => 1 }, 'output_total_reasoning_portion' => { 'tokens' => 1, 'price' => 1 } } } } }
 
     instance = ::Elevenlabs::Types::LlmCategoryUsage.new(wire)
 
