@@ -46,7 +46,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: 'v1/reception/staff',
-            body: request_body.to_h,
+            body: request_body.to_h.except('xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )
@@ -99,7 +99,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PUT',
             path: "v1/reception/staff/#{URI.encode_uri_component(params[:staff_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('staff_id', 'xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

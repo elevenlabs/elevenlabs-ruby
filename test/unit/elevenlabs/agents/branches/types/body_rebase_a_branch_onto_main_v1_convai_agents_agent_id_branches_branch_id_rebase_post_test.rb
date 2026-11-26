@@ -12,6 +12,6 @@ class BodyRebaseABranchOntoMainV1ConvaiAgentsAgentIDBranchesBranchIDRebasePostTe
 
     instance = ::Elevenlabs::Agents::Branches::Types::BodyRebaseABranchOntoMainV1ConvaiAgentsAgentIDBranchesBranchIDRebasePost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'branch_id', 'source_branch_id'))
   end
 end

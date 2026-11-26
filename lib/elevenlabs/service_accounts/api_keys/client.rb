@@ -41,7 +41,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/service-accounts/#{URI.encode_uri_component(params[:service_account_user_id].to_s)}/api-keys",
-            body: request_body.to_h,
+            body: request_body.to_h.except('service_account_user_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -66,7 +66,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/service-accounts/#{URI.encode_uri_component(params[:service_account_user_id].to_s)}/api-keys/#{URI.encode_uri_component(params[:api_key_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('service_account_user_id', 'api_key_id'),
             request_options: request_options,
           )
           response = @client.send(request)

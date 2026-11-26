@@ -6,6 +6,7 @@ module Elevenlabs
       module Tags
         module Types
           class PatchConversationTagRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :tag_id, -> { String }, optional: false, nullable: false
             field :title, -> { String }, optional: true, nullable: true
             field :description, -> { String }, optional: true, nullable: true
 

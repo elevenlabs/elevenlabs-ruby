@@ -47,7 +47,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/reception/team/members/#{URI.encode_uri_component(params[:user_id].to_s)}",
-              body: request_body.to_h,
+              body: request_body.to_h.except('user_id', 'xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )

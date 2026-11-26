@@ -6,6 +6,7 @@ module Elevenlabs
       module Feedback
         module Types
           class ConversationFeedbackRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :conversation_id, -> { String }, optional: false, nullable: false
             field :feedback, -> { ::Elevenlabs::Types::UserFeedbackScore }, optional: true, nullable: false
 
             def self.load(str)

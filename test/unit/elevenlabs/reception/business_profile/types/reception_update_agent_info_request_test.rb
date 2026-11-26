@@ -12,6 +12,6 @@ class ReceptionUpdateAgentInfoRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::BusinessProfile::Types::ReceptionUpdateAgentInfoRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('xi-workspace-id'))
   end
 end

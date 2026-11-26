@@ -12,6 +12,6 @@ class BodyCreateOrUpdateDeploymentsV1ConvaiAgentsAgentIDDeploymentsPostTest < Mi
 
     instance = ::Elevenlabs::Agents::Deployments::Types::BodyCreateOrUpdateDeploymentsV1ConvaiAgentsAgentIDDeploymentsPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id'))
   end
 end

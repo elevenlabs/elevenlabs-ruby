@@ -4,6 +4,8 @@ module Elevenlabs
   module Music
     module Types
       class BodyStreamComposedMusicV1MusicStreamPost < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::Music::Types::StreamMusicRequestOutputFormat }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :prompt, -> { String }, optional: true, nullable: true
         field :composition_plan, -> { ::Elevenlabs::Music::Types::BodyStreamComposedMusicV1MusicStreamPostCompositionPlan }, optional: true, nullable: true
         field :music_length_ms, -> { Integer }, optional: true, nullable: true

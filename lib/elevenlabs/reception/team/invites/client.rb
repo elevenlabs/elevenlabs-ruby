@@ -45,7 +45,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: 'v1/reception/team/invites',
-              body: request_body.to_h,
+              body: request_body.to_h.except('xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )
@@ -71,7 +71,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'DELETE',
               path: 'v1/reception/team/invites',
-              body: request_body.to_h,
+              body: request_body.to_h.except('xi-workspace-id'),
               headers: headers,
               request_options: request_options,
             )

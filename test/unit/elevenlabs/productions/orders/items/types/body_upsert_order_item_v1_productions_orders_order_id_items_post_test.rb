@@ -12,6 +12,6 @@ class BodyUpsertOrderItemV1ProductionsOrdersOrderIDItemsPostTest < Minitest::Tes
 
     instance = ::Elevenlabs::Productions::Orders::Items::Types::BodyUpsertOrderItemV1ProductionsOrdersOrderIDItemsPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('order_id'))
   end
 end

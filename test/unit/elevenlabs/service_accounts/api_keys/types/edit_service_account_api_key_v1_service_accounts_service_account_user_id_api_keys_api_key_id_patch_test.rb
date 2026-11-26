@@ -12,6 +12,6 @@ class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysAp
 
     instance = ::Elevenlabs::ServiceAccounts::APIKeys::Types::BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysApiKeyIdPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('service_account_user_id', 'api_key_id'))
   end
 end

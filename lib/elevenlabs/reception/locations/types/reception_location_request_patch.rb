@@ -5,6 +5,8 @@ module Elevenlabs
     module Locations
       module Types
         class ReceptionLocationRequestPatch < ::Elevenlabs::Internal::Types::Model
+          field :location_id, -> { String }, optional: false, nullable: false
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :name, -> { String }, optional: true, nullable: false
           field :address, -> { String }, optional: true, nullable: false
           field :notes, -> { String }, optional: true, nullable: false

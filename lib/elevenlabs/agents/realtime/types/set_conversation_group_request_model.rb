@@ -5,6 +5,7 @@ module Elevenlabs
     module Realtime
       module Types
         class SetConversationGroupRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :conversation_id, -> { String }, optional: false, nullable: false
           field :conversation_group_id, -> { String }, optional: false, nullable: false
 
           def self.load(str)

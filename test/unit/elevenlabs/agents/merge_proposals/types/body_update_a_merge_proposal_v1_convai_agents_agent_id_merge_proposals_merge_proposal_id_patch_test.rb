@@ -12,6 +12,6 @@ class BodyUpdateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsMergeProposalID
 
     instance = ::Elevenlabs::Agents::MergeProposals::Types::BodyUpdateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsMergeProposalIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'merge_proposal_id'))
   end
 end

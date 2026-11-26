@@ -12,6 +12,6 @@ class TemplateRunCreateRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Flows::Templates::Runs::Types::TemplateRunCreateRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('template_id'))
   end
 end

@@ -12,6 +12,6 @@ class BodyCreateAgentDraftV1ConvaiAgentsAgentIDDraftsPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Drafts::Types::BodyCreateAgentDraftV1ConvaiAgentsAgentIDDraftsPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'branch_id'))
   end
 end

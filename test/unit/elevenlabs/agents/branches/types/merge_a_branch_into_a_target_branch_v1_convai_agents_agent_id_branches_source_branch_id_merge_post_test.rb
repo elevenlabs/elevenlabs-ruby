@@ -12,6 +12,6 @@ class BodyMergeABranchIntoATargetBranchV1ConvaiAgentsAgentIDBranchesSourceBranch
 
     instance = ::Elevenlabs::Agents::Branches::Types::BodyMergeABranchIntoATargetBranchV1ConvaiAgentsAgentIDBranchesSourceBranchIDMergePost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'source_branch_id', 'target_branch_id'))
   end
 end

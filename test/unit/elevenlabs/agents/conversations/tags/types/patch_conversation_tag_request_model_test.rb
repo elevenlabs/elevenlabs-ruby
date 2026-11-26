@@ -12,6 +12,6 @@ class PatchConversationTagRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Conversations::Tags::Types::PatchConversationTagRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('tag_id'))
   end
 end

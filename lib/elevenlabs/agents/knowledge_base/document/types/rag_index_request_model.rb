@@ -6,6 +6,7 @@ module Elevenlabs
       module Document
         module Types
           class RagIndexRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :documentation_id, -> { String }, optional: false, nullable: false
             field :model, -> { ::Elevenlabs::Types::EmbeddingModelEnum }, optional: false, nullable: false
 
             def self.load(str)

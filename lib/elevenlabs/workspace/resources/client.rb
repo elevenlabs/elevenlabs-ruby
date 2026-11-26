@@ -44,7 +44,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/workspace/resources/#{URI.encode_uri_component(params[:resource_id].to_s)}/share",
-            body: request_body.to_h,
+            body: request_body.to_h.except('resource_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -67,7 +67,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/workspace/resources/#{URI.encode_uri_component(params[:resource_id].to_s)}/unshare",
-            body: request_body.to_h,
+            body: request_body.to_h.except('resource_id'),
             request_options: request_options,
           )
           response = @client.send(request)

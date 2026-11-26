@@ -6,6 +6,7 @@ module Elevenlabs
       module Invocations
         module Types
           class ResubmitTestsRequestModel < ::Elevenlabs::Internal::Types::Model
+            field :test_invocation_id, -> { String }, optional: false, nullable: false
             field :test_run_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
             field :agent_config_override, -> { ::Elevenlabs::Types::AdhocAgentConfigOverrideForTestRequestModel }, optional: true, nullable: false
             field :agent_id, -> { String }, optional: false, nullable: false

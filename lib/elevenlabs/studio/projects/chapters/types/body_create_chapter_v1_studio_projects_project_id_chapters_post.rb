@@ -6,6 +6,7 @@ module Elevenlabs
       module Chapters
         module Types
           class BodyCreateChapterV1StudioProjectsProjectIDChaptersPost < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
             field :name, -> { String }, optional: false, nullable: false
             field :from_url, -> { String }, optional: true, nullable: true
 

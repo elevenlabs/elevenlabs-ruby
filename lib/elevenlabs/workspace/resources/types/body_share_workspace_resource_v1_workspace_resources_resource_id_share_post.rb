@@ -5,6 +5,7 @@ module Elevenlabs
     module Resources
       module Types
         class BodyShareWorkspaceResourceV1WorkspaceResourcesResourceIDSharePost < ::Elevenlabs::Internal::Types::Model
+          field :resource_id, -> { String }, optional: false, nullable: false
           field :role, -> { ::Elevenlabs::Workspace::Resources::Types::BodyShareWorkspaceResourceV1WorkspaceResourcesResourceIDSharePostRole }, optional: false, nullable: false
           field :resource_type, -> { ::Elevenlabs::Types::WorkspaceResourceType }, optional: false, nullable: false
           field :user_email, -> { String }, optional: true, nullable: true

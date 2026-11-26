@@ -23,6 +23,7 @@ module Elevenlabs
       WHATSAPP = :whatsapp
       TWILIO_SMS = :twilio_sms
       FLUTTER_SDK = :flutter_sdk
+      UNITY_SDK = :unity_sdk
       ZENDESK_INTEGRATION = :zendesk_integration
       SLACK_INTEGRATION = :slack_integration
       TELEGRAM_INTEGRATION = :telegram_integration

@@ -12,6 +12,6 @@ class ReceptionUpdateServiceRequestPatchTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Services::Types::ReceptionUpdateServiceRequestPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('service_id', 'xi-workspace-id'))
   end
 end

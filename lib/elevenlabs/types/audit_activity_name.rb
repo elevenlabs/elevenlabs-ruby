@@ -6,6 +6,8 @@ module Elevenlabs
       extend ::Elevenlabs::Internal::Types::Enum
 
       ACCOUNT_SECURITY_CHANGE = :'Account Security Change'
+      AGENTS_USER_DELETED = :'Agents User Deleted'
+      AGENTS_USER_EXPORTED = :'Agents User Exported'
       AGENTS_USER_MEMORY_ENTITY_DELETED = :'Agents User Memory Entity Deleted'
       AGENTS_USER_MEMORY_ERASED = :'Agents User Memory Erased'
       AGENTS_USER_MEMORY_EXPORTED = :'Agents User Memory Exported'

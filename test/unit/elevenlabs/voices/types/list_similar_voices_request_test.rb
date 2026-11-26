@@ -12,6 +12,6 @@ class ListSimilarVoicesRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Voices::Types::ListSimilarVoicesRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('category', 'gender', 'age', 'use_cases', 'min_notice_period_days', 'include_custom_rates', 'include_live_moderated', 'owner_id'))
   end
 end

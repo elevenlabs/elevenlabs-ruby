@@ -12,6 +12,6 @@ class UpdateMemberUsageLimitRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Workspace::Members::Types::UpdateMemberUsageLimitRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('user_id'))
   end
 end

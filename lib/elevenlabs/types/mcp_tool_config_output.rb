@@ -24,7 +24,7 @@ module Elevenlabs
       field :mcp_server_name, -> { String }, optional: false, nullable: false
       field :mcp_input_schema, -> { Object }, optional: true, nullable: true
       field :execution_mode, -> { ::Elevenlabs::Types::ToolExecutionMode }, optional: true, nullable: false
-      field :input_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::McpToolConfigOutputInputOverridesValue] }, optional: true, nullable: true
+      field :input_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::McpToolConfigOutputInputOverridesValue] }, optional: true, nullable: true
 
       def validate!
         ::Elevenlabs::Validator.validate_string!(name, 'name', pattern: /^[a-zA-Z0-9_-]{1,64}$/)

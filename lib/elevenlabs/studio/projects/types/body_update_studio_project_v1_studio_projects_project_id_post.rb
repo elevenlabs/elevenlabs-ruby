@@ -5,6 +5,7 @@ module Elevenlabs
     module Projects
       module Types
         class BodyUpdateStudioProjectV1StudioProjectsProjectIDPost < ::Elevenlabs::Internal::Types::Model
+          field :project_id, -> { String }, optional: false, nullable: false
           field :name, -> { String }, optional: false, nullable: false
           field :default_title_voice_id, -> { String }, optional: false, nullable: false
           field :default_paragraph_voice_id, -> { String }, optional: false, nullable: false

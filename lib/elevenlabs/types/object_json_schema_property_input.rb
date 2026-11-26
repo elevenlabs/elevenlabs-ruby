@@ -10,7 +10,7 @@ module Elevenlabs
       field :is_omitted, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :type, -> { ::Elevenlabs::Types::ObjectJSONSchemaPropertyInputType }, optional: true, nullable: false
       field :required, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
-      field :properties, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::ObjectJSONSchemaPropertyInputPropertiesValue] }, optional: true, nullable: false
+      field :properties, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::ObjectJSONSchemaPropertyInputPropertiesValue] }, optional: true, nullable: false
       field :required_constraints, -> { ::Elevenlabs::Types::RequiredConstraints }, optional: true, nullable: true
 
       def self.load(str)

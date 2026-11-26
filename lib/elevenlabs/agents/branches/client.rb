@@ -46,7 +46,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -84,7 +84,7 @@ module Elevenlabs
           end
         end
 
-        # Update agent branch properties such as name, description, archiving status, protection level, and auto-rebase onto main
+        # Update agent branch properties such as name, description, archiving status, protection level, auto-rebase, and the branch it is kept in sync with
         def update(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           request_body = ::Elevenlabs::Agents::Branches::Types::BodyUpdateAgentBranchV1ConvaiAgentsAgentIDBranchesBranchIDPatch.new(params.except(:agent_id, :branch_id))
@@ -93,7 +93,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:branch_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -148,7 +148,7 @@ module Elevenlabs
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:source_branch_id].to_s)}/merge",
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'source_branch_id', 'target_branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -188,7 +188,7 @@ module Elevenlabs
           end
         end
 
-        # Pull changes from a source branch (defaults to main) into this branch as a new version. If both branches changed the same field, the rebase returns 409 unless `conflict_resolutions` settles every conflict the rebase preview reports.
+        # Pull changes from a source branch (defaults to main) into this branch as a new version. If both branches changed the same field, the rebase returns 409 unless `conflict_resolutions` settles every conflict the rebase preview reports. Callers with only propose access can pull into their own branch from its parent branch (their default source).
         def rebase(request_options: {}, **params)
           params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
           query_params = {}
@@ -200,7 +200,7 @@ module Elevenlabs
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:branch_id].to_s)}/rebase",
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'branch_id', 'source_branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)

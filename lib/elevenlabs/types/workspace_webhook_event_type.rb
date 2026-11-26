@@ -9,6 +9,7 @@ module Elevenlabs
       SPEECH_TO_TEXT = :speech_to_text
       AGENT_QA = :agent_qa
       FLOWS = :flows
+      SUPPORT_TICKET = :support_ticket
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

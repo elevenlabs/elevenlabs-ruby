@@ -51,6 +51,7 @@ module Elevenlabs
       field :end_confirmation_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :mobile_fullscreen, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
       field :transcript_speech_sync_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
+      field :layout, -> { ::Elevenlabs::Types::WidgetLayout }, optional: true, nullable: false
       field :language, -> { String }, optional: false, nullable: false
       field :supported_language_overrides, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: true
       field :language_presets, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::WidgetLanguagePresetResponse] }, optional: true, nullable: false

@@ -12,6 +12,6 @@ class ReceptionCreateHolidayRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Holidays::Types::ReceptionCreateHolidayRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('xi-workspace-id'))
   end
 end

@@ -52,7 +52,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'POST',
             path: 'v1/reception/services',
-            body: request_body.to_h,
+            body: request_body.to_h.except('xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )
@@ -105,7 +105,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PUT',
             path: "v1/reception/services/#{URI.encode_uri_component(params[:service_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('service_id', 'xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )
@@ -159,7 +159,7 @@ module Elevenlabs
             method: 'POST',
             path: "v1/reception/services/#{URI.encode_uri_component(params[:service_id].to_s)}/confirm-update",
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('service_id', 'reprice', 'xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

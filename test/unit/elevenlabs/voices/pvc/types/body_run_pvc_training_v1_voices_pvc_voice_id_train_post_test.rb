@@ -12,6 +12,6 @@ class BodyRunPvcTrainingV1VoicesPvcVoiceIDTrainPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Voices::Pvc::Types::BodyRunPvcTrainingV1VoicesPvcVoiceIDTrainPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id'))
   end
 end

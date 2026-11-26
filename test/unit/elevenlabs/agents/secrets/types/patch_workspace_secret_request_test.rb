@@ -12,6 +12,6 @@ class PatchWorkspaceSecretRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Secrets::Types::PatchWorkspaceSecretRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('secret_id'))
   end
 end

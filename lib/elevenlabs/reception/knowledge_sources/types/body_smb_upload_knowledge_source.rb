@@ -5,6 +5,7 @@ module Elevenlabs
     module KnowledgeSources
       module Types
         class BodySmbUploadKnowledgeSource < ::Elevenlabs::Internal::Types::Model
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :file, -> { String }, optional: false, nullable: false
 
           def self.load(str)

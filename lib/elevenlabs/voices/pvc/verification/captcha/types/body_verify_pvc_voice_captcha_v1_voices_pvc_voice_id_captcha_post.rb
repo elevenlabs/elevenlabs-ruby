@@ -7,6 +7,7 @@ module Elevenlabs
         module Captcha
           module Types
             class BodyVerifyPvcVoiceCaptchaV1VoicesPvcVoiceIDCaptchaPost < ::Elevenlabs::Internal::Types::Model
+              field :voice_id, -> { String }, optional: false, nullable: false
               field :recording, -> { String }, optional: false, nullable: false
 
               def self.load(str)

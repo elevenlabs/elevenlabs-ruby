@@ -12,6 +12,6 @@ class BodyUpdatePronunciationDictionaryV1PronunciationDictionariesPronunciationD
 
     instance = ::Elevenlabs::PronunciationDictionaries::Types::BodyUpdatePronunciationDictionaryV1PronunciationDictionariesPronunciationDictionaryIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('pronunciation_dictionary_id'))
   end
 end

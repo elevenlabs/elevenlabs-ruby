@@ -12,6 +12,6 @@ class BodySmbUploadKnowledgeSourceTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::KnowledgeSources::Types::BodySmbUploadKnowledgeSource.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('xi-workspace-id'))
   end
 end

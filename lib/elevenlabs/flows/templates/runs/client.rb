@@ -47,7 +47,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/flows/templates/#{URI.encode_uri_component(params[:template_id].to_s)}/runs",
-              body: request_body.to_h,
+              body: request_body.to_h.except('template_id'),
               request_options: request_options,
             )
             response = @client.send(request)

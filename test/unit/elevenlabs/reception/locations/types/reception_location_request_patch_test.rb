@@ -12,6 +12,6 @@ class ReceptionLocationRequestPatchTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Locations::Types::ReceptionLocationRequestPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('location_id', 'xi-workspace-id'))
   end
 end

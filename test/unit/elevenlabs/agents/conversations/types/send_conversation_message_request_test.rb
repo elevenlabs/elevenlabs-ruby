@@ -12,6 +12,6 @@ class SendConversationMessageRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Conversations::Types::SendConversationMessageRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('conversation_id'))
   end
 end

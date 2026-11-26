@@ -5,6 +5,7 @@ module Elevenlabs
     module KnowledgeSources
       module Types
         class AddURLRequest < ::Elevenlabs::Internal::Types::Model
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :url, -> { String }, optional: false, nullable: false
           field :crawl_entire_site, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

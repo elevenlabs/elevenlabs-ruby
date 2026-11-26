@@ -12,6 +12,6 @@ class BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIDPatchTest < Minitest
 
     instance = ::Elevenlabs::Webhooks::Types::BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('webhook_id'))
   end
 end

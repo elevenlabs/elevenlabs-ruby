@@ -8,6 +8,7 @@ module Elevenlabs
       field :phone_number, -> { String }, optional: false, nullable: false
       field :phone_numbers, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :phone_numbers_index, -> { Integer }, optional: false, nullable: false
+      field :timezone_override, -> { String }, optional: true, nullable: true
       field :user_id, -> { String }, optional: false, nullable: false
       field :attempt_count, -> { Integer }, optional: false, nullable: false
       field :failure_count, -> { Integer }, optional: false, nullable: false

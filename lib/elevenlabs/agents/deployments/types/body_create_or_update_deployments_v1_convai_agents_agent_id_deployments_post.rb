@@ -5,6 +5,7 @@ module Elevenlabs
     module Deployments
       module Types
         class BodyCreateOrUpdateDeploymentsV1ConvaiAgentsAgentIDDeploymentsPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
           field :deployment_request, -> { ::Elevenlabs::Types::AgentDeploymentRequest }, optional: false, nullable: false
 
           def self.load(str)

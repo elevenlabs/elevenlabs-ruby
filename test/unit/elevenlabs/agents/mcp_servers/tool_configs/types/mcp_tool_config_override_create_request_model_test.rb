@@ -12,6 +12,6 @@ class McpToolConfigOverrideCreateRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::McpServers::ToolConfigs::Types::McpToolConfigOverrideCreateRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('mcp_server_id', 'environment'))
   end
 end

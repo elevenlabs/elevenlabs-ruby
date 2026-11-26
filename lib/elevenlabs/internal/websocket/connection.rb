@@ -189,19 +189,20 @@ module Elevenlabs
           @lock.synchronize { @reconnecting }
         end
 
-        def abandon_reconnect
+        def abandon_reconnect # rubocop:disable Naming/PredicateMethod
           @io.close unless @io.closed?
           false
         end
 
-        def give_up(failure)
+        def give_up(failure) # rubocop:disable Naming/PredicateMethod
           @lock.synchronize { settle(State::CLOSED) }
           reason = "The WebSocket connection could not be reopened after #{@reconnect[:max_retries]} attempts"
           reason = "#{reason}: #{failure.message}" if failure
-          deliver([
-                    [:error, ::Elevenlabs::Errors::WebSocketError.new(reason)],
-                    [:close, @close_code || ABNORMAL_CLOSURE, @close_reason || reason],
-                  ])
+          closing_events = [
+            [:error, ::Elevenlabs::Errors::WebSocketError.new(reason)],
+            [:close, @close_code || ABNORMAL_CLOSURE, @close_reason || reason],
+          ]
+          deliver(closing_events)
           false
         end
 

@@ -46,7 +46,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/reception/customer-facing-agents/#{URI.encode_uri_component(params[:agent_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

@@ -8,7 +8,7 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class BranchSyncStatusTest < Minitest::Test
   def test_round_trip
-    wire = { 'last_attempt' => { 'outcome' => 'succeeded', 'attempted_at' => 1 } }
+    wire = { 'branch_id' => 'test-value', 'last_attempt' => { 'outcome' => 'succeeded', 'attempted_at' => 1 } }
 
     instance = ::Elevenlabs::Types::BranchSyncStatus.new(wire)
 

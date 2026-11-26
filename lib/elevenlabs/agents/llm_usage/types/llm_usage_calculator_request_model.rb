@@ -5,6 +5,7 @@ module Elevenlabs
     module LlmUsage
       module Types
         class LlmUsageCalculatorRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
           field :prompt_length, -> { Integer }, optional: true, nullable: true
           field :number_of_pages, -> { Integer }, optional: true, nullable: true
           field :rag_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true

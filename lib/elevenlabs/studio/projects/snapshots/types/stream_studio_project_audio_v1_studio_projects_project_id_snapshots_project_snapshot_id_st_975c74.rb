@@ -6,6 +6,8 @@ module Elevenlabs
       module Snapshots
         module Types
           class BodyStreamStudioProjectAudioV1StudioProjectsProjectIDSnapshotsProjectSnapshotIDStreamPost < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
+            field :project_snapshot_id, -> { String }, optional: false, nullable: false
             field :convert_to_mpeg, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 
             def self.load(str)

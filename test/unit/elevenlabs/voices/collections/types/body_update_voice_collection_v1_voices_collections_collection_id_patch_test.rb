@@ -12,6 +12,6 @@ class BodyUpdateVoiceCollectionV1VoicesCollectionsCollectionIDPatchTest < Minite
 
     instance = ::Elevenlabs::Voices::Collections::Types::BodyUpdateVoiceCollectionV1VoicesCollectionsCollectionIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('collection_id'))
   end
 end

@@ -12,6 +12,6 @@ class AddMemberToGroupRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Workspace::Groups::Members::Types::AddMemberToGroupRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('group_id'))
   end
 end

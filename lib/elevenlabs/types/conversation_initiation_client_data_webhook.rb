@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class ConversationInitiationClientDataWebhook < ::Elevenlabs::Internal::Types::Model
       field :url, -> { String }, optional: false, nullable: false
-      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Voices::Settings::Types::ConversationInitiationClientDataWebhookRequestHeadersValue] }, optional: false, nullable: false
+      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::ConversationInitiationClientDataWebhookRequestHeadersValue] }, optional: false, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

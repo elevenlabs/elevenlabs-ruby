@@ -12,6 +12,6 @@ class BodySendTestWebhookEventV1WorkspaceWebhooksWebhookIDTestPostTest < Minites
 
     instance = ::Elevenlabs::Webhooks::Types::BodySendTestWebhookEventV1WorkspaceWebhooksWebhookIDTestPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('webhook_id'))
   end
 end

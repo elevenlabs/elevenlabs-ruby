@@ -5,6 +5,7 @@ module Elevenlabs
     module Resources
       module Types
         class BodyUnshareWorkspaceResourceV1WorkspaceResourcesResourceIDUnsharePost < ::Elevenlabs::Internal::Types::Model
+          field :resource_id, -> { String }, optional: false, nullable: false
           field :resource_type, -> { ::Elevenlabs::Types::WorkspaceResourceType }, optional: false, nullable: false
           field :user_email, -> { String }, optional: true, nullable: true
           field :group_id, -> { String }, optional: true, nullable: true

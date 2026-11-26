@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class EndProcedureToolConfig < ::Elevenlabs::Internal::Types::Model
       field :system_tool_type, -> { ::Elevenlabs::Types::EndProcedureToolConfigSystemToolType }, optional: true, nullable: false
-      field :procedures, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::EndProcedureToolConfigProceduresValue] }, optional: true, nullable: false
+      field :procedures, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::EndProcedureToolConfigProceduresValue] }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

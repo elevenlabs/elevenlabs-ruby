@@ -12,6 +12,6 @@ class BodyEditPvcVoiceV1VoicesPvcVoiceIDPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Voices::Pvc::Types::BodyEditPvcVoiceV1VoicesPvcVoiceIDPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id'))
   end
 end

@@ -12,6 +12,6 @@ class BodyAddSamplesToPvcVoiceV1VoicesPvcVoiceIDSamplesPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Voices::Pvc::Samples::Types::BodyAddSamplesToPvcVoiceV1VoicesPvcVoiceIDSamplesPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id'))
   end
 end

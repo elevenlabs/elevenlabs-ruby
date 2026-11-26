@@ -12,6 +12,6 @@ class BodyUpdateStudioProjectV1StudioProjectsProjectIDPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Studio::Projects::Types::BodyUpdateStudioProjectV1StudioProjectsProjectIDPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('project_id'))
   end
 end

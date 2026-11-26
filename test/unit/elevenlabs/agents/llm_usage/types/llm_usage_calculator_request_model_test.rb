@@ -12,6 +12,6 @@ class LlmUsageCalculatorRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::LlmUsage::Types::LlmUsageCalculatorRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id'))
   end
 end

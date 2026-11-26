@@ -4,6 +4,7 @@ module Elevenlabs
   module AudioNative
     module Types
       class BodyUpdateAudioNativeProjectContentV1AudioNativeProjectIDContentPost < ::Elevenlabs::Internal::Types::Model
+        field :project_id, -> { String }, optional: false, nullable: false
         field :file, -> { String }, optional: true, nullable: false
         field :auto_convert, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
         field :auto_publish, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

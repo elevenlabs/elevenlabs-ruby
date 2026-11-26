@@ -12,6 +12,6 @@ class BodyTextToSpeechFullWithTimestampsTest < Minitest::Test
 
     instance = ::Elevenlabs::TextToSpeech::Types::BodyTextToSpeechFullWithTimestamps.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id', 'enable_logging', 'optimize_streaming_latency', 'output_format'))
   end
 end

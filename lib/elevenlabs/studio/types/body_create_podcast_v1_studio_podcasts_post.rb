@@ -4,6 +4,7 @@ module Elevenlabs
   module Studio
     module Types
       class BodyCreatePodcastV1StudioPodcastsPost < ::Elevenlabs::Internal::Types::Model
+        field :safety_identifier, -> { String }, optional: true, nullable: true, api_name: 'safety-identifier'
         field :model_id, -> { String }, optional: false, nullable: false
         field :mode, -> { ::Elevenlabs::Studio::Types::BodyCreatePodcastV1StudioPodcastsPostMode }, optional: false, nullable: false
         field :source, -> { ::Elevenlabs::Studio::Types::BodyCreatePodcastV1StudioPodcastsPostSource }, optional: false, nullable: false

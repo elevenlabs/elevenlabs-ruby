@@ -5,6 +5,8 @@ module Elevenlabs
     module PhoneNumbers
       module Types
         class ReassignPhoneRequest < ::Elevenlabs::Internal::Types::Model
+          field :phone_assignment_id, -> { String }, optional: false, nullable: false
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :customer_facing_agent_id, -> { String }, optional: false, nullable: false
 
           def self.load(str)

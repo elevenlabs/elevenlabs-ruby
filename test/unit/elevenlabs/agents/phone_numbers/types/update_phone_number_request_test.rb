@@ -12,6 +12,6 @@ class UpdatePhoneNumberRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::PhoneNumbers::Types::UpdatePhoneNumberRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('phone_number_id'))
   end
 end

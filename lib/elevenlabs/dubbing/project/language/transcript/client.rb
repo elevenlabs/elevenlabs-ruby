@@ -37,7 +37,7 @@ module Elevenlabs
             # Enterprise only. Edit a segment's translation for a language target. Omitted fields are left unchanged; an explicit null clears the field. Bumps the target's `revision` and marks it `stale` if it had already completed. The source transcript and the project's other languages are untouched, and no audio changes until you regenerate the target.
             def update_segment(request_options: {}, **params)
               params = ::Elevenlabs::Internal::Types::Utils.normalize_keys(params)
-              request_body = ::Elevenlabs::Dubbing::Project::Language::Transcript::Types::DubbingTargetSegmentUpdateRequest.new(params.except(:project_id, :language_id, :segment_id))
+              request_body = ::Elevenlabs::Types::DubbingTargetSegmentUpdateRequest.new(params.except(:project_id, :language_id, :segment_id))
               request_body.validate! if request_body.respond_to?(:validate!)
               request = ::Elevenlabs::Internal::JSON::Request.new(
                 base_url: request_options[:base_url],
@@ -68,7 +68,7 @@ module Elevenlabs
                 base_url: request_options[:base_url],
                 method: 'PATCH',
                 path: "v1/dubbing/project/#{URI.encode_uri_component(params[:project_id].to_s)}/language/#{URI.encode_uri_component(params[:language_id].to_s)}/transcript/segments",
-                body: request_body.to_h,
+                body: request_body.to_h.except('project_id', 'language_id'),
                 request_options: request_options,
               )
               response = @client.send(request)

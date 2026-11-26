@@ -5,6 +5,7 @@ module Elevenlabs
     module Subscriptions
       module Types
         class AssignResellerTierRequest < ::Elevenlabs::Internal::Types::Model
+          field :workspace_id, -> { String }, optional: false, nullable: false
           field :tier_id, -> { String }, optional: false, nullable: false
           field :billing_period, -> { ::Elevenlabs::Reception::Subscriptions::Types::AssignResellerTierRequestBillingPeriod }, optional: true, nullable: false
           field :idempotency_key, -> { String }, optional: true, nullable: true

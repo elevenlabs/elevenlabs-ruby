@@ -4,6 +4,7 @@ module Elevenlabs
   module TextToVoice
     module Types
       class VoiceDesignRequestModel < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::Types::AllowedOutputFormats }, optional: true, nullable: true
         field :voice_description, -> { String }, optional: false, nullable: false
         field :model_id, -> { ::Elevenlabs::TextToVoice::Types::VoiceDesignRequestModelModelID }, optional: true, nullable: false
         field :text, -> { String }, optional: true, nullable: true

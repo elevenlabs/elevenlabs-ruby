@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class FineTuningResponse < ::Elevenlabs::Internal::Types::Model
       field :is_allowed_to_fine_tune, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
-      field :state, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::TextToVoice::Types::FineTuningResponseStateValue] }, optional: true, nullable: false
+      field :state, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::FineTuningResponseStateValue] }, optional: true, nullable: false
       field :verification_failures, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false
       field :verification_attempts_count, -> { Integer }, optional: true, nullable: false
       field :manual_verification_requested, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

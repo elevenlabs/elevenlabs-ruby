@@ -12,6 +12,6 @@ class BodyUpdatePvcVoiceSampleV1VoicesPvcVoiceIDSamplesSampleIDPostTest < Minite
 
     instance = ::Elevenlabs::Voices::Pvc::Samples::Types::BodyUpdatePvcVoiceSampleV1VoicesPvcVoiceIDSamplesSampleIDPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('voice_id', 'sample_id'))
   end
 end

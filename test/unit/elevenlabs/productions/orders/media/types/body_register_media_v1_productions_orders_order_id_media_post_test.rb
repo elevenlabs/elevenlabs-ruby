@@ -12,6 +12,6 @@ class BodyRegisterMediaV1ProductionsOrdersOrderIDMediaPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Productions::Orders::Media::Types::BodyRegisterMediaV1ProductionsOrdersOrderIDMediaPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('order_id'))
   end
 end

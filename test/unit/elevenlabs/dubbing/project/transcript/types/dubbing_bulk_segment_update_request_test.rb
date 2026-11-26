@@ -12,6 +12,6 @@ class DubbingBulkSegmentUpdateRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Dubbing::Project::Transcript::Types::DubbingBulkSegmentUpdateRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('project_id'))
   end
 end

@@ -6,6 +6,7 @@ module Elevenlabs
       module Analysis
         module Types
           class RunConversationEvaluationsRequest < ::Elevenlabs::Internal::Types::Model
+            field :conversation_id, -> { String }, optional: false, nullable: false
             field :evaluation_id, -> { String }, optional: false, nullable: false
             field :scope, -> { ::Elevenlabs::Types::AnalysisScope }, optional: true, nullable: false
             field :evaluated_agent_id, -> { String }, optional: true, nullable: true

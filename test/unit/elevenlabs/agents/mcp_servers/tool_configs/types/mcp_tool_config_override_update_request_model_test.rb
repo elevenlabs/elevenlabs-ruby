@@ -12,6 +12,6 @@ class McpToolConfigOverrideUpdateRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::McpServers::ToolConfigs::Types::McpToolConfigOverrideUpdateRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('mcp_server_id', 'tool_name', 'environment'))
   end
 end

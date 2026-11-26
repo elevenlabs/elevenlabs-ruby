@@ -8,7 +8,7 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class CustomLlmTest < Minitest::Test
   def test_round_trip
-    wire = { 'url' => 'test-value', 'model_id' => 'test-value', 'api_key' => { 'secret_id' => 'test-value' }, 'auth_connection' => { 'auth_connection_id' => 'test-value' }, 'request_headers' => { 'key' => 'test-value' }, 'api_version' => 'test-value', 'api_type' => 'chat_completions' }
+    wire = { 'url' => 'test-value', 'model_id' => 'test-value', 'api_key' => { 'secret_id' => 'test-value' }, 'auth_connection' => { 'auth_connection_id' => 'test-value' }, 'mtls_auth_connection' => { 'auth_connection_id' => 'test-value' }, 'request_headers' => { 'key' => 'test-value' }, 'api_version' => 'test-value', 'api_type' => 'chat_completions' }
 
     instance = ::Elevenlabs::Types::CustomLlm.new(wire)
 

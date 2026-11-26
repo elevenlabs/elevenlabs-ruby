@@ -12,6 +12,6 @@ class BodySpeechToTextV1SpeechToTextPostTest < Minitest::Test
 
     instance = ::Elevenlabs::SpeechToText::Types::BodySpeechToTextV1SpeechToTextPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('token', 'enable_logging'))
   end
 end

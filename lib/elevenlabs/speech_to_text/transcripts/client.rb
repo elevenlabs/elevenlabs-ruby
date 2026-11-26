@@ -22,7 +22,7 @@ module Elevenlabs
           response = @client.send(request)
           code = response.code.to_i
           if code.between?(200, 299)
-            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::Dubbing::Transcripts::Types::GetTranscriptsResponse.load!(body) }
+            result = ::Elevenlabs::Internal::Http::ResponseBody.decode(response) { |body| ::Elevenlabs::SpeechToText::Transcripts::Types::GetTranscriptsResponse.load!(body) }
             result.validate! if result.respond_to?(:validate!)
             result
           else

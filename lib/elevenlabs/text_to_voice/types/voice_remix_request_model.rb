@@ -4,6 +4,8 @@ module Elevenlabs
   module TextToVoice
     module Types
       class VoiceRemixRequestModel < ::Elevenlabs::Internal::Types::Model
+        field :voice_id, -> { String }, optional: false, nullable: false
+        field :output_format, -> { ::Elevenlabs::Types::AllowedOutputFormats }, optional: true, nullable: true
         field :voice_description, -> { String }, optional: false, nullable: false
         field :text, -> { String }, optional: true, nullable: true
         field :auto_generate_text, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false

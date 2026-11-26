@@ -5,6 +5,7 @@ module Elevenlabs
     module BusinessProfile
       module Types
         class ReceptionUpdateAgentInfoRequest < ::Elevenlabs::Internal::Types::Model
+          field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
           field :business_name, -> { String }, optional: true, nullable: false
           field :business_country, -> { String }, optional: true, nullable: true
           field :business_description, -> { String }, optional: true, nullable: false

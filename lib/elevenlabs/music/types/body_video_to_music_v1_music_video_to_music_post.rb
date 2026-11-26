@@ -4,6 +4,8 @@ module Elevenlabs
   module Music
     module Types
       class BodyVideoToMusicV1MusicVideoToMusicPost < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::Types::AllowedOutputFormats }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :videos, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
         field :description, -> { String }, optional: true, nullable: true
         field :tags, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: true, nullable: false

@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class AgentWorkflowResponseModel < ::Elevenlabs::Internal::Types::Model
       field :edges, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::WorkflowEdgeModelOutput] }, optional: false, nullable: false
-      field :nodes, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::AgentWorkflowResponseModelNodesValue] }, optional: false, nullable: false
+      field :nodes, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::AgentWorkflowResponseModelNodesValue] }, optional: false, nullable: false
       field :prevent_subagent_loops, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: false, nullable: false
 
       def self.load(str)

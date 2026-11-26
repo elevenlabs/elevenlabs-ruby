@@ -4,6 +4,8 @@ module Elevenlabs
   module SpeechToText
     module Types
       class BodySpeechToTextV1SpeechToTextPost < ::Elevenlabs::Internal::Types::Model
+        field :token, -> { String }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :model_id, -> { String }, optional: false, nullable: false
         field :file, -> { String }, optional: true, nullable: true
         field :language_code, -> { String }, optional: true, nullable: true

@@ -7,10 +7,12 @@ module Elevenlabs
         class ReceptionProvisionResellerWorkspaceRequest < ::Elevenlabs::Internal::Types::Model
           field :business_name, -> { String }, optional: false, nullable: false
           field :vertical, -> { ::Elevenlabs::Types::ReceptionVertical }, optional: true, nullable: true
+          field :charge_customer, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
           field :subscription, -> { ::Elevenlabs::Types::ProvisionResellerWorkspaceSubscription }, optional: true, nullable: true
           field :phone_number, -> { String }, optional: true, nullable: true
           field :members, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::TeamInviteRequest] }, optional: true, nullable: false
           field :complete_onboarding, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
+          field :metadata, -> { ::Elevenlabs::Internal::Types::Hash[String, String] }, optional: true, nullable: false
           field :idempotency_key, -> { String }, optional: true, nullable: true
 
           def validate!

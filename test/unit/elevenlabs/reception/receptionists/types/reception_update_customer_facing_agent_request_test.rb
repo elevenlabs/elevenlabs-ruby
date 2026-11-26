@@ -12,6 +12,6 @@ class ReceptionUpdateCustomerFacingAgentRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Receptionists::Types::ReceptionUpdateCustomerFacingAgentRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id', 'xi-workspace-id'))
   end
 end

@@ -8,7 +8,7 @@ require 'minitest/autorun'
 # from comes back out unchanged.
 class ResellerTierResponseTest < Minitest::Test
   def test_round_trip
-    wire = { 'tier_id' => 'test-value', 'display_name' => 'test-value', 'tier_economics' => { 'monthly_price_usd' => 1, 'annual_price_usd' => 1, 'included_minutes_per_month' => 1, 'overage_price_per_minute_usd' => 1, 'max_phone_numbers' => 1, 'concurrent_calls' => 1, 'max_active_locations' => 1, 'max_customer_facing_agents' => 1, 'max_team_members' => 1, 'assistant_daily_messages' => 1 } }
+    wire = { 'tier_id' => 'test-value', 'display_name' => 'test-value', 'currency' => 'USD', 'tier_economics' => { 'monthly_price_usd' => 1, 'annual_price_usd' => 1, 'included_minutes_per_month' => 1, 'overage_price_per_minute_usd' => 1, 'max_phone_numbers' => 1, 'concurrent_calls' => 1, 'max_active_locations' => 1, 'max_customer_facing_agents' => 1, 'max_team_members' => 1, 'assistant_daily_messages' => 1 } }
 
     instance = ::Elevenlabs::Types::ResellerTierResponse.new(wire)
 

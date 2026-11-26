@@ -12,6 +12,6 @@ class BodyStreamComposedMusicWithADetailedResponseV1MusicDetailedStreamPostTest 
 
     instance = ::Elevenlabs::Music::Types::BodyStreamComposedMusicWithADetailedResponseV1MusicDetailedStreamPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('output_format', 'enable_logging'))
   end
 end

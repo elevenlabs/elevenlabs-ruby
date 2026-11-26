@@ -12,6 +12,6 @@ class UpdateEnvironmentVariableRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::EnvironmentVariables::Types::UpdateEnvironmentVariableRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('env_var_id'))
   end
 end

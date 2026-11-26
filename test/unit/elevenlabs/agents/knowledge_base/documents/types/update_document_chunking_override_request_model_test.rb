@@ -12,6 +12,6 @@ class UpdateDocumentChunkingOverrideRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::KnowledgeBase::Documents::Types::UpdateDocumentChunkingOverrideRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('documentation_id'))
   end
 end

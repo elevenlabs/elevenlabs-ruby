@@ -4,6 +4,8 @@ module Elevenlabs
   module TextToSoundEffects
     module Types
       class CreateSoundEffectRequest < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::TextToSoundEffects::Types::ConvertTextToSoundEffectsRequestOutputFormat }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :text, -> { String }, optional: false, nullable: false
         field :loop, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
         field :duration_seconds, -> { Float }, optional: true, nullable: true

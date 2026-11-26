@@ -12,6 +12,6 @@ class BodyUpdateDocumentV1ConvaiKnowledgeBaseDocumentationIDPatchTest < Minitest
 
     instance = ::Elevenlabs::Agents::KnowledgeBase::Documents::Types::BodyUpdateDocumentV1ConvaiKnowledgeBaseDocumentationIDPatch.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('documentation_id'))
   end
 end

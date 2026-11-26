@@ -5,6 +5,8 @@ module Elevenlabs
     module MergeProposals
       module Types
         class BodyCommentOnAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsMergeProposalIDCommentsPost < ::Elevenlabs::Internal::Types::Model
+          field :agent_id, -> { String }, optional: false, nullable: false
+          field :merge_proposal_id, -> { String }, optional: false, nullable: false
           field :body, -> { String }, optional: false, nullable: false
 
           def validate!

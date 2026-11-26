@@ -6,6 +6,7 @@ module Elevenlabs
       module PronunciationDictionaries
         module Types
           class BodyCreatePronunciationDictionariesV1StudioProjectsProjectIDPronunciationDictionariesPost < ::Elevenlabs::Internal::Types::Model
+            field :project_id, -> { String }, optional: false, nullable: false
             field :pronunciation_dictionary_locators, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::BodyTextToSpeechFullPronunciationDictionaryLocatorsItem] }, optional: false, nullable: false
             field :invalidate_affected_text, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: false
 

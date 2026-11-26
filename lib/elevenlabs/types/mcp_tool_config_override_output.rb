@@ -13,7 +13,7 @@ module Elevenlabs
       field :execution_mode, -> { ::Elevenlabs::Types::ToolExecutionMode }, optional: true, nullable: false
       field :response_timeout_secs, -> { Integer }, optional: true, nullable: true
       field :assignments, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::DynamicVariableAssignment] }, optional: true, nullable: false
-      field :input_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::McpServers::Types::McpToolConfigOverrideOutputInputOverridesValue] }, optional: true, nullable: true
+      field :input_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::McpToolConfigOverrideOutputInputOverridesValue] }, optional: true, nullable: true
       field :response_mocks, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::ToolResponseMockConfigOutput] }, optional: true, nullable: true
 
       def validate!

@@ -12,6 +12,6 @@ class BodyUnshareWorkspaceResourceV1WorkspaceResourcesResourceIDUnsharePostTest 
 
     instance = ::Elevenlabs::Workspace::Resources::Types::BodyUnshareWorkspaceResourceV1WorkspaceResourcesResourceIDUnsharePost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('resource_id'))
   end
 end

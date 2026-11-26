@@ -12,6 +12,6 @@ class BodyAddSharedVoiceV1VoicesAddPublicUserIDVoiceIDPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Voices::Types::BodyAddSharedVoiceV1VoicesAddPublicUserIDVoiceIDPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('public_user_id', 'voice_id'))
   end
 end

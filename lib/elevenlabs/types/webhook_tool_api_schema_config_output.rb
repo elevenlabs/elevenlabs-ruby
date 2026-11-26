@@ -3,7 +3,7 @@
 module Elevenlabs
   module Types
     class WebhookToolAPISchemaConfigOutput < ::Elevenlabs::Internal::Types::Model
-      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::WebhookToolAPISchemaConfigOutputRequestHeadersValue] }, optional: true, nullable: false
+      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::WebhookToolAPISchemaConfigOutputRequestHeadersValue] }, optional: true, nullable: false
       field :url, -> { String }, optional: false, nullable: false
       field :method_, -> { ::Elevenlabs::Types::WebhookToolAPISchemaConfigOutputMethod }, optional: true, nullable: false, api_name: 'method'
       field :path_params_schema, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::LiteralJSONSchemaProperty] }, optional: true, nullable: false

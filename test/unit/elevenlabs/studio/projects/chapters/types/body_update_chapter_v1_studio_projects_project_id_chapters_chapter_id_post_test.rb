@@ -12,6 +12,6 @@ class BodyUpdateChapterV1StudioProjectsProjectIDChaptersChapterIDPostTest < Mini
 
     instance = ::Elevenlabs::Studio::Projects::Chapters::Types::BodyUpdateChapterV1StudioProjectsProjectIDChaptersChapterIDPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('project_id', 'chapter_id'))
   end
 end

@@ -12,6 +12,6 @@ class BodyTextToDialogueMultiVoiceStreamingV1TextToDialogueStreamPostTest < Mini
 
     instance = ::Elevenlabs::TextToDialogue::Types::BodyTextToDialogueMultiVoiceStreamingV1TextToDialogueStreamPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('output_format', 'enable_logging'))
   end
 end

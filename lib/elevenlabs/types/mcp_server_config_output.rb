@@ -8,8 +8,8 @@ module Elevenlabs
       field :transport, -> { ::Elevenlabs::Types::McpServerTransport }, optional: true, nullable: false
       field :url, -> { ::Elevenlabs::Types::McpServerConfigOutputURL }, optional: false, nullable: false
       field :secret_token, -> { ::Elevenlabs::Types::McpServerConfigOutputSecretToken }, optional: true, nullable: true
-      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::McpServers::Types::McpServerConfigOutputRequestHeadersValue] }, optional: true, nullable: false
-      field :request_meta, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::McpServers::Types::McpServerConfigOutputRequestMetaValue] }, optional: true, nullable: false
+      field :request_headers, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::McpServerConfigOutputRequestHeadersValue] }, optional: true, nullable: false
+      field :request_meta, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::McpServerConfigOutputRequestMetaValue] }, optional: true, nullable: false
       field :auth_connection, -> { ::Elevenlabs::Types::McpServerConfigOutputAuthConnection }, optional: true, nullable: true
       field :name, -> { String }, optional: false, nullable: false
       field :description, -> { String }, optional: true, nullable: false

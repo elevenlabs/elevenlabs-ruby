@@ -6,6 +6,7 @@ module Elevenlabs
       module Members
         module Types
           class AddMemberToGroupRequest < ::Elevenlabs::Internal::Types::Model
+            field :group_id, -> { String }, optional: false, nullable: false
             field :email, -> { String }, optional: false, nullable: false
 
             def self.load(str)

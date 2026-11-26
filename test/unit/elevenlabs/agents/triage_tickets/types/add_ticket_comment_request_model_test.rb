@@ -12,6 +12,6 @@ class AddTicketCommentRequestModelTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::TriageTickets::Types::AddTicketCommentRequestModel.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agentqa_ticket_id'))
   end
 end

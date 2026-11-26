@@ -12,6 +12,6 @@ class ReceptionUpdateProductStockRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Reception::Products::Stock::Types::ReceptionUpdateProductStockRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('product_id', 'xi-workspace-id'))
   end
 end

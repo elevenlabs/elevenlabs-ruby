@@ -10,7 +10,7 @@ module Elevenlabs
       # adds a node type is picked up without a change to the builder. Requires the SDK to be loaded
       # (require 'elevenlabs').
       def known
-        @known ||= ::Elevenlabs::Agents::Types::AgentWorkflowRequestModelNodesValue
+        @known ||= ::Elevenlabs::Types::AgentWorkflowRequestModelNodesValue
                    .members.map { |key, _type| key.to_s }
       end
 

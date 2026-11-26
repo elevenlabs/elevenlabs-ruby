@@ -12,6 +12,6 @@ class BodyCreatePodcastV1StudioPodcastsPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Studio::Types::BodyCreatePodcastV1StudioPodcastsPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('safety-identifier'))
   end
 end

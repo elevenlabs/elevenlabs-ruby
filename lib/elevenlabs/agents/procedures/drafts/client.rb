@@ -42,7 +42,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'PATCH',
               path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/branches/#{URI.encode_uri_component(params[:branch_id].to_s)}/procedures/#{URI.encode_uri_component(params[:procedure_id].to_s)}/draft",
-              body: request_body.to_h,
+              body: request_body.to_h.except('agent_id', 'branch_id', 'procedure_id'),
               request_options: request_options,
             )
             response = @client.send(request)

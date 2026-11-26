@@ -5,6 +5,7 @@ module Elevenlabs
     module TriageTickets
       module Types
         class MergeAgentConversationTicketsRequestModel < ::Elevenlabs::Internal::Types::Model
+          field :agentqa_ticket_id, -> { String }, optional: false, nullable: false
           field :source_ticket_ids, -> { ::Elevenlabs::Internal::Types::Array[String] }, optional: false, nullable: false
 
           def validate!

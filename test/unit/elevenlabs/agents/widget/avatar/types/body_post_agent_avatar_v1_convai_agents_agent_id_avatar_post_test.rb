@@ -12,6 +12,6 @@ class BodyPostAgentAvatarV1ConvaiAgentsAgentIDAvatarPostTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::Widget::Avatar::Types::BodyPostAgentAvatarV1ConvaiAgentsAgentIDAvatarPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id'))
   end
 end

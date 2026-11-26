@@ -12,6 +12,6 @@ class BodyCreateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsPostTest < Mini
 
     instance = ::Elevenlabs::Agents::MergeProposals::Types::BodyCreateAMergeProposalV1ConvaiAgentsAgentIDMergeProposalsPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('agent_id'))
   end
 end

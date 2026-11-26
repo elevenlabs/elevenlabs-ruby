@@ -93,7 +93,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PATCH',
             path: "v1/convai/realtime/conversation-groups/#{URI.encode_uri_component(params[:conversation_group_id].to_s)}",
-            body: request_body.to_h,
+            body: request_body.to_h.except('conversation_group_id'),
             request_options: request_options,
           )
           response = @client.send(request)
@@ -138,7 +138,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PUT',
             path: "v1/convai/realtime/conversations/#{URI.encode_uri_component(params[:conversation_id].to_s)}/conversation-group",
-            body: request_body.to_h,
+            body: request_body.to_h.except('conversation_id'),
             request_options: request_options,
           )
           response = @client.send(request)

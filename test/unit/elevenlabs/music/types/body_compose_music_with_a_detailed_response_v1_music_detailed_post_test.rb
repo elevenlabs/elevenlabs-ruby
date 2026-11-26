@@ -12,6 +12,6 @@ class BodyComposeMusicWithADetailedResponseV1MusicDetailedPostTest < Minitest::T
 
     instance = ::Elevenlabs::Music::Types::BodyComposeMusicWithADetailedResponseV1MusicDetailedPost.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('output_format', 'enable_logging'))
   end
 end

@@ -6,6 +6,8 @@ module Elevenlabs
       module Stock
         module Types
           class ReceptionUpdateProductStockRequest < ::Elevenlabs::Internal::Types::Model
+            field :product_id, -> { String }, optional: false, nullable: false
+            field :xi_workspace_id, -> { String }, optional: false, nullable: false, api_name: 'xi-workspace-id'
             field :location_id, -> { String }, optional: false, nullable: false
             field :on_hand, -> { Integer }, optional: false, nullable: false
             field :expected_on_hand, -> { Integer }, optional: false, nullable: false

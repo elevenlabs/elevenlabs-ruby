@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class StartProcedureToolConfig < ::Elevenlabs::Internal::Types::Model
       field :system_tool_type, -> { ::Elevenlabs::Types::StartProcedureToolConfigSystemToolType }, optional: true, nullable: false
-      field :procedures, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::StartProcedureToolConfigProceduresValue] }, optional: true, nullable: false
+      field :procedures, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::StartProcedureToolConfigProceduresValue] }, optional: true, nullable: false
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

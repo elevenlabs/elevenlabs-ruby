@@ -12,6 +12,6 @@ class UpdateWhatsAppAccountRequestTest < Minitest::Test
 
     instance = ::Elevenlabs::Agents::WhatsappAccounts::Types::UpdateWhatsAppAccountRequest.new(wire)
 
-    assert_equal(wire, instance.to_h)
+    assert_equal(wire, instance.to_h.except('phone_number_id'))
   end
 end

@@ -44,7 +44,7 @@ module Elevenlabs
             base_url: request_options[:base_url],
             method: 'PUT',
             path: 'v1/reception/agent-info',
-            body: request_body.to_h,
+            body: request_body.to_h.except('xi-workspace-id'),
             headers: headers,
             request_options: request_options,
           )

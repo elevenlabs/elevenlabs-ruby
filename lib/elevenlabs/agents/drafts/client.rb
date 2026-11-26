@@ -22,7 +22,7 @@ module Elevenlabs
             method: 'POST',
             path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/drafts",
             query: query_params,
-            body: request_body.to_h,
+            body: request_body.to_h.except('agent_id', 'branch_id'),
             request_options: request_options,
           )
           response = @client.send(request)

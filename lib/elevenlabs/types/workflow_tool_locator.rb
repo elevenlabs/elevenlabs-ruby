@@ -4,7 +4,7 @@ module Elevenlabs
   module Types
     class WorkflowToolLocator < ::Elevenlabs::Internal::Types::Model
       field :tool_id, -> { String }, optional: false, nullable: false
-      field :schema_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Agents::Types::WorkflowToolLocatorSchemaOverridesValue] }, optional: true, nullable: true
+      field :schema_overrides, -> { ::Elevenlabs::Internal::Types::Hash[String, ::Elevenlabs::Types::WorkflowToolLocatorSchemaOverridesValue] }, optional: true, nullable: true
 
       def self.load(str)
         coerce(::JSON.parse(str, symbolize_names: true))

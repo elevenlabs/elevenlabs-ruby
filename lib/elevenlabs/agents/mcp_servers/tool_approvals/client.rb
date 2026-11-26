@@ -20,7 +20,7 @@ module Elevenlabs
               base_url: request_options[:base_url],
               method: 'POST',
               path: "v1/convai/mcp-servers/#{URI.encode_uri_component(params[:mcp_server_id].to_s)}/tool-approvals",
-              body: request_body.to_h,
+              body: request_body.to_h.except('mcp_server_id'),
               request_options: request_options,
             )
             response = @client.send(request)

@@ -4,6 +4,8 @@ module Elevenlabs
   module TextToDialogue
     module Types
       class BodyTextToDialogueMultiVoiceV1TextToDialoguePost < ::Elevenlabs::Internal::Types::Model
+        field :output_format, -> { ::Elevenlabs::TextToDialogue::Types::ConvertTextToDialogueRequestOutputFormat }, optional: true, nullable: true
+        field :enable_logging, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
         field :inputs, -> { ::Elevenlabs::Internal::Types::Array[::Elevenlabs::Types::DialogueInput] }, optional: false, nullable: false
         field :model_id, -> { String }, optional: true, nullable: false
         field :language_code, -> { String }, optional: true, nullable: true

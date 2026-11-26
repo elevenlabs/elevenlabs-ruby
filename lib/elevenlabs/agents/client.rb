@@ -21,7 +21,7 @@ module Elevenlabs
           method: 'POST',
           path: 'v1/convai/agents/create',
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('enable_versioning'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -78,7 +78,7 @@ module Elevenlabs
           method: 'PATCH',
           path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}",
           query: query_params,
-          body: request_body.to_h,
+          body: request_body.to_h.except('agent_id', 'enable_versioning_if_not_enabled', 'branch_id', 'include_procedure_generated_workflow_elements'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -161,7 +161,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'POST',
           path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/duplicate",
-          body: request_body.to_h,
+          body: request_body.to_h.except('agent_id'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -186,7 +186,7 @@ module Elevenlabs
           base_url: request_options[:base_url],
           method: 'POST',
           path: "v1/convai/agents/#{URI.encode_uri_component(params[:agent_id].to_s)}/run-tests",
-          body: request_body.to_h,
+          body: request_body.to_h.except('agent_id'),
           request_options: request_options,
         )
         response = @client.send(request)
@@ -265,6 +265,33 @@ module Elevenlabs
           error_body = ::Elevenlabs::Errors::ResponseError.load_body(response.body, { 422 => ::Elevenlabs::Types::HTTPValidationError }[code])
           raise error_class.new(response.body, code: code, body: error_body, headers: response.to_hash)
         end
+      end
+
+      # Opens a WebSocket connection to the `agents` channel.
+      #
+      # @param agent_id [String]
+      # @param reconnect [Hash, true, nil] Reopens the connection after the server closes or drops it:
+      #   `:max_retries` (default 5) and `:backoff`, the first delay in seconds (default 1.0, doubling
+      #   each retry). Off unless given.
+      # @param connect_timeout [Numeric, nil] Seconds to wait for the handshake; 5 when nil.
+      # @param request_options [Hash] `:base_url` replaces the server URL for this connection;
+      #   `:additional_headers` and `:additional_query_parameters` are added to the handshake.
+      # @yieldparam socket [AgentsSocket] The connected socket; it is closed when the block returns.
+      # @return [AgentsSocket, Object] The connected socket, or the block's value when a block is given.
+      def conversation(agent_id:, reconnect: nil, connect_timeout: nil, request_options: {}, &block)
+        AgentsSocket.connect(
+          url: ::Elevenlabs::Internal::WebSocket::Handshake.url(
+            base_url: request_options[:base_url] || @client.websocket_base_url || @client.base_url || '',
+            path: '/v1/convai/conversation',
+            query: { 'agent_id' => agent_id },
+            client_query: @client.websocket_query,
+            request_options: request_options,
+          ),
+          headers: -> { ::Elevenlabs::Internal::WebSocket::Handshake.headers(client_headers: @client.websocket_headers, credentials: -> { @client.websocket_credentials }, request_options: request_options) },
+          reconnect: reconnect,
+          connect_timeout: connect_timeout,
+          &block
+        )
       end
 
       def conversations

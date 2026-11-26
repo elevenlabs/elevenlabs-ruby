@@ -4,6 +4,7 @@ module Elevenlabs
   module Webhooks
     module Types
       class BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIDPatch < ::Elevenlabs::Internal::Types::Model
+        field :webhook_id, -> { String }, optional: false, nullable: false
         field :is_disabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: false, nullable: false
         field :name, -> { String }, optional: false, nullable: false
         field :retry_enabled, -> { ::Elevenlabs::Internal::Types::Boolean }, optional: true, nullable: true
